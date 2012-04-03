@@ -1,4 +1,4 @@
-Ext.define('Kiva.view.detail.Map', {
+Ext.define('Ria.view.detail.Map', {
     extend: 'Ext.Map',
     xtype: 'detailMap',
     config: {

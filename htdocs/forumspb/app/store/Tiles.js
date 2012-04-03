@@ -1,8 +1,8 @@
-Ext.define('Kiva.store.Loans', {
+Ext.define('Ria.store.Tiles', {
     extend: 'Ext.data.Store',
 
     config: {
-        model: 'Kiva.model.Loan',
+        model: 'Ria.model.Tile',
         autoLoad: true,
         remoteFilter: true
     }

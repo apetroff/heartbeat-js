@@ -1,4 +1,4 @@
-Ext.define('Kiva.view.detail.Information', {
+Ext.define('Ria.view.detail.Information', {
     extend: 'Ext.Container',
     xtype: 'detailInformation',
     requires: ['Ext.XTemplate'],
@@ -17,7 +17,7 @@ Ext.define('Kiva.view.detail.Information', {
             '<p class="overview">',
                 '<strong>Activity:</strong> {activity}<br />',
                 '<strong>Sector:</strong> {sector}<br />',
-                '<strong>Amount requested:</strong> ${terms.loan_amount}<br />',
+                '<strong>Amount requested:</strong> ${terms.tile_amount}<br />',
                 '<strong>Amount funded:</strong> ${funded_amount}<br />',
             '</p>',
             '<p><strong>Overview</strong><br />{description}</p>'

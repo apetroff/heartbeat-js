@@ -1,9 +1,8 @@
-Ext.define('Kiva.view.Main', {
+Ext.define('Ria.view.Main', {
     extend: 'Ext.Container',
     xtype: 'mainview',
     requires: [
-        'Kiva.view.LoansList',
-        'Kiva.view.LoanFilter'
+        'Ria.view.TilesList'
     ],
 
     config: {
@@ -11,11 +10,7 @@ Ext.define('Kiva.view.Main', {
         layout: 'fit',
         items: [
             {
-                xtype : 'loanfilter',
-                docked: 'top'
-            },
-            {
-                xtype: 'loanslist'
+                xtype: 'tileslist'
             }
         ]
     }

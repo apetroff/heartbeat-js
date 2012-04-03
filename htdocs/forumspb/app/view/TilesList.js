@@ -1,19 +1,19 @@
 /**
- * @class kiva.views.List
+ * @class Ria.views.List
  * @extends Ext.DataView
  */
-Ext.define('Kiva.view.LoansList', {
+Ext.define('Ria.view.TilesList', {
     extend: 'Ext.DataView',
-    xtype : 'loanslist',
+    xtype : 'tileslist',
     requires: [
-        'Kiva.view.LoansListItem'
+        'Ria.view.TileItem'
     ],
 
     config: {
-        ui   : 'loans',
-        store: 'Loans',
+        ui   : 'tiles',
+        store: 'Tiles',
         useComponents: true,
-        defaultType: 'loanslistitem',
+        defaultType: 'tileslistitem',
         deselectOnContainerClick: false
     },
 
@@ -33,7 +33,7 @@ Ext.define('Kiva.view.LoansList', {
             me.setMasked({
                 xtype: 'loadmask',
                 indicator: false,
-                message: 'Sorry, KIVA is having issues right now.'
+                message: 'Sorry, Ria is having issues right now.'
             });
 
             me.getScrollable().getScroller().setDisabled(true);

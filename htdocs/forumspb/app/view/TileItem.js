@@ -1,8 +1,8 @@
 
-Ext.define('Kiva.view.LoansListItem', {
+Ext.define('Ria.view.TileItem', {
     extend: 'Ext.dataview.component.DataItem',
-    xtype : 'loanslistitem',
-    requires: ['Ext.Img', 'Kiva.view.LoansListItemCompletion'],
+    xtype : 'tileslistitem',
+    requires: ['Ext.Img'],
 
     config: {
         dataMap: {
@@ -79,7 +79,7 @@ Ext.define('Kiva.view.LoansListItem', {
     },
 
     applyCompletion: function(config) {
-        return Ext.factory(config, Kiva.view.LoansListItemCompletion, this.getCompletion());
+        return Ext.factory(config, Ria.view.TilesListItemCompletion, this.getCompletion());
     },
 
     updateCompletion: function(newCompletion) {

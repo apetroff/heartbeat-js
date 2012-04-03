@@ -1,8 +1,8 @@
 {
-    "name": "Kiva",
+    "name": "ПМЭФ-2012",
     "js": [
         {
-            "path": "../a/lib/sencha-touch-2/sencha-touch-all-debug.js"
+            "path": "/a/lib/sencha-touch-2/sencha-touch-all-debug.js"
         },
         {
             "path": "app.js",
@@ -17,7 +17,12 @@
     ],
     "appCache": {
         "cache": [
-            "index.html"
+            "index.html",
+			"tiles.json",
+			"app/*",
+			"app.js",
+			"app.json",
+			"tiles.json"
         ],
         "network": [
             "*"
@@ -32,10 +37,10 @@
     ],
     "archivePath": "archive",
     "buildPaths": {
-        "testing": "../a/lib/sencha-touch-2/deploy/testing/kiva",
-        "production": "../a/lib/sencha-touch-2/deploy/production/kiva",
-        "package": "../a/lib/sencha-touch-2/deploy/package/kiva",
-        "native": "../a/lib/sencha-touch-2/deploy/native/kiva"
+        "testing": "/a/lib/sencha-touch-2/deploy/testing/Ria",
+        "production": "/a/lib/sencha-touch-2/deploy/production/Ria",
+        "package": "/a/lib/sencha-touch-2/deploy/package/Ria",
+        "native": "/a/lib/sencha-touch-2/deploy/native/Ria"
     },
     "buildOptions": {
         "product": "touch",

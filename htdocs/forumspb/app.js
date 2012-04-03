@@ -1,27 +1,20 @@
-//<debug>
 Ext.Loader.setPath({
-    'Ext': '../a/lib/sencha-touch-2/src',
-    'Ext.data.proxy.Kiva': 'lib/KivaProxy.js'
+    'Ext': '/a/lib/sencha-touch-2/src'
 });
-//</debug>
-
-Ext.ClassManager.setAlias('Ext.data.proxy.Kiva', 'proxy.kiva');
 
 Ext.application({
-    name: 'Kiva',
-
-    requires: ['Ext.data.proxy.Kiva'],
+    name: 'Ria',
 
     icon: 'resources/icons/icon.png',
     phoneStartupScreen: 'resources/loading/Homescreen.jpg',
     tabletStartupScreen: 'resources/loading/Homescreen~ipad.jpg',
 
-    views : ['Main', 'Detail', 'LoanFilter'],
-    controllers: ['Loans'],
-    models: ['Loan'],
-    stores: ['Loans'],
+    views : ['Main', 'Detail'],
+    controllers: ['Controller'],
+    models: ['Tile'],
+    stores: ['Tiles'],
 
     launch: function() {
-        Ext.create('Kiva.view.Main');
+        Ext.create('Ria.view.Main');
     }
 });

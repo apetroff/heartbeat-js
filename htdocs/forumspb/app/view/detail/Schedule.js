@@ -1,4 +1,4 @@
-Ext.define('Kiva.view.detail.Schedule', {
+Ext.define('Ria.view.detail.Schedule', {
     extend: 'Ext.Container',
     xtype: 'detailSchedule',
     requires: ['Ext.DateExtras'],

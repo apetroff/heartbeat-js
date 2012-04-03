@@ -1,11 +1,11 @@
 /**
- * @class Kiva.controller.Loans
+ * @class Ria.controller.Tiles
  * @extends Ext.app.Controller
  *
  * The only controller in this simple application - this simply sets up the fullscreen viewport panel
- * and renders a detailed overlay whenever a Loan is tapped on.
+ * and renders a detailed overlay whenever a Tile is tapped on.
  */
-Ext.define('Kiva.controller.Loans', {
+Ext.define('Ria.controller.Controller', {
     extend: 'Ext.app.Controller',
 
     config: {
@@ -13,14 +13,13 @@ Ext.define('Kiva.controller.Loans', {
 
         refs: {
             main: 'mainview',
-            loansList: 'loanslist',
-            loanFilter: 'loanfilter',
+            tilesList: 'tileslist',
             searchField: 'searchfield',
             refreshButton: 'button[iconCls=refresh]'
         },
 
         control: {
-            'loanslist': {
+            'tileslist': {
                 select: 'onListTap'
             },
             'detail': {
@@ -39,7 +38,7 @@ Ext.define('Kiva.controller.Loans', {
     },
 
     init: function() {
-        Ext.getStore('Loans').on({
+        Ext.getStore('Tiles').on({
             scope: this,
 
             beforeload: this.onBeforeStoreLoad,
@@ -47,13 +46,13 @@ Ext.define('Kiva.controller.Loans', {
         });
     },
 
-    onListTap: function(list, loan) {
+    onListTap: function(list, tile) {
         if (!this.view) {
-            this.view = Ext.create('Kiva.view.Detail');
+            this.view = Ext.create('Ria.view.Detail');
         }
 
         var view = this.view;
-        view.setLoan(loan);
+        view.setTile(tile);
 
         if (this.getProfile() == "phone") {
             view.setWidth(null);
@@ -70,9 +69,7 @@ Ext.define('Kiva.controller.Loans', {
     },
 
     onSearch: function(field) {
-        this.doFilter({
-            q: field.getValue()
-        });
+        
     },
 
     onSelectChange: function(field) {
@@ -82,15 +79,14 @@ Ext.define('Kiva.controller.Loans', {
 
         var config = {};
         config[field.getName()] = field.getValue();
-        this.doFilter(config);
     },
 
     onDetailHideAnimationStart: function() {
-        this.getLoansList().deselectAll();
+        this.getTilesList().deselectAll();
     },
 
     onRefreshButtonTap: function() {
-        var store = Ext.getStore('Loans'),
+        var store = Ext.getStore('Tiles'),
             hasValue = Boolean(this.getSearchField().getValue().length);
 
         if (!hasValue) {
@@ -105,27 +101,6 @@ Ext.define('Kiva.controller.Loans', {
     },
 
     onStoreLoad: function() {
-        this.getRefreshButton().setDisabled(false);
-    },
-
-    /**
-     * @private
-     * Listener for the 'filter' event fired by the listView set up in the 'list' action. This simply
-     * gets the form values that the user wants to filter on and tells the Store to filter using them.
-     */
-    doFilter: function(values) {
-        var store = Ext.getStore('Loans'),
-            filters = [];
-
-        Ext.iterate(values, function(field, value) {
-            filters.push({
-                property: field,
-                value   : value
-            });
-        });
-
-        store.clearFilter();
-        store.filter(filters);
-        store.load();
+        //
     }
 });
