@@ -1,0 +1,15 @@
+[
+	{
+		"functionName": "parseQuery",
+		"url": "{$request.url}",
+		"produce": "data.query"
+	},
+	{
+	   "className": "task/download",
+		"verbose": 1,
+		"retries": 2,
+		"timeout": 2,
+		"url": "{$data.query.url}",
+		"produce": "data.download"
+	}
+]

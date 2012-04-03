@@ -1,0 +1,487 @@
+//json
+{
+	"db": "<db>",
+
+	"consumerConfig": "<consumerConfig>",
+
+	"prepare": {
+		"session": {
+			"tasks": [{
+				"className": "task/post",
+				"request": "{$request}",
+				"produce": "data.body"
+			}, {
+				"className": "task/cookieParser",
+				"description": "get cookie headers and parse it",
+				"headers": "{$request.headers}",
+				"produce": "data.cookies"
+			}, {
+				"className": "task/cookieSession",
+				"description": "generate SessionUID and compose session Cookie, render request.sessionUID",
+				"request": "{$request}",
+				"reqCookies": "{$data.cookies}",
+				"secret": "4d4ywyTuy8UYTU4y",
+				"cookieTpl": {
+					"name": "stoken",
+					"domain": "collaboratoria.com",
+					"path": "/",
+					"expirePeriod": "+172800000"
+				},
+				"produce": "data.sessionCookie"
+			}, {
+				"className": "task/cookieRender",
+				"description": "render set-cookie header to response + update expired period",
+				"cookies": ["{$data.sessionCookie}"],
+				"output": "{$response}"
+			}]
+		},
+		"user": {
+			"tasks": [{
+				"className":  "task/mongoRequest",
+				"description": "get user WHERE sessionUIDs[i] == request.sessionUID",
+				"connector":  "mongo",
+				"filter": {"sessionUIDs": "{$request.sessionUID}"},
+				"collection": "users",
+				"produce":    "data.mongoResponse"
+			}, {
+				"className": "task/userRender",
+				"description": "render request.user from mongoResponse",
+				"request": "{$request}",
+				"found": "{$data.mongoResponse}",
+				"produce": "data.user"
+			}]
+		},
+		"authWithRedirect": {
+			"className": "task/redirect",
+			"if": "{$data.anonimous}",
+			"url": "/google/login",
+			"output": "{$response}"
+		}
+	},
+	"initiator" : {
+		"httpd" : {
+			"port": 50088,
+			"static": {
+				"index": "index.html"
+			},
+			"router": "hierarchical",
+			"workflows": [{
+				"path": "save",
+				"tasks": [{
+					"className": "task/post",
+					"request": "{$request}",
+					"produce": "data.body"
+				}],
+				"presenter": {
+					"type": "json",
+					"vars": "{$data.body}"
+				}
+			}, {
+				"path": "entity",
+				"workflows": "<entity>"
+			}, {
+				"path": "upload",
+				"tasks": [{
+					"className": "task/upload",
+					"request": "{$request}",
+					"dumpData": true,
+					"jsonEncoded": true,
+					"produce": "data.post"
+				}],
+				"presenter": {
+					"type": "json",
+					"vars": "{$data.post}"
+				}
+			}, {
+				"path": "",
+				"tasks": [{
+					"className": "task/redirect",
+					"url": "/editor/",
+					"output": "{$response}"
+				}]
+			}, {
+				"path": "google",
+				"workflows": [{
+					"path": "login",
+					"prepare": ["session"],
+					"tasks": [{
+						"className": "task/google",
+						"description": "get oauth token",
+						"scopes": ["profile", "userinfo", "contacts"],
+						"req": "{$request}",
+						"method": "login",
+						"produce": "data.redirectUrl"
+					}, {
+						"className":"task/mongoRequest",
+						"description": "save tokens as anonymous user",
+						"connector": "mongo",
+						"method": "insert",
+						"insertingSafe": true,
+						"collection": "users",
+						"data": [{
+							"sessionUIDs": ["{$request.sessionUID}"],
+							"tokens": {
+								"_requestUrl": "{$request._requestUrl}",
+								"_authorize_callback": "{$request._authorize_callback}",
+								"oauth_token": "{$request.oauth_token}",
+								"oauth_token_secret": "{$request.oauth_token_secret}"
+							}
+						}],
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"if": "{$data.mongoResponse}",
+						"url": "{$data.redirectUrl}",
+						"output": "{$response}"
+					}]
+				}, {
+					"path": "callback",
+					"prepare": ["session", "user"],
+					"tasks": [{
+						"className": "task/google",
+						"description": "get access token",
+						"req": "{$request}",
+						"method": "callback",
+						"produce": "data.redirectUrl"
+					}, {
+						"className": "task/google",
+						"description": "get userinfo",
+						"if": "{$data.redirectUrl}",
+						"req": "{$request}",
+						"method": "profile",
+						"produce": "data.userData"
+					}, {
+						"className": "task/userParser",
+						"description": "compose userData and sessionsData in one object",
+						"request": "{$request}",
+						"userData":"{$data.userData}",
+						"produce": "data.user"
+					}, {
+						"className": "task/mongoRequest",
+						"description": "update user data",
+						"connector": "mongo",
+						"method": "update",
+						"collection": "users",
+						"data": "{$data.user}",
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"description": "redirect to action or root",
+						"if": "{$data.mongoResponse}",
+						"url": "{$data.redirectUrl}",
+						"output": "{$response}"
+					}]
+				}]
+			}, {
+				"path": "facebook",
+				"workflows": [{
+					"path": "login",
+					"prepare": ["session"],
+					"tasks": [{
+						"className": "task/facebook",
+						"description": "get oauth token",
+						"req": "{$request}",
+						"method": "login",
+						"produce": "data.redirectUrl"
+					}, {
+						"className":"task/mongoRequest",
+						"description": "save request data as anonymous user",
+						"connector": "mongo",
+						"method": "insert",
+						"insertingSafe": true,
+						"collection": "users",
+						"data": [{
+							"sessionUIDs": ["{$request.sessionUID}"],
+							"tokens": {}
+						}],
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"if": "{$data.mongoResponse}",
+						"url": "{$data.redirectUrl}",
+						"output": "{$response}"
+					}]
+				}, {
+					"path": "callback",
+					"prepare": ["session", "user"],
+					"tasks": [{
+						"className": "task/facebook",
+						"description": "get access token",
+						"req": "{$request}",
+						"method": "callback",
+						"produce": "data.redirectUrl"
+					}, {
+						"className": "task/facebook",
+						"description": "get userinfo",
+						"if": "{$data.redirectUrl}",
+						"req": "{$request}",
+						"method": "profile",
+						"produce": "data.userData"
+					}, {
+						"className": "task/facebook",
+						"description": "get usergroups",
+						"if": "{$data.redirectUrl}",
+						"req": "{$request}",
+						"method": "grouplist",
+						"produce": "data.groupsData"
+					}, {
+						"className": "task/userParser",
+						"description": "compose userData, groupsData and sessionsData in one object",
+						"request": "{$request}",
+						"userData": "{$data.userData}",
+						"groupsData": "{$data.groupsData}",
+						"produce": "data.user"
+					}, {
+						"className": "task/mongoRequest",
+						"description": "update user data",
+						"connector": "mongo",
+						"method": "update",
+						"collection": "users",
+						"data": "{$data.user}",
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"description": "redirect to action or root",
+						"if": "{$data.mongoResponse}",
+						"url": "{$data.redirectUrl}",
+						"output": "{$response}"
+					}]
+				}, {
+					"path": "logout",
+					"prepare": ["session", "user"],
+					"tasks": [{
+						"className":"task/mongoRequest",
+						"description": "remove user data",
+						"connector": "mongo",
+						"method": "remove",
+						"collection": "users",
+						"data": ["{$request.user}"],
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"if": "{$data.mongoResponse}",
+						"url": "/",
+						"output": "{$response}"
+					}]
+				}]
+			}, {
+				"path": "twitter",
+				"workflows": [{
+					"path": "login",
+					"prepare": ["session"],
+					"tasks": [{
+						"className": "task/twitter",
+						"description": "get oauth token",
+						"scopes": ["profile", "userinfo", "contacts"],
+						"req": "{$request}",
+						"method": "login",
+						"produce": "data.redirectUrl"
+					}, {
+						"className":"task/mongoRequest",
+						"description": "save tokens as anonymous user",
+						"connector": "mongo",
+						"method": "insert",
+						"insertingSafe": true,
+						"collection": "users",
+						"data": [{
+							"sessionUIDs": ["{$request.sessionUID}"],
+							"tokens": {
+								"twitter_redirect_url" : "{$request.twitter_redirect_url}",
+								"twitter_oauth_token": "{$request.twitter_oauth_token}",
+								"twitter_oauth_token_secret": "{$request.twitter_oauth_token_secret}"							
+							}
+						}],
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"if": "{$data.mongoResponse}",
+						"url": "{$data.redirectUrl}",
+						"output": "{$response}"
+					}]
+				}, {
+					"url": "callback",
+					"prepare": ["session", "user"],
+					"tasks": [{
+						"className": "task/twitter",
+						"description": "get access token",
+						"req": "{$request}",
+						"method": "callback",
+						"produce": "data.userId"
+					}, {
+						"className": "task/twitter",
+						"description": "get userinfo",
+						"userId": "{$data.userId}",
+						"req": "{$request}",
+						"method": "profile",
+						"produce": "data.userData"
+					}, {
+						"className": "task/userParser",
+						"description": "compose userData and sessionsData in one object",
+						"request": "{$request}",
+						"userData":"{$data.userData}",
+						"produce": "data.user"
+					}, {
+						"className": "task/mongoRequest",
+						"description": "update user data",
+						"connector": "mongo",
+						"method": "update",
+						"collection": "users",
+						"data": "{$data.user}",
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"description": "redirect to action or root",
+						"if": "{$data.mongoResponse}",
+						"url": "/",
+						"output": "{$response}"
+					}]
+				}]
+			}, {
+				"path": "vkontakte",
+				"workflows": [{
+					"path": "login",
+					"prepare": ["session"],
+					"tasks": [{
+						"className": "task/vkontakte",
+						"description": "get oauth token",
+						"req": "{$request}",
+						"method": "login",
+						"produce": "data.redirectUrl"
+					}, {
+						"className":"task/mongoRequest",
+						"description": "save request data as anonymous user",
+						"connector": "mongo",
+						"method": "insert",
+						"insertingSafe": true,
+						"collection": "users",
+						"data": [{
+							"sessionUIDs": ["{$request.sessionUID}"],
+							"tokens": {}
+						}],
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"if": "{$data.mongoResponse}",
+						"url": "{$data.redirectUrl}",
+						"output": "{$response}"
+					}]
+				}, {
+					"path": "callback",
+					"prepare": ["session", "user"],
+					"tasks": [{
+						"className": "task/vkontakte",
+						"description": "get access token",
+						"req": "{$request}",
+						"method": "callback",
+						"produce": "data.userId"
+					}, {
+						"className": "task/vkontakte",
+						"description": "get userinfo",
+						"userId": "{$data.userId}",
+						"req": "{$request}",
+						"method": "profile",
+						"produce": "data.userData"
+					}, {
+						"className": "task/userParser",
+						"description": "compose userData and sessionsData in one object",
+						"request": "{$request}",
+						"userData":"{$data.userData}",
+						"produce": "data.user"
+					}, {
+						"className": "task/mongoRequest",
+						"description": "update user data",
+						"connector": "mongo",
+						"method": "update",
+						"collection": "users",
+						"data": "{$data.user}",
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/redirect",
+						"description": "redirect to action or root",
+						"if": "{$data.mongoResponse}",
+						"url": "/",
+						"output": "{$response}"
+					}]
+				}]
+			}, {
+				"path": "profile",
+				"prepare": ["session", "user"],
+				"tasks": [{
+					"functionName":  "getProfile",
+					"request":       "{$request}",
+					"produce":       "data.profile"
+				}],
+				"presenter": {
+					"type": "json",
+					"vars": "{$data.profile}"
+				}
+			}, {
+				"path": "proxy",
+				"tasks": "<proxy>",
+
+				"presenter": {
+					"type": "asis",
+					"contentType": "{$data.download.contentType}",
+					"vars": "{$data.download.data}"
+				}
+			}]
+		},
+		
+		"socketd": {
+			"port": 50089,
+			"workflows": [{
+				"route": "/entity/states/set",
+				"description": "set state",
+				"tasks": [{
+					"className":  "task/mongoRequest",
+					"connector":  "mongo",
+					"collection": "states",
+					"method": "update",
+					"replace": 1,
+					"criteria": {
+						"state": "{$query.data.state}"
+					},
+					"options": {
+						"upsert": 1
+					},
+					"data": "{$query.data}",
+					"produce": "data.recordIds"
+				}, {
+					"className":  "task/mongoRequest",
+					"if": "$data.recordIds",
+					"connector":  "mongo",
+					"collection": "states",
+					"pager": {
+						"filter": {
+							"state": "{$query.data.state}"
+						}
+					},
+					"produce": "data.records"
+				}],
+				"presenter": {
+					"broadcast": true,
+					"header": "/entity/states/get",
+					"vars": "{$data.records.data.0}"
+				}
+			}, {
+				"route": "/entity/states/get",
+				"description": "set state",
+				"tasks": [{
+					"className":  "task/mongoRequest",
+					"connector":  "mongo",
+					"collection": "states",
+					"pager": {
+						"filter": {
+							"state": "{$query.data.state}"
+						}
+					},
+					"produce": "data.records"
+				}],
+				"presenter": {
+					"header": "{$query.route}",
+					"vars": "{$data.records.data.0}"
+				}
+			}]
+		}
+	}
+}

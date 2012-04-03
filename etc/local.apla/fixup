@@ -1,0 +1,12 @@
+// json
+{
+	"consumerConfig": {
+		
+		"facebook": {
+			
+			"appId":       "242215809197608",
+			"appSecret":   "490041b462a33979008a49ccda2a39cd",
+			"callbackUrl": "http://collaboratoria.local/facebook/callback"
+		}
+	}
+}

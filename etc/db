@@ -1,0 +1,15 @@
+{
+	"mongo": {
+		"database": "tasks",
+		"host": "127.0.0.1",
+		"port": 27017
+	},
+	"ldap" : {
+		"driver_name" : "LDAP",
+		"package" : "Rian::Profile::LDAPDB",
+		"user" : "cn=SA_LDAP-Reader,ou=Test&ServiceUsers,dc=msk,dc=rian",
+		"pass" : "SaL123456",
+		"host" : "ldap://ml1.rian.ru:636",
+		"base" : "dc=msk,dc=rian"
+	}
+}
