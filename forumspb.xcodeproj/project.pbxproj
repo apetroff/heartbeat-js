@@ -1,0 +1,80 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		634B23DE152B13CF00FEF61B /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
+		634B23DF152B13CF00FEF61B /* etc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = etc; sourceTree = "<group>"; };
+		634B23E0152B13CF00FEF61B /* htdocs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = htdocs; sourceTree = "<group>"; };
+		634B23E1152B13CF00FEF61B /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lib; sourceTree = "<group>"; };
+		634B23E2152B13CF00FEF61B /* var */ = {isa = PBXFileReference; lastKnownFileType = folder; path = var; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		634B23D2152B138D00FEF61B = {
+			isa = PBXGroup;
+			children = (
+				634B23DE152B13CF00FEF61B /* bin */,
+				634B23DF152B13CF00FEF61B /* etc */,
+				634B23E0152B13CF00FEF61B /* htdocs */,
+				634B23E1152B13CF00FEF61B /* lib */,
+				634B23E2152B13CF00FEF61B /* var */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		634B23D4152B138D00FEF61B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 634B23D7152B138D00FEF61B /* Build configuration list for PBXProject "forumspb" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 634B23D2152B138D00FEF61B;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		634B23D9152B138D00FEF61B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		634B23DA152B138D00FEF61B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		634B23D7152B138D00FEF61B /* Build configuration list for PBXProject "forumspb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				634B23D9152B138D00FEF61B /* Debug */,
+				634B23DA152B138D00FEF61B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 634B23D4152B138D00FEF61B /* Project object */;
+}
