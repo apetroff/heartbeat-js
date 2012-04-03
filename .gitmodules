@@ -1,0 +1,3 @@
+[submodule "lib/workflow"]
+	path = lib/workflow
+	url = ssh://git.rian.off/scm/workflow.nodejs
