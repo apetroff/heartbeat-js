@@ -8,28 +8,12 @@ Ext.define('Ria.model.Tile', {
     extend: 'Ext.data.Model',
 
     config: {
+		idProperty: "_id",
         fields: [
             {name: "_id", type: "string"},
 			{name: "title", type: "string"},
 			{name: "image", type: "string"},
             {name: "id", type: "string"}
-        ],
-
-        proxy: {
-            type: 'ajax',
-			url : '/forumspb/tiles.json',
-
-            reader: {
-                type: 'json',
-                successProperty: 'success',
-                rootProperty: function(data) {
-                    if (data.error || data.query.count === 0) {
-                        return [];
-                    } else {
-                        return data.query.results.tiles;
-                    }
-                }
-            }
-        }
+        ]
     }
 });

@@ -4,6 +4,16 @@ Ext.define('Ria.store.Tiles', {
     config: {
         model: 'Ria.model.Tile',
         autoLoad: true,
-        remoteFilter: true
+        remoteFilter: true,
+		
+		proxy: {
+            type: 'ajax',
+			url : '/forumspb/tiles.json',
+
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        }
     }
 });

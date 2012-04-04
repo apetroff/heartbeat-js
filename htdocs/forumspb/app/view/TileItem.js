@@ -1,45 +1,29 @@
 
 Ext.define('Ria.view.TileItem', {
     extend: 'Ext.dataview.component.DataItem',
-    xtype : 'tileslistitem',
+    xtype : 'tilesitem',
     requires: ['Ext.Img'],
 
     config: {
-        dataMap: {
-            getName: {
-                setHtml: 'name'
+	
+		dataMap: {
+            getTitle: {
+                setHtml: 'title'
             },
 
-            getUse: {
-                setHtml: 'use'
-            },
-
-            getAvatar: {
+            getImage: {
                 setSrc: 'image'
-            },
-
-            getCompletion: {
-                setPercentFunded: 'percent_funded'
             }
         },
 
         cls: Ext.baseCSSPrefix + 'list-item',
 
-        name: {
-            cls: 'name'
+        title: {
+            cls: 'title'
         },
 
-        use: {
-            cls: 'use'
-        },
-
-        avatar: {
+        image: {
             docked: 'left'
-        },
-
-        completion: {
-            docked: 'right',
-            hidden: (Ext.os.deviceType === 'Phone') ? true : false
         },
 
         layout: {
@@ -48,43 +32,23 @@ Ext.define('Ria.view.TileItem', {
         }
     },
 
-    applyName: function(config) {
-        return Ext.factory(config, Ext.Component, this.getName());
+    applyTitle: function(config) {
+        return Ext.factory(config, Ext.Component, this.getTitle());
     },
 
-    updateName: function(newName) {
-        if (newName) {
-            this.add(newName);
+    updateTitle: function(newTitle) {
+        if (newTitle) {
+            this.add(newTitle);
         }
     },
 
-    applyUse: function(config) {
-        return Ext.factory(config, Ext.Component, this.getUse());
+    applyImage: function(config) {
+        return Ext.factory(config, Ext.Img, this.getImage());
     },
 
-    updateUse: function(newUse) {
-        if (newUse) {
-            this.add(newUse);
-        }
-    },
-
-    applyAvatar: function(config) {
-        return Ext.factory(config, Ext.Img, this.getAvatar());
-    },
-
-    updateAvatar: function(newAvatar) {
-        if (newAvatar) {
-            this.add(newAvatar);
-        }
-    },
-
-    applyCompletion: function(config) {
-        return Ext.factory(config, Ria.view.TilesListItemCompletion, this.getCompletion());
-    },
-
-    updateCompletion: function(newCompletion) {
-        if (newCompletion) {
-            this.add(newCompletion);
+    updateImage: function(newImage) {
+        if (newImage) {
+            this.add(newImage);
         }
     }
 });
