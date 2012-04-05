@@ -32,5 +32,9 @@ Ext.define('Ria.layout.MonopolyLayout', {
 			style.setProperty('-webkit-transform', 'rotate(90deg)');
 			
 		}
+	},
+	
+	doLayout: function() {
+		//TODO: move layout actions here and need handle add/remove items
 	}
 });

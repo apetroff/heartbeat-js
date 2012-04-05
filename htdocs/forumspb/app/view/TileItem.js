@@ -11,9 +11,9 @@ Ext.define('Ria.view.TileItem', {
                 setHtml: 'title'
             },
 
-            getImage: {
-                setSrc: 'image'
-            }
+//            getImage: {
+//                setSrc: 'image'
+//            }
         },
 
         cls: Ext.baseCSSPrefix + 'list-item floatTile',
@@ -22,12 +22,13 @@ Ext.define('Ria.view.TileItem', {
             cls: 'title'
         },
 
-        image: {
-            docked: 'left'
-        },
+//        image: {
+//            docked: 'left'
+//        },
 
         layout: {
             type: 'vbox',
+			align: 'center',
             pack: 'center'
         }
     },
@@ -42,13 +43,13 @@ Ext.define('Ria.view.TileItem', {
         }
     },
 
-    applyImage: function(config) {
-        return Ext.factory(config, Ext.Img, this.getImage());
-    },
-
-    updateImage: function(newImage) {
-        if (newImage) {
-            this.add(newImage);
-        }
-    }
+//    applyImage: function(config) {
+//        return Ext.factory(config, Ext.Img, this.getImage());
+//    },
+//
+//    updateImage: function(newImage) {
+//        if (newImage) {
+//            this.add(newImage);
+//        }
+//    }
 });
