@@ -16,7 +16,7 @@ Ext.define('Ria.view.TileItem', {
             }
         },
 
-        cls: Ext.baseCSSPrefix + 'list-item',
+        cls: Ext.baseCSSPrefix + 'list-item floatTile',
 
         title: {
             cls: 'title'

@@ -14,18 +14,17 @@ Ext.define('Ria.view.TilesList', {
 		useComponents: true,
         defaultType: 'tilesitem',
         
-		deselectOnContainerClick: false,
-		
-		scrollable: false,
+		//scrollable: false,
 		
 		items: [{
 			
-			centered: true,
+			left: 120,
+			top: 120,
 			xtype: 'container',
-			width: 600,
-			height: 300,
+			width: 1680,
+			height: 840,
 			
-			style: 'background-color: #759E60;',
+			style: 'background-color: #759E60;  font-size: 60px;',
 			
 			layout: {
 				type: 'vbox',
@@ -36,7 +35,87 @@ Ext.define('Ria.view.TilesList', {
 				html: 'Centered banner',
 			}],
 			
-		}]		
+		}, {
+			
+			left: 0,
+			top: 0,
+			xtype: 'container',
+			width: 120,
+			height: 120,
+			
+			style: 'background-color: #F88; font-size: 60px;',
+			
+			layout: {
+				type: 'vbox',
+				pack: 'middle',
+				align: 'center'
+			},
+			items: [{
+				style: '-webkit-transform: rotate(135deg)',
+				html: '1'
+			}],
+			
+		}, {
+			
+			left: 1800,
+			top: 0,
+			xtype: 'container',
+			width: 120,
+			height: 120,
+			
+			style: 'background-color: #F88; font-size: 60px;',
+			
+			layout: {
+				type: 'vbox',
+				pack: 'middle',
+				align: 'center'
+			},
+			items: [{
+				style: '-webkit-transform: rotate(-135deg)',
+				html: '2'
+			}],
+			
+		}, {
+			
+			left: 1800,
+			top: 960,
+			xtype: 'container',
+			width: 120,
+			height: 120,
+			
+			style: 'background-color: #F88; font-size: 60px;',
+			
+			layout: {
+				type: 'vbox',
+				pack: 'middle',
+				align: 'center'
+			},
+			items: [{
+				style: '-webkit-transform: rotate(-45deg)',
+				html: '3'
+			}],
+			
+		}, {
+			
+			left: 0,
+			top: 960,
+			xtype: 'container',
+			width: 120,
+			height: 120,
+			
+			style: 'background-color: #F88; font-size: 60px;',
+			
+			layout: {
+				type: 'vbox',
+				pack: 'middle',
+				align: 'center'
+			},
+			items: [{
+				style: '-webkit-transform: rotate(45deg)',
+				html: '4'
+			}],
+			
+		}]
     },
 	
 	initialize: function() {

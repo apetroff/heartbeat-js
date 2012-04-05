@@ -8,13 +8,29 @@ Ext.define('Ria.layout.MonopolyLayout', {
 		
 		var style = item.element.dom.style;
 		
-		console.log (i, item, style);
+		if (i < 14) {
+			
+			style.setProperty('left', (i+1) * 120 + 'px');
+			style.setProperty('top', 0);
+			style.setProperty('-webkit-transform', 'rotate(180deg)');
 		
-		style.setProperty('position','absolute');
-		style.setProperty('left',(i % 4) * 120 + 'px');
-		style.setProperty('top',~~(i / 4) * 120  + 'px');
+		} else if (i < 21) {
 		
+			style.setProperty('left', 1800 + 'px');
+			style.setProperty('top', (i-13) * 120  + 'px');
+			style.setProperty('-webkit-transform', 'rotate(-90deg)');
+					
+		} else if (i < 35) {
 		
-		item.setSize(120, 120);
+			style.setProperty('left', (1800 - (i-20)*120) + 'px');
+			style.setProperty('top', 960  + 'px');
+		
+		} else {
+			
+			style.setProperty('left', 0 + 'px');
+			style.setProperty('top', (960 - (i-34) * 120)  + 'px');
+			style.setProperty('-webkit-transform', 'rotate(90deg)');
+			
+		}
 	}
 });
