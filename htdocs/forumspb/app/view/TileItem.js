@@ -52,4 +52,17 @@ Ext.define('Ria.view.TileItem', {
 //            this.add(newImage);
 //        }
 //    }
+
+	initialize: function() {
+		this.callParent(arguments);
+
+		this.element.dom.addEventListener('touchstart', Ext.bind(this.touchTrace, this));
+		this.element.dom.addEventListener('touchmove', Ext.bind(this.touchTrace, this));
+		this.element.dom.addEventListener('touchend', Ext.bind(this.touchTrace, this));
+		
+	},
+	
+	touchTrace: function(e) {
+		console.log (this.id, e);
+	}
 });

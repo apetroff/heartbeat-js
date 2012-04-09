@@ -1,8 +1,10 @@
-<!DOCTYPE HTML>
-<html manifest="" lang="en-US">
+<!DOCTYPE html>
+<html lang="en-US" webkitallowfullscreen="true" allowfullscreen="true">
 <head>
     <meta charset="UTF-8">
     <title>ПМЭФ-2012</title>
+	
+	<script type="text/javascript" src="lib/tuio.js"></script>
     <script id="microloader" type="text/javascript" src="/a/lib/sencha-touch-2/microloader/development.js"></script>
 	
 	<style>
@@ -14,16 +16,132 @@
 			overflow: hidden;
 		}
 		
-		.floatTile:nth-child(2n+1) {
-			background-color: #FFF;
-		}
-		
-		.floatTile:nth-child(2n) {
-			background-color: #EEE;
-		}
+//		.floatTile:nth-child(2n+1) {
+//			background-color: #FFF;
+//		}
+//		
+//		.floatTile:nth-child(2n) {
+//			background-color: #EEE;
+//		}
 	</style>
+	
+	<style>
+    #fsDiv:fullscreen {
+        width: 100%;
+        height: 100%;
+        background: #ddd;
+    }
+    #fsDiv:-moz-full-screen {
+        width: 100%;
+        height: 100%;
+        background: #ddd;
+    }
+
+    #fsDiv:-webkit-full-screen {
+        width: 100%;
+        height: 100%;
+        background: #ddd;
+    }
+
+    #fsDiv {
+        width: 100px;
+        height: 100px;
+        display: block;
+        background: #ddd;
+        padding: 20px;
+    }
+
+    #fsDiv #exitFullScreen {
+        display: none;
+    }
+
+    #fsDiv:hover {
+        border: 1px solid #eee;
+    }
+
+    #fsDiv:-moz-full-screen #exitFullScreen{
+        display: block;
+    }
+    #fsDiv:fullscreen #exitFullScreen{
+        display: block;
+    }
+    #fsDiv:-webkit-full-screen #exitFullScreen {
+        display: block;
+    }
+  </style>
 </head>
 <body>
+
+	<!--script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script-->
+	
+	<object id="tuio" type="application/x-tuio" style="width: 0px; height: 0px; position: absolute; z-index: -10000;">
+		Touch input plugin failed to load!
+	</object>
+	
+	<script>
+		// - - - - - - - - - -
+
+		function normalizeFullScreen(element) {
+		  if (element.mozRequestFullScreen) {
+			element.requestFullScreen = element.mozRequestFullScreen;
+		  } else if (element.webkitRequestFullScreen) {
+			element.requestFullScreen = element.webkitRequestFullScreen;
+		  }
+		  return element;
+		}
+
+		function normalizeFullScreenState() {
+		  if (undefined != document.mozFullScreen) {
+			document.fullscreen = document.mozFullScreen;
+		  } else if (undefined != document.webkitIsFullScreen) {
+			document.fullscreen = document.webkitIsFullScreen;
+		  }
+		  return (document.fullscreen);
+		}
+
+		  function exitfullscreen(event) {
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.webkitCancelFullScreen) {
+				document.webkitCancelFullScreen();
+			}
+			event.preventDefault();
+			event.stopPropagation();
+			event.cancelBubble = true;
+		  }
+
+		var documentElement = normalizeFullScreen(document.documentElement);
+
+		if (documentElement.requestFullScreen) {
+		  
+		  function fullscreen(e) {
+			if (e.keyCode == 102) {
+				var element = normalizeFullScreen(documentElement);
+				element.requestFullScreen();
+			}
+		  }
+
+		  subscribeToFullScreenChange(function() {
+			console.log("test", normalizeFullScreenState());
+		  });
+
+		  document.documentElement.addEventListener("keypress", fullscreen, false);
+		}
+
+		function subscribeToFullScreenChange(handler){
+		  document.addEventListener("fullscreenchange", handler, false);
+		  document.addEventListener("mozfullscreenchange", handler, false);
+		  document.addEventListener("webkitfullscreenchange", handler, false);
+		}
+
+		// - - -
+
+		document.addEventListener('contextmenu', function(e) {e.preventDefault()});
+
+	</script>
+
 </body>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	
 </html>

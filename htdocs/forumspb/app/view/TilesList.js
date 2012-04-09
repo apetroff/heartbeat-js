@@ -14,7 +14,7 @@ Ext.define('Ria.view.TilesList', {
 		useComponents: true,
         defaultType: 'tilesitem',
         
-		//scrollable: false,
+		scrollable: false,
 		
 		items: [{
 			
