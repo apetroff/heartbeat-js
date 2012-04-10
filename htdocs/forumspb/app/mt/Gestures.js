@@ -13,12 +13,19 @@ Ext.define('Ria.mt.Gestures', {
 		tap: {
 			add: function (el, fn) {
 				var MAX_DURATION = 1000;
+				var MAX_X_DELTA = 10;
+				var MAX_Y_DELTA = 10;
 
-				var start;
+				var start, x, y;
 
 				var handlers = {
 					touchstart: function (e) {
-						if (e.targetTouches.length === 1) {
+						var touches = e.targetTouches;
+
+						if (touches.length === 1) {
+							var touch = touches[0];
+							x = touch.pageX;
+							y = touch.pageY;
 							start = Date.now();
 						} else {
 							start = null;
@@ -27,12 +34,20 @@ Ext.define('Ria.mt.Gestures', {
 
 					touchmove: function (e) {
 						if (start) {
-							start = null;
+							var touches = e.targetTouches;
+							var touch = touches[0];
+
+							var xD = Math.abs(touch.pageX - x);
+							var yD = Math.abs(touch.pageY - y);
+
+							if (xD > MAX_X_DELTA || yD > MAX_Y_DELTA) {
+								start = null;
+							}
 						}
 					},
 
 					touchend: function (e) {
-						if (start && Date.now() - start <= MAX_DURATION) {
+						if (start && (Date.now() - start) <= MAX_DURATION) {
 							start = null;
 							fn.call(el, e);
 						}
@@ -54,10 +69,33 @@ Ext.define('Ria.mt.Gestures', {
 		},
 
 		scroll: {
-			add: function (el, type) {
-			},
+			add: function (el, fn) {
+				var startX, startY;
 
-			remove: function (el, type) {
+				var handlers = {
+					touchstart: function (e) {
+						startX = e.pageX;
+						startY = e.pageY;
+					},
+
+					touchmove: function (e) {
+						var deltaX = e.pageX - startX;
+						var deltaY = e.pageY - startY;
+						fn(e, deltaX, deltaY);
+					}
+				};
+
+				var forAllHandlers = function (method) {
+					Object.keys(handlers).forEach(function (type) {
+						el[method](type, handlers[type], false); 
+					});
+				};
+
+				this.remove = function () {
+					forAllHandlers('removeEventListener');
+				};
+
+				forAllHandlers('addEventListener');
 			}
 		}
 	},
@@ -78,5 +116,13 @@ Ext.define('Ria.mt.Gestures', {
 		} else {
 			throw new Error(type + ': no such gesture.');
 		}
+	},
+
+	addScroll: function (el) {
+		this.addListener(el, 'scroll', function (e, deltaX, deltaY) {
+			el.scrollLeft += deltaX;
+			el.scrollTop += deltaY;
+			e.preventDefault();
+		}, false);
 	}
 });
