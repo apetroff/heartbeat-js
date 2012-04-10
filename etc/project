@@ -423,7 +423,35 @@
 					"type": "asis",
 					"contentType": "{$data.download.contentType}",
 					"vars": "{$data.download.data}"
-				}
+				},
+				
+				"workflows":[{
+					"path": "post",
+					"tasks": [{
+						"functionName": "parseQuery",
+						"url": "{$request.url}",
+						"produce": "data.query"
+					}, {
+						"className": "task/post",
+						"request": "{$request}",
+						"produce": "data.body"
+					}, {
+					   "className": "task/download",
+						"verbose": 1,
+						"retries": 2,
+						"timeout": 2,
+						"post": "{$data.body}",
+						"url": "{$data.query.url}",
+						"headers": "{$data.query.headers}",
+						"produce": "data.download"
+					}],
+					
+					"presenter": {
+						"type": "asis",
+						"headers": "{$data.download.headers}",
+						"vars": "{$data.download.data}"
+					}
+				}]
 			}]
 		},
 		
