@@ -4,6 +4,7 @@ Ext.define('Ria.view.TilesList', {
 	
     requires: [
         'Ria.view.TileItem',
+		'Ria.view.UserSpace',
 		'Ria.layout.MonopolyLayout'
     ],
 
@@ -24,7 +25,7 @@ Ext.define('Ria.view.TilesList', {
 			width: 1680,
 			height: 840,
 			
-			style: 'background-color: #759E60;  font-size: 60px;',
+			style: 'background-color: #fff;',
 			
 			layout: {
 				type: 'vbox',
@@ -32,7 +33,7 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [{
-				html: 'Centered banner',
+				html: '<img src="http://www.1prime.ru/Header/prime_new_logo.png" />'
 			}],
 			
 		}, {
@@ -43,18 +44,15 @@ Ext.define('Ria.view.TilesList', {
 			width: 120,
 			height: 120,
 			
-			style: 'background-color: #F88; font-size: 60px;',
-			
 			layout: {
 				type: 'vbox',
 				pack: 'middle',
 				align: 'center'
 			},
-			items: [{
-				style: '-webkit-transform: rotate(135deg)',
-				html: '1'
-			}],
-			
+			items: [ Ext.create('Ria.view.UserSpace', {
+				angle: 135,
+				uid: 1
+			}) ]
 		}, {
 			
 			left: 1800,
@@ -62,19 +60,16 @@ Ext.define('Ria.view.TilesList', {
 			xtype: 'container',
 			width: 120,
 			height: 120,
-			
-			style: 'background-color: #F88; font-size: 60px;',
-			
+
 			layout: {
 				type: 'vbox',
 				pack: 'middle',
 				align: 'center'
 			},
-			items: [{
-				style: '-webkit-transform: rotate(-135deg)',
-				html: '2'
-			}],
-			
+			items: [ Ext.create('Ria.view.UserSpace', {
+				angle: -135,
+				uid: 2
+			}) ]
 		}, {
 			
 			left: 1800,
@@ -83,18 +78,15 @@ Ext.define('Ria.view.TilesList', {
 			width: 120,
 			height: 120,
 			
-			style: 'background-color: #F88; font-size: 60px;',
-			
 			layout: {
 				type: 'vbox',
 				pack: 'middle',
 				align: 'center'
 			},
-			items: [{
-				style: '-webkit-transform: rotate(-45deg)',
-				html: '3'
-			}],
-			
+			items: [ Ext.create('Ria.view.UserSpace', {
+				angle: -45,
+				uid: 3
+			}) ]
 		}, {
 			
 			left: 0,
@@ -103,18 +95,15 @@ Ext.define('Ria.view.TilesList', {
 			width: 120,
 			height: 120,
 			
-			style: 'background-color: #F88; font-size: 60px;',
-			
 			layout: {
 				type: 'vbox',
 				pack: 'middle',
 				align: 'center'
 			},
-			items: [{
-				style: '-webkit-transform: rotate(45deg)',
-				html: '4'
-			}],
-			
+			items: [ Ext.create('Ria.view.UserSpace', {
+				angle: 45,
+				uid: 4
+			}) ]
 		}]
     },
 	

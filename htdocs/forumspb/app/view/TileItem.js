@@ -1,9 +1,7 @@
-var gestures = Ext.create('Ria.mt.Gestures');
-
 Ext.define('Ria.view.TileItem', {
     extend: 'Ext.dataview.component.DataItem',
     xtype : 'tilesitem',
-    requires: ['Ext.Img'],
+    requires: ['Ext.Img', 'Ria.mt.Gestures'],
 
     config: {
 	
@@ -57,7 +55,11 @@ Ext.define('Ria.view.TileItem', {
 	initialize: function() {
 		this.callParent(arguments);
 
-		gestures.addListener(
+		if (!this.gestures) {
+			this.gestures = Ext.create('Ria.mt.Gestures');
+		}
+
+		this.gestures.addListener(
 			this.element.dom, 'tap',
 			this.onTileTap
 		);
