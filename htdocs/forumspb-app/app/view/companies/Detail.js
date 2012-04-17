@@ -1,34 +1,19 @@
-Ext.define('Spief.view.speaker.Detail', {
+Ext.define('Spief.view.companies.Detail', {
 
 	extend: 'Ext.Container',
-	xtype: 'speaker',
+	xtype: 'company',
 
 	config: {
 
 		layout: 'vbox',
 		scrollable: 'vertical',
-
+		
 		items: [
 			{
-				xtype: 'speakerInfo'
+				xtype: 'companyInfo'
 			},
 			{
-				xtype: 'list',
-				store: 'SpeakerSessions',
-
-				scrollable: false,
-
-				items: [
-					{
-						xtype: 'listitemheader',
-						cls: 'dark',
-						html: 'Sessions'
-					}
-				],
-
-				itemTpl: [
-					'{title}'
-				]
+				xtype: 'additionalList'
 			}
 		]
 

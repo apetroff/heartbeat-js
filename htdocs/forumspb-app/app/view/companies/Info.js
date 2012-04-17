@@ -1,18 +1,17 @@
-Ext.define('Spief.view.speaker.Info', {
+Ext.define('Spief.view.companies.Info', {
 
 	extend: 'Ext.Container',
-	xtype: 'speakerInfo',
+	xtype: 'companyInfo',
 
 	config: {
 
 		cls: 'speakerInfo',
 		tpl: [
 			'<div class="header">',
-				'<div class="avatar" style="background-image: url({photo});"></div>',
-				'<h3>{first_name} {last_name}</h3>',
-				'<h4>{position}, {affiliation}</h4>',
-			'</div>',
-			'<p>{bio}</p>'
+				'<h3>{title}</h3>',
+				'<h4>Текущий индекс {daily}</h4>',
+				'<h4>Индекс за год {yearly}</h4>',
+			'</div>'
 		]
 	}
 });

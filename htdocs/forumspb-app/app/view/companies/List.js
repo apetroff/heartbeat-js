@@ -8,9 +8,9 @@ Ext.define('Spief.view.companies.List', {
         emptyText: '<p class="no-searches">No companies</p>',
 		
 		itemCls: 'companies',
-        itemTpl: Ext.create('Ext.XTemplate',
+        itemTpl: [
 			'<h2>{title}</h2>',
 			'<p>{region} | {sector}</p>'
-        )
+		]
     }
 });

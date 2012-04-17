@@ -2,7 +2,7 @@
 <html>
 <head></head>
 <body>
-	<table style="WIDTH:100%;" class="grid-header" border="0">
+	<!--table style="WIDTH:100%;" class="grid-header" border="0">
 		<colgroup>
 			<col width="28px/">
 			<col width="300px/">
@@ -21,61 +21,381 @@
 				<th title="ОКПО" colspan="1" rowspan="1" class="header-cell">ОКПО</th>
 			</tr>
 		</tbody>
-	</table>
+	</table-->
+	
 	<script>
-		var listISIN = 'RU0009029540 RU0007661625 RU0009024277 RU0007288411 RU000A0JP5V6 RU000A0J2Q06 RU0008926258 RU000A0JPVJ0 RU0009046510 RU000A0JPNN9 RU0009046452 RU000A0JPKH7 RU0007661302 RU000A0JPNM1 RU0008943394 RU0009062285 RU000A0DKVS5 RU0009033591 RU000A0JKQU8 RU0007775219 RU0009062467 RU000A0DKXV5 RU0009084396 RU000A0B90N8 RU000A0HGPM9 RU000A0JNGA5 RU000A0JNG55 RU000A0JNAA8 RU000A0DQZE3 RU000A0JPFP0 RU000A0JP7F5 RU0008958863 RU000A0JPPL8 RU000A0JNUD0 RU0009028674 RU000A0HG4P4 RU0009071187 RU000A0JQU47 RU0009100291 RU0008959580 RU0006914488 RU000A0JR6A6 RU0005294775 RU0007252813 RU000A0ET7Y7 RU0009100945 RU0008081765 RU0007664942 RU0009107684 RU000A0JPGA0'.split(' ');
-		var primeUrl = 'http://emitent.1prime.ru/EmitentPages/EmitentSearchResultGrid.aspx';
+		//var listISIN = 'RU0009029540 RU0007661625 RU0009024277 RU0007288411 RU000A0JP5V6 RU000A0J2Q06 RU0008926258 RU000A0JPVJ0 RU0009046510 RU000A0JPNN9 RU0009046452 RU000A0JPKH7 RU0007661302 RU000A0JPNM1 RU0008943394 RU0009062285 RU000A0DKVS5 RU0009033591 RU000A0JKQU8 RU0007775219 RU0009062467 RU000A0DKXV5 RU0009084396 RU000A0B90N8 RU000A0HGPM9 RU000A0JNGA5 RU000A0JNG55 RU000A0JNAA8 RU000A0DQZE3 RU000A0JPFP0 RU000A0JP7F5 RU0008958863 RU000A0JPPL8 RU000A0JNUD0 RU0009028674 RU000A0HG4P4 RU0009071187 RU000A0JQU47 RU0009100291 RU0008959580 RU0006914488 RU000A0JR6A6 RU0005294775 RU0007252813 RU000A0ET7Y7 RU0009100945 RU0008081765 RU0007664942 RU0009107684 RU000A0JPGA0'.split(' ');
+		var idsList = ["1519","7785","8085","7805","1435","8233","8617","8801","8529","8793","8257","8473","8761","7913","8461","7697","8245","8633","8089","8209","7781","8113","8093","8417","12240","8321","8313","8405","8889","7813","8785","8157","8201","8649","7653","7817","7633","12715","8005","7953","8597","63715","8869","12219","8173","1423","7669","12727","8389","7985"];
+		
+		//var primeUrlSearchIds = 'http://emitent.1prime.ru/EmitentPages/EmitentSearchResultGrid.aspx';
+		//var primeUrlInfo = 'http://emitent.1prime.ru/EmitentPages/EmitentGeneralGrid.aspx';
+		var primeUrlDescription = 'http://emitent.1prime.ru/EmitentPages/EmitentActivitiesGrid.aspx';
+		//var primeUrlIntraday = 'http://emitent.1prime.ru/EmitentPages/EmitentCompareFoTickerIntradayGrid.aspx';
+		var primeUrlYear = 'http://emitent.1prime.ru/EmitentPages/EmitentCompareFoTickerResultsByDateGrid.aspx';
+		
+//		Comments
+//		Request URL:http://emitent.1prime.ru/Comments/CommentsSearchGrid.aspx
+//		Request Method:POST
+//		Status Code:200 OK
+//		Request Headersview source
+//		Content-Type:application/estyle-xml-request
+//		Origin:http://emitent.1prime.ru
+//		Referer:http://emitent.1prime.ru/Comments/CommentsSearch.aspx?EmitentId=7785
+//		User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.5 Safari/534.55.3
+//		Request Payload
+//		<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage><orderCondition>&lt;order/&gt;</orderCondition><forExcel>0</forExcel><forWord>0</forWord><DateFrom>11.04.2012</DateFrom><DateTo>11.04.2012</DateTo><SearchComments></SearchComments></request>
+
+//		Новости
+//		Request URL:http://emitent.1prime.ru/News/NewsSearchGrid.aspx
+//		Request Method:POST
+//		Status Code:200 OK
+//		Request Headersview parsed
+//		Origin: http://emitent.1prime.ru
+//		User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.5 Safari/534.55.3
+//		Content-Type: application/estyle-xml-request
+//		Referer: http://emitent.1prime.ru/EmitentPages/EmitentNewsArchive.aspx?EmitentId=7785
+//		Request Payload
+//		<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage><orderCondition>&lt;order/&gt;</orderCondition><forExcel>0</forExcel><forWord>0</forWord><DateFrom></DateFrom><DateTo></DateTo><SearchNews></SearchNews><Tickers>81JK | GAZ | GAZP | GAZP09 | gazp11 | gazp13 | GAZPS | GSPBEX | OGZD | OGZPF | RU000A0DY3S2 | RU000A0GDJM1 | RU000A0JNTT8 | RU000A0JNTU6 | RU000A0JP203 | RU000A0JQ6T7 | RU000A0JQ6U5</Tickers></request>
+
+//		Документы ФСФР
+//		Request URL:http://emitent.1prime.ru/EmitentPages/EmitentDocumentsFCSMGrid.aspx
+//		Request Method:POST
+//		Status Code:200 OK
+//		Request Headersview source
+//		Content-Type:application/estyle-xml-request
+//		Origin:http://emitent.1prime.ru
+//		Referer:http://emitent.1prime.ru/EmitentPages/EmitentDocumentsFCSM.aspx?EmitentId=7785
+//		User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.5 Safari/534.55.3
+//		Request Payload
+//		<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage><orderCondition>&lt;order/&gt;</orderCondition><forExcel>0</forExcel><forWord>0</forWord><DateFrom>11.04.2011</DateFrom><DateTo>11.04.2012</DateTo><DocType>1</DocType><DocMessType>0</DocMessType><EmitentId>7785</EmitentId></request>
+		
 		var reactor = document.createElement('div');
-		var renderTo = document.getElementById('tbody_1');
+		//var renderTo = document.getElementById('tbody_1');
+		var renderTo = document.body;
 		
-		function getXmlSer(isin) {
+//		function getXmlSerISIN(isin) {
+//		
+//			return '<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage>'
+//				+'<orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><Name></Name>'
+//				+'<CodeType>-1</CodeType><regionList></regionList><regionListStr></regionListStr><branchList></branchList>'
+//				+'<branchListStr></branchListStr><pocList></pocList><pocListStr></pocListStr><emitentTypeList>1 2 3 4</emitentTypeList>'
+//				+'<INN></INN><tiker></tiker><OKPO></OKPO><ISIN>'
+//				+ isin
+//				+'</ISIN><OGRN></OGRN><regNumBank></regNumBank><codeFSFR></codeFSFR><regNumStrah></regNumStrah><OKATO></OKATO>'
+//				+'<pocSearchType>0</pocSearchType><pocIntervalType>0</pocIntervalType><pocFromYear>2011</pocFromYear>'
+//				+'<pocToYear>2012</pocToYear><pocOfQ>1</pocOfQ><pocOfY>2012</pocOfY><isTrading>0</isTrading>'
+//				+'<showCol>ShortName Region Branch INN OKPO</showCol></request>';
+//		}
+
+		function getXmlSerID(id) {
 		
-			return '<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage>'
-				+'<orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><Name></Name>'
-				+'<CodeType>-1</CodeType><regionList></regionList><regionListStr></regionListStr><branchList></branchList>'
-				+'<branchListStr></branchListStr><pocList></pocList><pocListStr></pocListStr><emitentTypeList>1 2 3 4</emitentTypeList>'
-				+'<INN></INN><tiker></tiker><OKPO></OKPO><ISIN>'
-				+ isin
-				+'</ISIN><OGRN></OGRN><regNumBank></regNumBank><codeFSFR></codeFSFR><regNumStrah></regNumStrah><OKATO></OKATO>'
-				+'<pocSearchType>0</pocSearchType><pocIntervalType>0</pocIntervalType><pocFromYear>2011</pocFromYear>'
-				+'<pocToYear>2012</pocToYear><pocOfQ>1</pocOfQ><pocOfY>2012</pocOfY><isTrading>0</isTrading>'
-				+'<showCol>ShortName Region Branch INN OKPO</showCol></request>';
+			return '<request><EmitentId>'
+				+ id
+				+ '</EmitentId></request>';
 		}
 		
-		function loadISIN(isin) {
+//		function getXmlIntradaySerID(id) {
+//		
+//			return '<request><pageNumber>1</pageNumber>'
+//				+'<isEmitentCard>1</isEmitentCard><groupExchangeList>2 </groupExchangeList>'
+//				+'<groupInstrumentTypeList>1 </groupInstrumentTypeList><idList>'
+//				+id
+//				+'</idList><showCol>Name ExchangeName Code ActionName Last High Low ChangeProc Bid_ Ask WA Trade VDay VRub VDol</showCol>'
+//				+'<parentId>EmitentQuotesIntraday</parentId></request>';
+//		}
+		
+//		function getXmlIntradaySerID(id) {
+//		
+//			return '<request>'
+//				+'<isEmitentCard>1</isEmitentCard><groupExchangeList>2 </groupExchangeList>'
+//				+'<groupInstrumentTypeList>1 </groupInstrumentTypeList><idList>'
+//				+id
+//				+'</idList><showCol>Name ExchangeName Code ActionName Last High Low ChangeProc Bid_ Ask WA Trade VDay VRub VDol</showCol>'
+//				+'<parentId>EmitentQuotesIntraday</parentId></request>';
+//		}
+//		
+//		function getXmlYearSerID(id) {
+//		
+//			return '<request>'
+//				+'<compareDate>16.04.2012</compareDate>'
+//				+'<isEmitentCard>1</isEmitentCard><groupExchangeList>2 </groupExchangeList><groupInstrumentTypeList>1 </groupInstrumentTypeList><idList>'
+//				+id
+//				+'</idList><showCol>Name ADate ExchangeName Code ActionName Close High Low ChangeProc Bid_ Ask WA Trade VDay VRub VDol</showCol>'
+//				+'<parentId>EmitentQuotesArchive</parentId></request>';
+//		}
+		
+//		function loadSearchResultByISIN(isin) {
+//			
+//			var xhr = new XMLHttpRequest();
+//			
+//			var url = encodeURI(primeUrlSearchIds),
+//				headers = encodeURI(JSON.stringify({
+//					"Content-Type": "application/estyle-xml-request",
+//					"Origin": "http://emitent.1prime.ru",
+//					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentSearchResult.aspx"
+//				}));
+//			
+//			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
+//			
+//			xhr.onreadystatechange = function (event) {  
+//				
+//				if (xhr.readyState === 4) {  
+//					if (xhr.status === 200) {
+//						reactor.innerHTML = xhr.responseText;
+//						var row = reactor.querySelector('tr.even-row');
+//						renderTo.appendChild(row);
+//						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
+//						if (listISIN.length) loadSearchResultByISIN(listISIN.shift());
+//					} else {  
+//						console.log("Error", xhr.statusText);  
+//					}
+//				}
+//			};
+//			
+//			
+//			xhr.send(getXmlSerISIN(isin));
+//		}
+//		
+//		loadSearchResultByISIN(listISIN.shift());
+		
+//		function loadInfoByID(id) {
+//			
+//			var xhr = new XMLHttpRequest();
+//			
+//			var url = encodeURI(primeUrlInfo),
+//				headers = encodeURI(JSON.stringify({
+//					"Content-Type": "application/estyle-xml-request",
+//					"Origin": "http://emitent.1prime.ru",
+//					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentQuotesIntraday.aspx?EmitentId=" + id
+//				}));
+//			
+//			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
+//			
+//			xhr.onreadystatechange = function (event) {  
+//				
+//				if (xhr.readyState === 4) {  
+//					if (xhr.status === 200) {
+//						reactor.innerHTML = xhr.responseText;
+//						var row = reactor.querySelector('table');
+//						renderTo.appendChild(row);
+//						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
+//						if (idsList.length) loadInfoByID(idsList.shift());
+//					} else {  
+//						console.log("Error", xhr.statusText);  
+//					}
+//				}
+//			};
+//			
+//			
+//			xhr.send(getXmlSerID(id));
+//		}
+//		
+//		loadInfoByID(idsList.shift());
+
+		function loadDescriptionByID(id) {
 			
 			var xhr = new XMLHttpRequest();
 			
-			var url = encodeURI(primeUrl),
+			var url = encodeURI(primeUrlDescription),
 				headers = encodeURI(JSON.stringify({
 					"Content-Type": "application/estyle-xml-request",
 					"Origin": "http://emitent.1prime.ru",
-					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentSearchResult.aspx"
+					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentActivities.aspx?EmitentId=" + id
 				}));
 			
 			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
 			
-			xhr.onreadystatechange = function (event) {  
+			xhr.addEventListener('readystatechange', function (event) {  
 				
 				if (xhr.readyState === 4) {  
 					if (xhr.status === 200) {
 						reactor.innerHTML = xhr.responseText;
-						var row = reactor.querySelector('tr.even-row');
+						var row = reactor.querySelector('table');
 						renderTo.appendChild(row);
 						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
-						if (listISIN.length) loadISIN(listISIN.shift());
+						if (idsList.length) loadDescriptionByID(idsList.shift());
 					} else {  
 						console.log("Error", xhr.statusText);  
 					}
 				}
-			};
+			});
 			
 			
-			xhr.send(getXmlSer(isin));
+			xhr.send(getXmlSerID(id));
 		}
 		
-		loadISIN(listISIN.shift());
+		loadDescriptionByID(idsList.shift());
+
+//		function loadIntradayByID(id) {
+//			
+//			var xhr = new XMLHttpRequest();
+//			
+//			var url = encodeURI(primeUrlIntraday),
+//				headers = encodeURI(JSON.stringify({
+//					"Content-Type": "application/estyle-xml-request",
+//					"Origin": "http://emitent.1prime.ru",
+//					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentQuotesIntraday.aspx?EmitentId=" + id
+//				}));
+//			
+//			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
+//			
+//			xhr.onreadystatechange = function (event) {  
+//				
+//				if (xhr.readyState === 4) {  
+//					if (xhr.status === 200) {
+//						reactor.innerHTML = xhr.responseText;
+//						var row = reactor.querySelector('tr.even-row');
+//						renderTo.appendChild(row);
+//						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
+//						if (idsList.length) loadIntradayByID(idsList.shift());
+//					} else {  
+//						console.log("Error", xhr.statusText);  
+//					}
+//				}
+//			};
+//			
+//			
+//			xhr.send(getXmlSerID(id));
+//		}
+//		
+//		loadIntradayByID(idsList.shift());
+
+//		function loadYearByID(id) {
+//			
+//			var xhr = new XMLHttpRequest();
+//			
+//			var url = encodeURI(primeUrlYear),
+//				headers = encodeURI(JSON.stringify({
+//					"Content-Type": "application/estyle-xml-request",
+//					"Origin": "http://emitent.1prime.ru",
+//					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentQuotesArchive.aspx?EmitentId=" + id
+//				}));
+//			
+//			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
+//			
+//			xhr.onreadystatechange = function (event) {  
+//				
+//				if (xhr.readyState === 4) {  
+//					if (xhr.status === 200) {
+//						reactor.innerHTML = xhr.responseText;
+//						var row = reactor.querySelector('tr.even-row');
+//						if (!row) return;
+//						renderTo.appendChild(row);
+//						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
+//						if (idsList.length) loadYearByID(idsList.shift());
+//					} else {  
+//						console.log("Error", xhr.statusText);  
+//					}
+//				}
+//			};
+//			
+//			
+//			xhr.send(getXmlYearSerID(id));
+//		}
+//		
+//		loadYearByID(idsList.shift());
 		
 	</script>
+	
+	<!--script>
+	
+	// PIEF persons
+	// PIEF shedule
+	
+	var memberList = document.querySelectorAll('#memb_list_bls td:not(.space)');
+	var topicsNamesList = document.querySelectorAll('#topics_menu a');
+	var topicsList = document.querySelectorAll('#topics_bl article');
+	var persons = {};
+	
+	for (var i=0;i<memberList.length;i++) {
+		var person = memberList[i];
+		if (!person. childElementCount) break;
+		var names = person.querySelector('strong').textContent.split(/\s+/),
+			surname = names.pop(),
+			name = names.join(' ');
+			
+		console.log (person);
+			
+		persons[name+' '+surname] = {
+			avatar: person.querySelector('img').src,
+			surname: surname,
+			name: name,
+			post: person.querySelector('p').textContent,
+			country: person.querySelector('span').textContent
+		};
+	}
+	
+	var shedule = [],
+		personId = 1,
+		sessionId = 1;
+	
+	for (var i=0; i<topicsNamesList.length; i++) {
+		
+		var topicName = topicsNamesList[i].innerText.replace('\n',' '),
+			sections = topicsList[i].querySelectorAll('p.theme');
+			
+		for(var j=0; j < sections.length; j++) {
+			var section = sections[j],
+				sectionName = section.querySelector('strong');
+			if (sectionName) {
+				sectionName = sectionName.innerText.replace('\n',' ');
+				if (section.nextElementSibling && section.nextElementSibling.nodeName == 'UL') {
+					var memberList = section.nextElementSibling.querySelectorAll('li'),
+						members = [];
+					for (var k=0; k < memberList.length; k++) {
+						var member = memberList[k].textContent;
+						if (member) {
+							member = member.split(', ');
+							var names = member.shift().split(' ')
+								surname = names.pop()
+								name = names.join(' ');
+							var p = persons[name+' '+surname] || {surname: surname, name: name, post: member.join(', '), avatar: '', country: ''};
+							if (!p['id']) p['id'] = personId++;
+							members.push(p);
+						}
+					}
+				}
+				
+				shedule.push({
+					title: sectionName,
+					topic: topicName,
+					speakers: members
+				});
+			}
+		}
+	}
+	
+	var startDate = new Date('Jun 21 2012 10:00:00 GMT+0400 (MSK)'),
+		endDate = new Date('Jun 23 2012 00:00:00 GMT+0400 (MSK)'),
+		sectionsPerDay = ~~(shedule.length/(endDate.getDay() - startDate.getDay()+1)+1),
+		sectionDuration = 3600*1000,
+		day = 24*3600*1000,
+		topicCount = topicsList.length,
+		j = 0;
+		
+	endDate.setTime(startDate.getTime());
+		
+	shedule.forEach(function(section, i) {
+		
+		console.log(i % sectionsPerDay, j % topicCount);
+		
+		if (i % sectionsPerDay == 0 && i != 0) {
+			startDate.setTime(startDate.getTime() + day);
+			endDate.setTime(startDate.getTime());
+			j = 0;
+		} else if (j % topicCount == 0 && j != 0) {
+			endDate.setTime(endDate.getTime() + sectionDuration);
+		}
+		j++;
+		section.id = sessionId++;
+		section.startDate = endDate.toString();
+		section.endDate = new Date(endDate.getTime() + sectionDuration).toString();
+	})
+			
+	console.log ({sessions: shedule});
+	 
+	copy(JSON.stringify({sessions: shedule}));
+	
+	</script-->
 </body>
 </html>

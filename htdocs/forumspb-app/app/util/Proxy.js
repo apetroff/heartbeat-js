@@ -22,8 +22,9 @@ Ext.define('Spief.util.Proxy', {
 		            sessionModel = Ext.create('Spief.model.Session', session);
 
 		            Ext.Array.each(session.speakers, function(speaker) {
-		                session.speakerIds.push(speaker.id);
-
+		                
+						session.speakerIds.push(speaker.id);
+						
 		                speakerModel = Ext.create('Spief.model.Speaker', speaker);
 		                speakerStore.add(speakerModel);
 		                sessionSpeakerStore.add(speakerModel);
@@ -51,13 +52,10 @@ Ext.define('Spief.util.Proxy', {
 
 		        for (var speakerId in speakerSessions) {
 		            speaker = speakerStore.getById(speakerId);
-					console.log (speakerId, speaker);
-		            if (speaker) {
+					if (speaker) {
 		                speaker.set('sessionIds', speakerSessions[speakerId]);
 		            }
 		        }
-				
-				console.log(speakerSessions);
 				
 				Spief.sessionDays = Ext.Array.sort(Ext.Object.getValues(sessionDays), function(a, b) {
 		            return a.startDate < b.startDate ? -1 : 1;

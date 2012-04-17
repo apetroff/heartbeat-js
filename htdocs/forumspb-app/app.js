@@ -18,7 +18,7 @@ Ext.application({
 
     mapCenter: [59.928294,30.236024],
     mapText: '<h1>Lenexpo</h1><small>Васильевский остр., Большой пр., 103<br />г. Санкт-Петербург, Россия, 199106<br />+7 812 321-26-15 ‎</small>',
-
+	
     aboutPages: [
         {
             title: 'ПМЭФ-2012',
@@ -38,6 +38,29 @@ Ext.application({
             title: 'О программе',
             xtype: 'htmlPage',
             url: 'data/credits.html'
+        }
+    ],
+	
+	companyAdditionalPages: [
+        {
+            title: 'Краткая информация',
+            xtype: 'list',
+        },
+		{
+            title: 'Описание деятельности',
+            xtype: 'container'
+        },
+        {
+            title: 'Новости',
+            xtype: 'list'
+        },
+		{
+            title: 'Комментарии',
+            xtype: 'list'
+        },
+		{
+            title: 'Документы',
+            xtype: 'list'
         }
     ],
 
@@ -61,7 +84,9 @@ Ext.application({
 
     models: [
         'Session',
-        'Speaker'
+        'Speaker',
+		'Company',
+		'ExtendedCompany'
     ],
 
     views: [
@@ -79,6 +104,9 @@ Ext.application({
 
         'companies.Card',
 		'companies.List',
+		'companies.AdditionalList',
+		'companies.Detail',
+        'companies.Info',
 		
         'about.Location',
         'about.Card',
@@ -98,7 +126,8 @@ Ext.application({
         'SpeakerSessions',
         'Speakers',
         'SessionSpeakers',
-        'Companies'
+        'Companies',
+		'ExtendedCompanies',
     ],
 
     viewport: {
@@ -107,16 +136,12 @@ Ext.application({
 
     launch: function() {
 
-        Ext.Viewport.setMasked({ xtype: 'loadmask' });
-
-        Spief.util.Proxy.process('data/sessions.js', function() {
+        Ext.Viewport.setMasked({ xtype: 'loadmask', message: 'Загрузка...' });
+		
+		Spief.util.Proxy.process('data/sessions.js', function() {
             Ext.Viewport.add({ xtype: 'main' });
             Ext.Viewport.setMasked(false);
         });
-
-        // setInterval(function(){
-        //     Ext.DomQuery.select('link')[0].href = "resources/css/spief.css?" + Math.ceil(Math.random() * 100000000)
-        // }, 1000);
     }
 
 });

@@ -788,8 +788,8 @@ Ext.data.JsonP.sessionsCb({
                     "id": 57
                 },
                 {
-                    "surname": "Саад",
-                    "name": "Бадр Мухаммад аль-",
+                    "surname": "аль-Саад",
+                    "name": "Бадр Мухаммад",
                     "post": "Исполнительный директор, Kuwait Investment Authority (KIA)",
                     "avatar": "",
                     "country": "",
