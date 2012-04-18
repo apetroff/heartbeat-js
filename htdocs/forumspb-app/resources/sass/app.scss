@@ -30,7 +30,10 @@ $index-bar-color: #666;
 @include pictos-iconmask('note1');
 @include pictos-iconmask('locate');
 @include pictos-iconmask('briefcase1');
+@include pictos-iconmask('play_black1');
 @include pictos-iconmask('action');
+@include pictos-iconmask('lock_closed');
+@include pictos-iconmask('user');
 
 @include sencha-tabbar-ui('gray', #111, 'matte', lighten($base-color, 10%));
 @include sencha-toolbar-ui('dark', darken($base-color, 10%), $base-gradient);
@@ -54,6 +57,25 @@ h4 {
 
 .x-title {
 	padding: 0 1em;
+}
+
+.x-segmentedbutton-inner {
+
+	.x-button {
+		border-right-width: 0;
+	}
+	
+	.x-button:first-child {
+		border-top-left-radius:10px;
+		border-bottom-left-radius:10px;
+		border-right-width: 0;
+	}
+
+	.x-button:last-child {
+		border-left-width: 0;
+		border-top-right-radius:10px;
+		border-bottom-right-radius:10px;
+	}
 }
 
 .x-list-item-label > .session {
@@ -215,4 +237,20 @@ h4 {
             }
         }
     }
+}
+
+form.login {
+
+	border-radius: 12px !important;
+	background-color: $list-header-color/2 !important;
+	
+	div.x-anchor {
+		background-color: $list-header-color/2 !important;
+		-webkit-mask-size: 21px 12px !important;
+		-webkit-mask-position: center center;
+	}
+	
+	.x-form-fieldset  {
+		margin: 0 0 6px 0 !important;
+	}
 }

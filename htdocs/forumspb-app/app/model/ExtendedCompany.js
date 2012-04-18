@@ -5,7 +5,6 @@ Ext.define('Spief.model.ExtendedCompany', {
 		fields: [
 			'description',
 			'info',
-			'daily',
 			'yearly',
 			'news',
 			'comments',
