@@ -21,16 +21,6 @@ Ext.define('Spief.store.Companies', {
 				},
 				direction: 'ASC'
 			}
-		],
-
-        proxy: {
-			type: 'ajax',
-            url: 'data/companies.json',
-			
-			reader: {
-				type: 'json',
-				rootProperty: 'companies'
-			}
-        }
+		]
     }
 });

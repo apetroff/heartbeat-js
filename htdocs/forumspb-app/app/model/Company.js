@@ -5,6 +5,8 @@ Ext.define('Spief.model.Company', {
 		fields: [
 			'id',
 			'title',
+			'tickers',
+			'daily',
 			'region',
 			'sector'
 		]

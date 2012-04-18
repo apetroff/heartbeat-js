@@ -12,16 +12,17 @@ Ext.define('Spief.view.session.List', {
 				docked: 'top',
 				xtype: 'toolbar',
 				ui: 'gray',
-
+				
 				items: [
 					{
+						xtype: 'segmentedbutton',
 						width: '100%',
 						padding: '0 5',
+						allowDepress: false,
 						defaults: {
-							flex: 1
-						},
-						xtype: 'segmentedbutton',
-						allowDepress: false
+							flex: 1,
+							ui: 'decline'
+						}
 					}
 				]
 			}

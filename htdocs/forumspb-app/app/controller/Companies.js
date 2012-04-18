@@ -24,15 +24,18 @@ Ext.define('Spief.controller.Companies', {
 		
 		if (!this.loadedCompanies) {
 
-			Ext.getStore('Companies').load();
-			
-			this.extendedStore = Ext.getStore('ExtendedCompanies');
+			this.companiesStore = Ext.getStore('Companies');			
+			this.extendedCompaniesStore = Ext.getStore('ExtendedCompanies');
 			this.primeProxy = Spief.util.Prime;
 			
-			console.log (this.primeProxy, Spief.util.Prime);
-
+			this.primeProxy.process('data/companies.js', Ext.bind(this.onFirstLoad));
+			
 			this.loadedCompanies = true;
 		}
+	},
+	
+	onFirstLoad: function() {
+		console.log('loaded');
 	},
 
 	onCompanyTap: function(list, idx, el, record) {
@@ -44,18 +47,18 @@ Ext.define('Spief.controller.Companies', {
 		var id = record.getId();
 		
 		this.currentRecord = record;
-		this.extendedCompany = this.extendedStore.getById(id);
+		this.extendedCompany = this.extendedCompaniesStore.getById(id);
 		
 		if (this.extendedCompany) {
 		
 			this.allInfoShow = false;
-			this.primeProxy.process(id, false, this.onExtendedDataLoaded, this);
+			this.primeProxy.processCompany(id, false, this.onExtendedDataLoaded, this);
 		
 		} else {
 			
 			this.allInfoShow = true;
 			Ext.Viewport.setMasked({ xtype: 'loadmask', message: 'Загрузка...' });
-			this.primeProxy.process(id, true, this.onExtendedDataLoaded, this);
+			this.primeProxy.processCompany(id, true, this.onExtendedDataLoaded, this);
 		}
 	},
 	

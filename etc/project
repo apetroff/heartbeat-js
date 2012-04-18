@@ -428,10 +428,6 @@
 				"workflows":[{
 					"path": "post",
 					"tasks": [{
-						"functionName": "parseQuery",
-						"url": "{$request.url}",
-						"produce": "data.query"
-					}, {
 						"className": "task/post",
 						"request": "{$request}",
 						"produce": "data.body"
@@ -440,9 +436,9 @@
 						"verbose": 1,
 						"retries": 2,
 						"timeout": 2,
-						"post": "{$data.body}",
-						"url": "{$data.query.url}",
-						"headers": "{$data.query.headers}",
+						"post": "{$data.body.fields.request}",
+						"url": "{$data.body.fields.url}",
+						"headers": "{$data.body.fields.headers}",
 						"produce": "data.download"
 					}],
 					

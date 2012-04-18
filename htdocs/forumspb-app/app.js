@@ -108,16 +108,25 @@ Ext.application({
 		'companies.Detail',
         'companies.Info',
 		
+		'game.Card',
+        'game.List',
+        'game.Detail',
+        'game.Info',
+		
         'about.Location',
         'about.Card',
         'about.List',
-        'about.HtmlPage'
+        'about.HtmlPage',
+		
+		'login.Button',
+		'login.Form'
     ],
 
     controllers: [
         'Sessions',
         'Speakers',
         'Companies',
+		'Login',
         'About'
     ],
 
