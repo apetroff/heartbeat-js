@@ -1,0 +1,87 @@
+.user-space,
+.x-dataview-tiles {
+	padding: 0;
+}
+
+.user-space {
+	border: none !important;
+}
+
+.user-space button,
+.user-space input {
+	width: 95px;
+}
+
+.user-space button {
+	font-size: 0.7em;
+	margin-top: 5px;
+	white-space: nowrap;
+}
+
+.floatTile {
+	position: absolute;
+	width: 120px;
+	height: 120px;
+	border: none !important;
+	overflow: hidden;
+}
+
+/*
+.floatTile:nth-child(2n+1) {
+	background-color: #FFF;
+}
+		
+.floatTile:nth-child(2n) {
+	background-color: #EEE;
+}
+*/
+
+#fsDiv:fullscreen {
+    width: 100%;
+    height: 100%;
+    background: #ddd;
+}
+#fsDiv:-moz-full-screen {
+    width: 100%;
+    height: 100%;
+    background: #ddd;
+}
+
+#fsDiv:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    background: #ddd;
+}
+
+#fsDiv {
+    width: 100px;
+    height: 100px;
+    display: block;
+    background: #ddd;
+    padding: 20px;
+}
+
+#fsDiv #exitFullScreen {
+    display: none;
+}
+
+#fsDiv:hover {
+    border: 1px solid #eee;
+}
+
+#fsDiv:-moz-full-screen #exitFullScreen{
+    display: block;
+}
+#fsDiv:fullscreen #exitFullScreen{
+    display: block;
+}
+#fsDiv:-webkit-full-screen #exitFullScreen {
+    display: block;
+}
+
+canvas {
+	position: absolute;
+	z-index: 1000;
+	left: 120px;
+	top: 120px;
+}
