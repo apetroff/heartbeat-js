@@ -25,41 +25,47 @@ Ext.application({
 
 		window.arcanoid = initArcanoid(
 			document.querySelector('canvas'), {
+				ballRadius: 30,
+
 				explosionSound: document.querySelector('audio'),
 
 				onContact: function (point, game) {
-					var maxX = ~~((game.width * game.scale) / tileW) - 1;
-					var maxY = ~~((game.height * game.scale) / tileW) - 1;
+					var maxX = ~~((game.width * game.scale) / tileW);
+					var maxY = ~~((game.height * game.scale) / tileW);
 
-					var indexX = ~~(point.x / tileW);
-					var indexY = ~~(point.y / tileH);
-
-					var index = indexX + indexY;
+					var indexX = ~~(point.x / tileW) + 1;
+					var indexY = ~~(point.y / tileH) + 1;
 
 					if (indexY == maxY) {
-						index = maxX + maxY + ((maxX + 1) - indexX);
-					} else if (indexX == 0 && indexY > 0) {
-						index = maxX + maxX + maxY + ((maxY + 1) - indexY);
+						var index = maxX + maxY + (maxX - indexX);
+					} else if (indexX == 1 && indexY > 1) {
+						index = maxX + maxX + maxY + (maxY - indexY);
+					} else if (indexY > 1) {
+						index = indexX + indexY - 1;
+					} else {
+						index = indexX - 1;
 					}
 
+					/* The second contact. */
 					if (index in playedTiles) {
 						return true;
-					} else {
-						setTimeout(function () {
-							if (!playedTiles[index]) {
-								playedTiles[index] = true;
-
-								game.explode(point);
-
-								var tile = tiles[index];
-								tile.style.visibility = 'hidden';
-							}
-						}, 30);
-
-						return false;
 					}
+
+					/* The first contact. */
+					setTimeout(function () {
+						if (!playedTiles[index]) {
+							playedTiles[index] = true;
+
+							game.explode(point);
+
+							var tile = tiles[index];
+							tile.style.visibility = 'hidden';
+						}
+					}, 50);
+
+					return false;
 				}
 			}
-		)
+		);
     }
 });
