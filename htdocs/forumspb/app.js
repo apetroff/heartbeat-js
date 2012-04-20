@@ -65,7 +65,7 @@ Ext.application({
 
 							setTimeout(function () {
 								playedTiles[index] = true;
-							}, 600);
+							}, 50);
 
 							return true;
 						} else {

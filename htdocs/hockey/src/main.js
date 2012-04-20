@@ -176,6 +176,21 @@
 			}
 		},
 
+		getContactPoint: function (contact) {
+			var contactPoints = contact.GetManifold();
+			var firstPoint = contactPoints.m_points[0].m_localPoint;
+			var fixture = contact.GetFixtureB();
+			var body = fixture.GetBody();
+			var pos = body.GetWorldPoint(firstPoint);
+
+			return {
+				x: ~~(pos.x * this.scale),
+				y: ~~(pos.y * this.scale),
+				body: body,
+				fixture: fixture
+			};
+		},
+
 		bindCollision: function () {
 			var self = this;
 
@@ -186,28 +201,17 @@
 					return;
 				}
 
-				var contactPoints = contact.GetManifold();
-				var firstPoint = contactPoints.m_points[0].m_localPoint;
-				var fixture = contact.GetFixtureB();
-				var body = fixture.GetBody();
-				var pos = body.GetWorldPoint(firstPoint);
+				var point = self.getContactPoint(contact);
 
-				var absPos = {
-					x: ~~(pos.x * self.scale),
-					y: ~~(pos.y * self.scale)					
-				};
-
-				var preventDefault = self.options.onPreSolve(absPos, self);
+				var preventDefault = self.options.onPreSolve(point, self);
 
 				if (preventDefault) {
-					body._isOut = true;
-
 					contact.SetEnabled(false);
 
 					setTimeout(function () {
-						body.SetAwake(false);
-						body.DestroyFixture(fixture);
-						self.world.DestroyBody(body);
+						point.body.SetAwake(false);
+						point.body.DestroyFixture(point.fixture);
+						self.world.DestroyBody(point.body);
 					}, 3000);
 				}
 			};
@@ -217,26 +221,12 @@
 					return;
 				}
 
-				var contactPoints = contact.GetManifold();
-				var firstPoint = contactPoints.m_points[0].m_localPoint;
-				var fixture = contact.GetFixtureB();
-				var body = fixture.GetBody();
+				var point = self.getContactPoint(contact);
 
-				if (body._isOut) {
-					return;
-				}
-
-				var pos = body.GetWorldPoint(firstPoint);
-
-				var absPos = {
-					x: ~~(pos.x * self.scale),
-					y: ~~(pos.y * self.scale)					
-				};
-
-				var explode = self.options.onEndContact(absPos, self);
+				var explode = self.options.onEndContact(point, self);
 
 				if (explode) {
-					self.explode(absPos);
+					self.explode(point);
 				}
 			};
 
