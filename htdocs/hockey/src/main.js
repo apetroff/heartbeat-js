@@ -69,7 +69,6 @@
 		},
 
 		reset: function () {
-			this.collisions = {};
 			this.addBalls();
 		},
 
@@ -127,8 +126,6 @@
 		},
 
 		addBalls: function () {
-			this.balls = [];
-
 			var offset = 13 / this.scale;
 
 			for (var i = 0; i < this.ballCount; i += 1) {
@@ -137,7 +134,6 @@
 				var y = this.height * (i > 1) +
 					(this.options.ballRadius + offset) * (i > 1 ? -1 : 1);
 				var ball = this.createBall(i, x, y);
-				this.balls[i] = ball;
 			}
 		},
 
@@ -155,6 +151,7 @@
             );
 			bodyDef.position.x = x;
             bodyDef.position.y = y;
+			bodyDef.fixedRotation = true;
 
             this.world.CreateBody(bodyDef).CreateFixture(fixDef);
 
@@ -196,6 +193,8 @@
 
 			var contactListener = new b2ContactListener;
 
+			var count = 0;
+
 			contactListener.PreSolve = function (contact) {
 				if ('b2PolyAndCircleContact' != contact.constructor.name) {
 					return;
@@ -208,11 +207,21 @@
 				if (preventDefault) {
 					contact.SetEnabled(false);
 
+					count += 1;
+
+					if (0 == count % self.ballCount) {
+						setTimeout(function () {
+							location.reload();
+						}, 10000);
+					}
+
+					/*
 					setTimeout(function () {
 						point.body.SetAwake(false);
 						point.body.DestroyFixture(point.fixture);
 						self.world.DestroyBody(point.body);
 					}, 3000);
+					*/
 				}
 			};
 
