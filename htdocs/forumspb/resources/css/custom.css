@@ -22,7 +22,17 @@
 	position: absolute;
 	width: 120px;
 	height: 120px;
-	border: none !important;
+	overflow: hidden;
+	border: 1px ridge #999 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+.floatTile .x-innerhtml {
+	font-size: 70% !important;
+	text-overflow: ellipsis;
+	text-align: center;
+	width: 120px;
 	overflow: hidden;
 }
 
@@ -81,7 +91,7 @@
 
 canvas {
 	position: absolute;
-	z-index: 1000;
+	z-index: 3;
 	left: 120px;
 	top: 120px;
 }
