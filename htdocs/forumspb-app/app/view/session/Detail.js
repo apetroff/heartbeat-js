@@ -24,7 +24,7 @@ Ext.define('Spief.view.session.Detail', {
 					{
 						xtype: 'listitemheader',
 						cls: 'dark',
-						html: 'Speakers'
+						html: 'Участники'
 					}
 				]
 			}

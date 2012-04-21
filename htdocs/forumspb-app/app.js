@@ -13,7 +13,7 @@ Ext.require(['Spief.util.Proxy']);
 Ext.application({
     // Change the values below to re-configure the app for a different conference.
 
-    title:   'ПЭМФ-2012',
+    title:   'ПМЭФ-2012',
     dataUrl: 'http://2012.forumspb.com/index_ru.html',
 
     mapCenter: [59.928294,30.236024],
@@ -21,7 +21,7 @@ Ext.application({
 	
     aboutPages: [
         {
-            title: 'ПМЭФ-2012',
+            title: 'О форуме',
             xtype: 'htmlPage',
             url: 'data/about.html'
         },
@@ -41,30 +41,7 @@ Ext.application({
         }
     ],
 	
-	companyAdditionalPages: [
-        {
-            title: 'Краткая информация',
-            xtype: 'list',
-        },
-		{
-            title: 'Описание деятельности',
-            xtype: 'container'
-        },
-        {
-            title: 'Новости',
-            xtype: 'list'
-        },
-		{
-            title: 'Комментарии',
-            xtype: 'list'
-        },
-		{
-            title: 'Документы',
-            xtype: 'list'
-        }
-    ],
-
-    // App namespace
+	// App namespace
 
     name: 'Spief',
 
@@ -86,7 +63,7 @@ Ext.application({
         'Session',
         'Speaker',
 		'Company',
-		'ExtendedCompany'
+		'User'
     ],
 
     views: [
@@ -104,29 +81,27 @@ Ext.application({
 
         'companies.Card',
 		'companies.List',
-		'companies.AdditionalList',
 		'companies.Detail',
-        'companies.Info',
+        'companies.InfoHeader',
+		'companies.InfoCard',
 		
-		'game.Card',
-        'game.List',
-        'game.Detail',
-        'game.Info',
+		'trade.Panel',
+        'trade.Form',
 		
-        'about.Location',
+		'about.Location',
         'about.Card',
         'about.List',
         'about.HtmlPage',
 		
-		'login.Button',
-		'login.Form'
+		'user.Panel',
+		'user.Form'
     ],
 
     controllers: [
         'Sessions',
         'Speakers',
         'Companies',
-		'Login',
+		'User',
         'About'
     ],
 
@@ -136,7 +111,6 @@ Ext.application({
         'Speakers',
         'SessionSpeakers',
         'Companies',
-		'ExtendedCompanies',
     ],
 
     viewport: {

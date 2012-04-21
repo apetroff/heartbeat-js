@@ -11,13 +11,14 @@ Ext.define('Spief.view.Main', {
 		},
 
 		items: [
-			{ xclass: 'Spief.view.login.Button'},
-			{ xclass: 'Spief.view.login.Form'},
+			{ xclass: 'Spief.view.user.Panel'},
 			{ xclass: 'Spief.view.session.Card' },
 			{ xclass: 'Spief.view.speaker.Card' },
 			{ xclass: 'Spief.view.companies.Card' },
-			{ xclass: 'Spief.view.game.Card' },
-			{ xclass: 'Spief.view.about.Card' }
+			{ xclass: 'Spief.view.about.Card' },
+			
+			{ xclass: 'Spief.view.user.Form'},
+			{ xclass: 'Spief.view.trade.Form'}
 		]
 	}
 });

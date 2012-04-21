@@ -6,8 +6,8 @@ Ext.define('Spief.view.companies.Card', {
 	config: {
 
         tab: {
-			title: 'Компании',
-			iconCls: 'briefcase1',
+			title: 'Прайм Play',
+			iconCls: 'play_black1',
 			cls: 'companies',
 	        action: 'companiesTab'
 	    },

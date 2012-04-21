@@ -9,13 +9,27 @@ Ext.define('Spief.controller.Companies', {
 			companies: 'companies',
 			companiesContainer: 'companiesContainer',
 			company: 'company',
-			companyInfo: 'companiesContainer companyInfo'
+			companyInfo: 'companiesContainer companyInfo',
+			
+			infoCard: 'infoCard',
+			
+			tradeForm: 'tradeForm',
+			buyButton: 'companyInfo button[ui=confirm]',
+			sellButton: 'companyInfo button[ui=decline]'
 		},
 		
 		control: {
 			companies: {
 				activate: 'onActivate',
 				itemtap: 'onCompanyTap'
+			},
+			
+			buyButton: {
+				tap: 'onBuy'
+			},
+			
+			sellButton: {
+				tap: 'onSell'
 			}
 		}
 	},
@@ -24,13 +38,30 @@ Ext.define('Spief.controller.Companies', {
 		
 		if (!this.loadedCompanies) {
 
-			this.companiesStore = Ext.getStore('Companies');			
-			this.extendedCompaniesStore = Ext.getStore('ExtendedCompanies');
+			this.companiesStore = Ext.getStore('Companies');
 			this.primeProxy = Spief.util.Prime;
 			
 			this.primeProxy.process('data/companies.js', Ext.bind(this.onFirstLoad));
 			
 			this.loadedCompanies = true;
+		}
+	},
+	
+	onBuy: function( b, e, eOpts ) {
+
+		if (this.getTradeForm().getHidden()) {
+			this.getTradeForm().show();
+		} else {
+			this.getTradeForm().hide();
+		}
+	},
+	
+	onSell: function( b, e, eOpts ) {
+
+		if (this.getTradeForm().getHidden()) {
+			this.getTradeForm().show();
+		} else {
+			this.getTradeForm().hide();
 		}
 	},
 	
@@ -47,32 +78,15 @@ Ext.define('Spief.controller.Companies', {
 		var id = record.getId();
 		
 		this.currentRecord = record;
-		this.extendedCompany = this.extendedCompaniesStore.getById(id);
-		
-		if (this.extendedCompany) {
-		
-			this.allInfoShow = false;
-			this.primeProxy.processCompany(id, false, this.onExtendedDataLoaded, this);
-		
-		} else {
-			
-			this.allInfoShow = true;
-			Ext.Viewport.setMasked({ xtype: 'loadmask', message: 'Загрузка...' });
-			this.primeProxy.processCompany(id, true, this.onExtendedDataLoaded, this);
-		}
+		this.primeProxy.processCompany(id, true, this.onExtendedDataLoaded, this);
 	},
 	
 	onExtendedDataLoaded: function() {
 		
-		if (this.allInfoShow) {
-			Ext.Viewport.setMasked(false);
-			this.maskShow = false;
-			
-			this.company.config.title = this.currentRecord.get('title');
-			this.getCompaniesContainer().push(this.company);
-			this.getCompanyInfo().setRecord(this.currentRecord);
-			
-		}
+		this.company.config.title = this.currentRecord.get('title');
+		this.getCompaniesContainer().push(this.company);
+		this.getCompanyInfo().setRecord(this.currentRecord);
+		this.getInfoCard().setRecord(this.currentRecord);
 	}
 
 });

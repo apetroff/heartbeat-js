@@ -146,6 +146,58 @@ h4 {
     .x-list-item {
         border-top: 1px solid white;
     }
+	
+	h3.negative {
+		color: #F00;
+	}
+	
+	h3.positive {
+		color: #080;
+	}
+	
+	.price {
+		font-weight: bold;
+	}
+}
+
+.companyInfo {
+
+    @include background-gradient(#eee);
+
+    .header {
+        
+        border-bottom: 1px solid #ccc;
+        border-top: 1px solid #ddd;
+        padding: 1em 0.8em;
+		
+		h3.negative {
+			color: #F00;
+		}
+		
+		h3.positive {
+			color: #080;
+		}
+		
+		.price {
+			font-weight: bold;
+		}
+    }
+}
+
+.infoCard {
+
+	input, span {
+		color: #000 !important;
+		-webkit-text-fill-color: #000 !important;
+	}
+	
+	.x-description-field {
+		background-color: #FFF;
+		border-radius: 0.4em;
+		font-size: 12px;
+		border: solid #DDD 1px;
+		padding: 10px 20px;
+	}
 }
 
 .x-list-item.speaker {
@@ -183,6 +235,7 @@ h4 {
         border-bottom: 1px solid #ccc;
         border-top: 1px solid #ddd;
         padding: 1em 0.8em;
+		height: 165px;
     }
 
     .avatar {
@@ -193,9 +246,9 @@ h4 {
         border: 0;
         border-radius: 0.5em;
         margin-right: 10px;
-        width: 60px;
-        height: 60px;
-        background-size: 60px auto;
+        width: 135px;
+        height: 135px;
+        background-size: 135px auto;
     }
 
     p {
@@ -206,51 +259,103 @@ h4 {
     }
 }
 
+.about {
+	background: #EEE;
+	padding: 20px 0 0 0;
+	text-align: center;
+}
+
 .htmlPage {
 
-    background: #fff;
+    background: #EEE;
     color: #333;
     line-height: 1.5em;
     font-size: 0.8em;
-    padding: 1.2em;
+	
+	.wrapper {
+	
+		padding: 1em;
+    
+		p {
+			padding: 0.4em 0;
+		}
 
-    p {
-        padding: 0.4em 0;
-    }
+		.sponsor_list_heading {
+			font-weight: bold;
+		}
+		.sponsorList {
+			margin: 10px 0 25px 0;
+			padding-left: 0;
+			list-style-type: none;
+			overflow: hidden;
 
-    .sponsor_list_heading {
-        font-weight: bold;
-    }
-    .sponsorList {
-        margin: 10px 0 25px 0;
-        padding-left: 0;
-        list-style-type: none;
-        overflow: hidden;
-
-        li {
-            display: block;
-            float: left;
-            margin-right: 20px;
-            height: 50px;
-            img {
-                max-height: 50px;
-            }
-        }
-    }
+			li {
+				display: block;
+				float: left;
+				margin-right: 20px;
+				height: 50px;
+				img {
+					max-height: 50px;
+				}
+			}
+		}
+		
+		div.image {
+			box-shadow: white 0 1px 1px;
+			background-image: url('http://2012.forumspb.com/img/temp/main_pic.jpg');
+			width: 680px;
+			height: 354px;
+			border-radius: 0.4em;
+			border: solid #DDD 1px;
+		}
+	
+		h1 {
+			padding: 30px 0 10px 0;
+			text-shadow: white 0 1px 1px;
+			color: #333;
+			font-size: 26px;
+			font-weight: bold;
+		}
+		
+		h4 {
+			text-shadow: white 0 1px 1px;
+			margin: 1em 0.7em 0.3em;
+			color: #333;
+			font-weight: bold;
+			white-space: nowrap;
+		}
+		
+		div {
+			
+			padding: 20px;
+			background-color: #FFF;
+			border-radius: 0.4em;
+			border: solid #DDD 1px;
+		
+			table {
+				
+				width: 100%;
+				
+				td {
+					width: 25%;
+					text-align: center;
+				}
+			}
+		}
+	}
 }
 
-form.login {
+form.user, form.trade {
 
 	border-radius: 12px !important;
 	background-color: $list-header-color/2 !important;
 	
-	div.x-anchor {
-		background-color: $list-header-color/2 !important;
-		-webkit-mask-size: 21px 12px !important;
-		-webkit-mask-position: center center;
+	.x-form-fieldset {
+		margin: 0;
 	}
 	
-	.x-form-fieldset  {
-		margin: 0 0 6px 0 !important;
+	.x-form-fieldset-title, .x-form-fieldset-instructions {
+		margin: 1em;
+		text-align: center;
 	}
 }
