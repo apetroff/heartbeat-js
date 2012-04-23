@@ -82,6 +82,7 @@ Ext.application({
 				explosionSound: document.querySelector('audio'),
 
 				onReset: function () {
+					playedTiles = {};
 					[].forEach.call(tiles, function (tile) {
 						tile.style.visibility = '';
 					});

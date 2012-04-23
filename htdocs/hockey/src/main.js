@@ -50,6 +50,7 @@
 			this.height = canvas.height / this.scale;
 
 			this.destroyedBodies = [];
+			this.movingBalls = [];
 			this.walls = {};
 			this.balls = {};
 
@@ -73,6 +74,8 @@
 		},
 
 		reset: function () {
+			this.movingBalls.length = 0;
+
 			this.removeWalls();
 			this.addWalls();
 			this.addBalls();
@@ -288,12 +291,9 @@
 			document.addEventListener('mouseup', onMouseUp, true);
 
 			function onMouseUp() {
-				document.removeEventListener('mousemove', handleMouseMove, true);
 				isMouseDown = false;
 				mouseX = undefined;
 				mouseY = undefined;
-
-				document.removeEventListener('mousedown', onMouseDown);
 			}
 
 			function onMouseDown(e) {
@@ -335,7 +335,9 @@
 				if (isMouseDown && !mouseJoint) {
 					var body = getBodyAtMouse();
 
-					if (body) {
+					if (body && self.movingBalls.indexOf(body) == -1) {
+						self.movingBalls.push(body);
+
 						var md = new b2MouseJointDef();
 						md.bodyA = this.world.GetGroundBody();
 						md.bodyB = body;
