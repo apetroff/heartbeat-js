@@ -12,7 +12,7 @@ Ext.define('Ria.model.Tile', {
         fields: [
             {name: "_id", type: "string"},
 			{name: "title", type: "string"},
-			{name: "tickers", type: "string"},
+			"tickers",
 			{name: "region", type: "string"},
 			{name: "sector", type: "string"},
             {name: "id", type: "string"}

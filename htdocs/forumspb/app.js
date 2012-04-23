@@ -81,23 +81,20 @@ Ext.application({
 
 				explosionSound: document.querySelector('audio'),
 
-				onPreSolve: function (point, game) {
-					var index = getIndex(point, game);
-					return index in playedTiles;
+				onReset: function () {
+					[].forEach.call(tiles, function (tile) {
+						tile.style.visibility = '';
+					});
 				},
 
-				onEndContact: function (point, game) {
-					var index = getIndex(point, game);
-
+				onEndContact: function (index) {
 					if (!playedTiles[index]) {
 						var tile = tiles[index];
 
 						if (tile) {
 							tile.style.visibility = 'hidden';
 
-							setTimeout(function () {
-								playedTiles[index] = true;
-							}, 50);
+							playedTiles[index] = true;
 
 							return true;
 						} else {

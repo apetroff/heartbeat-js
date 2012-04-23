@@ -91,7 +91,7 @@
 
 canvas {
 	position: absolute;
-	z-index: 3;
-	left: 120px;
-	top: 120px;
+	z-index: 1;
+	left: 0;
+	top: 0;
 }

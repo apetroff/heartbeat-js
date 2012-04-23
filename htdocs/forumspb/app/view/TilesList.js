@@ -17,7 +17,7 @@ Ext.define('Ria.view.TilesList', {
         
 		scrollable: false,
 		
-		items: [{
+		items: [/*{
 			
 			left: 120,
 			top: 120,
@@ -36,7 +36,7 @@ Ext.define('Ria.view.TilesList', {
 				html: '<img src="http://www.1prime.ru/Header/prime_new_logo.png" />'
 			}],
 			
-		}, {
+		},*/ {
 			
 			left: 0,
 			top: 0,

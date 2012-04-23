@@ -33,7 +33,8 @@
 
 			this.options = {
 				ballRadius: 60,
-				onEndContact: Boolean
+				onEndContact: Boolean,
+				onReset: Boolean
 			};
 
 			if (options) {
@@ -49,6 +50,8 @@
 			this.height = canvas.height / this.scale;
 
 			this.destroyedBodies = [];
+			this.walls = {};
+			this.balls = {};
 
 			var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(canvas.getContext('2d'));
@@ -70,8 +73,10 @@
 		},
 
 		reset: function () {
+			this.removeWalls();
 			this.addWalls();
 			this.addBalls();
+			this.options.onReset();
 		},
 
 		startLoop: function () {
@@ -91,6 +96,16 @@
 			   // allow sleep
                false
 			);
+		},
+
+		removeWalls: function () {
+			var self = this;
+			var wallKeys = Object.keys(this.walls);
+			wallKeys.forEach(function (i) {
+				var wall = self.walls[i];
+				delete self.walls[i];
+				self.destroyedBodies.push(wall);
+			});
 		},
 
 		addWalls: function () {
@@ -136,15 +151,15 @@
 				}
 
 				bodyDef.userData = { index: index };
-				this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+				var wall = this.world.CreateBody(bodyDef);
+				wall.CreateFixture(fixDef);
+				this.walls[index] = wall;
 				index += 1;
 			}
 		},
 
 		addBalls: function () {
 			var offset = 135 / this.scale;
-
-			this.balls = [];
 
 			for (var i = 0; i < this.ballCount; i += 1) {
 				var x = this.width * (i % 2) +
@@ -153,7 +168,7 @@
 					(this.options.ballRadius + offset) * (i > 1 ? -1 : 1);
 				var ball = this.createBall(i, x, y);
 
-				this.balls.push(ball);
+				this.balls[i] = ball;
 			}
 		},
 
@@ -182,7 +197,15 @@
 		destroyOffScreen: function () {
 			var self = this;
 
-			this.balls.forEach(function (ball, i) {
+			var ballKeys = Object.keys(this.balls);
+
+			if (!ballKeys.length) {
+				this.reset();
+				return;
+			}
+
+			ballKeys.forEach(function (i) {
+				var ball = self.balls[i];
 				var pos = ball.GetPosition();
 				var r = self.options.ballRadius;
 
@@ -194,6 +217,7 @@
 				) {
 					ball.SetAwake(false);
 					self.destroyedBodies.push(ball);
+					delete self.balls[i];
 				}
 			});
 		},
@@ -246,6 +270,7 @@
 				var explode = self.options.onEndContact(data.index);
 
 				if (explode) {
+					delete self.walls[data.index];
 					self.explode(body);
 				}
 			};

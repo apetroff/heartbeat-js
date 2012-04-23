@@ -35,7 +35,7 @@ Ext.define('Ria.controller.Controller', {
 				'<dt>Отрасль</dt>',
 				'<dd>{sector}</dd>',
 			'</dl>',
-			'<strong>{[values.tickers.split(",")[0]]}</strong>',
+			'<strong>{[values.tickers[0]]}</strong>',
 			'<span>&mdash;{[~~(Math.random() * 20)]}%</span>'
 		).compile();
 
