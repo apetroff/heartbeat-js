@@ -6,7 +6,15 @@ Ext.define('Spief.view.about.List', {
 	config: {
 		title: 'Инфо',
 		ui: 'round',
-		itemTpl: [ '{title}' ]
+		itemTpl: [ '{title}' ],
+		
+		items:[{
+			xtype: 'container',
+			docked: 'top',
+			cls: 'about',
+			html: '<img src="http://2012.forumspb.com/img/logo_ru.png"></img>'
+		}]
+		
 	},
 
 	initialize: function() {

@@ -9,7 +9,7 @@ Ext.define('Spief.util.Prime', {
 		
 		defaults: {
 			method: 'POST',
-			proxyUrl: 'http://collaboratoria.local/proxy/post',
+			proxyUrl: '/proxy/post',
 			headers: {
 				"Content-Type": "application/estyle-xml-request",
 				"Origin": "http://emitent.1prime.ru"
@@ -23,7 +23,7 @@ Ext.define('Spief.util.Prime', {
 				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentActivities.aspx?EmitentId={id}'
 			},
 			request: '<request><EmitentId>{id}</EmitentId></request>',
-			dataSelector: 'table#GridBuilderGeneral_headTable'
+			selector: 'table#GridBuilderGeneral_headTable'
 			
 		},
 		info: {
@@ -33,17 +33,7 @@ Ext.define('Spief.util.Prime', {
 				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentGeneral.aspx?EmitentId={id}'
 			},
 			request: '<request><EmitentId>{id}</EmitentId></request>',
-			dataSelector: 'table#GridBuilderGeneral_headTable'
-			
-		},
-		dailyAll: {
-			
-			url: 'http://emitent.1prime.ru/EmitentPages/EmitentCompareFoTickerResultsByDateGrid.aspx',
-			headers: {
-				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentCompareFoTickerBlueChip.aspx'
-			},
-			request: '<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage><orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><compareDate>{today}</compareDate><groupExchangeList>2 </groupExchangeList><groupInstrumentTypeList>1 </groupInstrumentTypeList><idList>{ids}</idList><showCol>Name ADate ExchangeName Code ActionName Close High Low ChangeProc Bid_ Ask WA Trade VDay VRub VDol</showCol><isBlueChip>1</isBlueChip><parentId>EmitentCompareFoTickerBlueChip</parentId></request>',
-			dataSelector: 'table#GridBuilderTicker_headTable'
+			selector: 'table#GridBuilderGeneral_headTable'
 			
 		},
 		daily: {
@@ -53,8 +43,12 @@ Ext.define('Spief.util.Prime', {
 				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentQuotesIntraday.aspx?EmitentId={id}'
 			},
 			request: '<request><isEmitentCard>1</isEmitentCard><groupExchangeList>2 </groupExchangeList><groupInstrumentTypeList>1 </groupInstrumentTypeList><idList>{id}</idList><showCol>Name ExchangeName Code ActionName Last High Low ChangeProc Bid_ Ask WA Trade VDay VRub VDol</showCol><parentId>EmitentQuotesIntraday</parentId></request>',
-			dataSelector: 'table#GridBuilderTicker_headTable'
-			
+			selector: {
+				table: 'table#GridBuilderTicker_headTable',
+				row: 'tr[id]',
+				cell: 'td[title]',
+				cellNames: 'exchangeName code actionName date last high low changeProc bid ask wa trade vDay vRub vDol'.split(' ')
+			}
 		},
 		yearly: {
 			
@@ -63,7 +57,7 @@ Ext.define('Spief.util.Prime', {
 				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentQuotesArchive.aspx?EmitentId={id}'
 			},
 			request: '<request><compareDate>{date}</compareDate><isEmitentCard>1</isEmitentCard><groupExchangeList>2 </groupExchangeList><groupInstrumentTypeList>1 </groupInstrumentTypeList><idList>{id}</idList><showCol>Name ADate ExchangeName Code ActionName Close High Low ChangeProc Bid_ Ask WA Trade VDay VRub VDol</showCol><parentId>EmitentQuotesArchive</parentId></request>',
-			dataSelector: 'tr#{id} td'
+			selector: 'tr#{id} td'
 			
 		},
 		news: {
@@ -73,7 +67,7 @@ Ext.define('Spief.util.Prime', {
 				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentNewsArchive.aspx?EmitentId={id}'
 			},
 			request: '<request><pageNumber>1</pageNumber><rowsOnPage>10</rowsOnPage><orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><DateFrom></DateFrom><DateTo></DateTo><SearchNews></SearchNews><Tickers>{tickers}</Tickers></request>',
-			dataSelector: 'table#GridBuilderNews'
+			selector: 'table#GridBuilderNews'
 			
 		},
 		comments: {
@@ -83,7 +77,11 @@ Ext.define('Spief.util.Prime', {
 				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentAnalystComments.aspx?EmitentId={id}'
 			},
 			request: '<request><pageNumber>1</pageNumber><rowsOnPage>10</rowsOnPage><orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><DateFrom>{today}</DateFrom><DateTo>{today}</DateTo><SearchComments></SearchComments><Tickers>{tickers}</Tickers></request>',
-			dataSelector: 'table#GridBuilderComments'
+			selector: {
+				table: 'table#GridBuilderComments',
+				row: '',
+				cell: ''
+			}
 			
 		},
 		docs: {
@@ -93,7 +91,7 @@ Ext.define('Spief.util.Prime', {
 				"Referer": 'http://emitent.1prime.ru/EmitentPages/EmitentDocumentsFCSM.aspx?EmitentId={id}'
 			},
 			request: '<request><pageNumber>1</pageNumber><rowsOnPage>10</rowsOnPage><orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><DateFrom>17.04.2011</DateFrom><DateTo>17.04.2012</DateTo><DocType>1</DocType><DocMessType>0</DocMessType><EmitentId>{id}</EmitentId></request>',
-			dataSelector: 'table#GridBuilderGeneral'
+			selector: 'table#GridBuilderGeneral'
 			
 		}
 	},
@@ -101,7 +99,7 @@ Ext.define('Spief.util.Prime', {
 	constructor: function(config) {
 		
 		this.callParent(config);
-		this.reactor = new Ext.get('reactor');
+		this.reactor = new Ext.get('reactor').dom;
 	},
 	
 	process: function(url, callback) {
@@ -125,16 +123,16 @@ Ext.define('Spief.util.Prime', {
 		            me.companiesIds.push(company.id);
 					
 		            companyModel = Ext.create('Spief.model.Company', company);
-
+					companyModel.setId(company.id);
+					
 		            me.companiesStore.add(companyModel);
+					
+					me.load('daily', {
+						id: company.id
+					}, companyModel);
 		        });
 				
-				var date = new Date();
-				
-		        me.load('dailyAll', {
-					ids: me.companiesIds.join(' '),
-					today: Ext.Date.format(date, 'd.m.Y')
-				}, callback);
+				callback();
 		    }
 		});
 	},
@@ -180,7 +178,8 @@ Ext.define('Spief.util.Prime', {
 				request: request
 			},
 			
-			selector: branchConfig.dataSelector
+			selector: branchConfig.selector,
+			rowSelector: branchConfig.rowSelector
 		}
 	},
 	
@@ -200,10 +199,12 @@ Ext.define('Spief.util.Prime', {
 //		this.loadAdditional(id);
 	},
 	
-	load: function(branch, data, callback) {
+	load: function(branch, data, model) {
 		
 		var me = this,
 			request = this.getRequest(branch, data);
+			
+		me.count = 0;
 			
 		Ext.Ajax.request({
 					
@@ -215,11 +216,11 @@ Ext.define('Spief.util.Prime', {
 			jsonData: request.data,
 			
 			success: function(response, opts) {
-				me[branch+'Process'].call(me, response.responseText, request.selector, callback);
+				me[branch+'Process'].call(me, response.responseText, request.selector, model);
 			},
 			
 			failure: function(response, opts) {
-				callback({err: response.statusText});
+				console.log(response.statusText);
 			}
 			
 		});
@@ -233,22 +234,23 @@ Ext.define('Spief.util.Prime', {
 	
 	},
 	
-	dailyAllProcess: function(responseText, selector, callback) {
-		
-		this.reactor.dom.innerHTML = responseText;
-		
-		var data = this.reactor.dom.querySelector(selector);
-		data.parentNode.removeChild(data);
-		
-		while (this.reactor.dom.childNodes.length) this.reactor.dom.removeChild(this.reactor.dom.firstChild); 
-		
-		console.log (data);
-		
-		callback({ok: 1, data: {}});
-	},
+	dailyProcess: function(responseText, selector, model) {
 	
-	dailyProcess: function(responseText, selector, callback) {
+		this.reactor.innerHTML = responseText;
+		var firstRow = this.reactor.querySelector(selector.table + ' ' + selector.row),
+			cells = firstRow.querySelectorAll(selector.cell);
 		
+		var daily = {}, names = selector.cellNames;
+		
+		for (var i = 0; i < cells.length; i++) {
+			daily[names[i]] = cells[i].title;
+		}
+		
+		if (!daily.changeProc) console.log(model.get('title'), daily.changeProc, ++this.count);
+		
+		model.set('daily', daily)
+		
+		this.clearReactor();
 	},
 	
 	yearlyProcess: function(responseText, selector, callback) {
@@ -265,6 +267,12 @@ Ext.define('Spief.util.Prime', {
 	
 	docsProcess: function(responseText, selector, callback) {
 	
+	},
+	
+	clearReactor: function() {
+		while (this.reactor.childNodes.length) {
+			this.reactor.removeChild(this.reactor.firstChild);
+		}
 	}
 	
 });

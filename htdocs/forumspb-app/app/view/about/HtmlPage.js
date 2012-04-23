@@ -13,7 +13,7 @@ Ext.define('Spief.view.about.HtmlPage', {
 		 Ext.Ajax.request({
             url: this.config.url,
             success: function(rs) {
-                this.setHtml(rs.responseText);
+                this.setHtml('<div class="wrapper">'+rs.responseText+'</div>');
             },
             scope: this
         });

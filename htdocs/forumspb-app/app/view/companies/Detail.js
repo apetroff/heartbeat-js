@@ -13,7 +13,7 @@ Ext.define('Spief.view.companies.Detail', {
 				xtype: 'companyInfo'
 			},
 			{
-				xtype: 'additionalList'
+				xtype: 'infoCard'
 			}
 		]
 

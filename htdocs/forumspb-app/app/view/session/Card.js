@@ -5,7 +5,7 @@ Ext.define('Spief.view.session.Card', {
 
     config: {
 
-        title: 'Сессии',
+        title: 'Расписание',
         iconCls: 'note1',
 
         autoDestroy: false,

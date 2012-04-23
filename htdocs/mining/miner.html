@@ -2,7 +2,7 @@
 <html>
 <head></head>
 <body>
-	<table style="WIDTH:100%;" class="grid-header" border="0">
+	<!--table style="WIDTH:100%;" class="grid-header" border="0">
 		<colgroup>
 			<col width="28px/">
 			<col width="300px/">
@@ -21,42 +21,42 @@
 				<th title="ОКПО" colspan="1" rowspan="1" class="header-cell">ОКПО</th>
 			</tr>
 		</tbody>
-	</table>
+	</table-->
 	
 	<script>
-		var listISIN = 'RU0009029540 RU0007661625 RU0009024277 RU0007288411 RU000A0JP5V6 RU000A0J2Q06 RU0008926258 RU000A0JPVJ0 RU0009046510 RU000A0JPNN9 RU0009046452 RU000A0JPKH7 RU0007661302 RU000A0JPNM1 RU0008943394 RU0009062285 RU000A0DKVS5 RU0009033591 RU000A0JKQU8 RU0007775219 RU0009062467 RU000A0DKXV5 RU0009084396 RU000A0B90N8 RU000A0HGPM9 RU000A0JNGA5 RU000A0JNG55 RU000A0JNAA8 RU000A0DQZE3 RU000A0JPFP0 RU000A0JP7F5 RU0008958863 RU000A0JPPL8 RU000A0JNUD0 RU0009028674 RU000A0HG4P4 RU0009071187 RU000A0JQU47 RU0009100291 RU0008959580 RU0006914488 RU000A0JR6A6 RU0005294775 RU0007252813 RU000A0ET7Y7 RU0009100945 RU0008081765 RU0007664942 RU0009107684 RU000A0JPGA0'.split(' ');
-		//var idsList = ["1519","7785","8085","7805","1435","8233","8617","8801","8529","8793","8257","8473","8761","7913","8461","7697","8245","8633","8089","8209","7781","8113","8093","8417","12240","8321","8313","8405","8889","7813","8785","8157","8201","8649","7653","7817","7633","12715","8005","7953","8597","63715","8869","12219","8173","1423","7669","12727","8389","7985"];
+		//var listISIN = 'RU0009029540 RU0007661625 RU0009024277 RU0007288411 RU000A0JP5V6 RU000A0J2Q06 RU0008926258 RU000A0JPVJ0 RU0009046510 RU000A0JPNN9 RU0009046452 RU000A0JPKH7 RU0007661302 RU000A0JPNM1 RU0008943394 RU0009062285 RU000A0DKVS5 RU0009033591 RU000A0JKQU8 RU0007775219 RU0009062467 RU000A0DKXV5 RU0009084396 RU000A0B90N8 RU000A0HGPM9 RU000A0JNGA5 RU000A0JNG55 RU000A0JNAA8 RU000A0DQZE3 RU000A0JPFP0 RU000A0JP7F5 RU0008958863 RU000A0JPPL8 RU000A0JNUD0 RU0009028674 RU000A0HG4P4 RU0009071187 RU000A0JQU47 RU0009100291 RU0008959580 RU0006914488 RU000A0JR6A6 RU0005294775 RU0007252813 RU000A0ET7Y7 RU0009100945 RU0008081765 RU0007664942 RU0009107684 RU000A0JPGA0'.split(' ');
+		var idsList = ["1519","7785","8085","7805","1435","8233","8617","8801","8529","8793","8257","8473","8761","7913","8461","7697","8245","8633","8089","8209","7781","8113","8093","8417","12240","8321","8313","8405","8889","7813","8785","8157","8201","8649","7653","7817","7633","12715","8005","7953","8597","63715","8869","12219","8173","1423","7669","12727","8389","7985"];
 		
-		var primeUrlSearchIds = 'http://emitent.1prime.ru/EmitentPages/EmitentSearchResultGrid.aspx';
-		//var primeUrlInfo = 'http://emitent.1prime.ru/EmitentPages/EmitentGeneralGrid.aspx';
+		//var primeUrlSearchIds = 'http://emitent.1prime.ru/EmitentPages/EmitentSearchResultGrid.aspx';
+		var primeUrlInfo = 'http://emitent.1prime.ru/EmitentPages/EmitentGeneralGrid.aspx';
 		//var primeUrlDescription = 'http://emitent.1prime.ru/EmitentPages/EmitentActivitiesGrid.aspx';
 		//var primeUrlIntraday = 'http://emitent.1prime.ru/EmitentPages/EmitentCompareFoTickerIntradayGrid.aspx';
 		//var primeUrlYear = 'http://emitent.1prime.ru/EmitentPages/EmitentCompareFoTickerResultsByDateGrid.aspx';
 		
 		var reactor = document.createElement('div');
-		var renderTo = document.getElementById('tbodyQwerty');
-		//var renderTo = document.body;
+		//var renderTo = document.getElementById('tbodyQwerty');
+		var renderTo = document.body;
 		
-		function getXmlSerISIN(isin) {
-		
-			return '<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage>'
-				+'<orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><Name></Name>'
-				+'<CodeType>-1</CodeType><regionList></regionList><regionListStr></regionListStr><branchList></branchList>'
-				+'<branchListStr></branchListStr><pocList></pocList><pocListStr></pocListStr><emitentTypeList>1 2 3 4</emitentTypeList>'
-				+'<INN></INN><tiker></tiker><OKPO></OKPO><ISIN>'
-				+ isin
-				+'</ISIN><OGRN></OGRN><regNumBank></regNumBank><codeFSFR></codeFSFR><regNumStrah></regNumStrah><OKATO></OKATO>'
-				+'<pocSearchType>0</pocSearchType><pocIntervalType>0</pocIntervalType><pocFromYear>2011</pocFromYear>'
-				+'<pocToYear>2012</pocToYear><pocOfQ>1</pocOfQ><pocOfY>2012</pocOfY><isTrading>0</isTrading>'
-				+'<showCol>ShortName Region Branch Ticker</showCol></request>';
-		}
-
-//		function getXmlSerID(id) {
+//		function getXmlSerISIN(isin) {
 //		
-//			return '<request><EmitentId>'
-//				+ id
-//				+ '</EmitentId></request>';
+//			return '<request><pageNumber>1</pageNumber><rowsOnPage>50</rowsOnPage>'
+//				+'<orderCondition><order/></orderCondition><forExcel>0</forExcel><forWord>0</forWord><Name></Name>'
+//				+'<CodeType>-1</CodeType><regionList></regionList><regionListStr></regionListStr><branchList></branchList>'
+//				+'<branchListStr></branchListStr><pocList></pocList><pocListStr></pocListStr><emitentTypeList>1 2 3 4</emitentTypeList>'
+//				+'<INN></INN><tiker></tiker><OKPO></OKPO><ISIN>'
+//				+ isin
+//				+'</ISIN><OGRN></OGRN><regNumBank></regNumBank><codeFSFR></codeFSFR><regNumStrah></regNumStrah><OKATO></OKATO>'
+//				+'<pocSearchType>0</pocSearchType><pocIntervalType>0</pocIntervalType><pocFromYear>2011</pocFromYear>'
+//				+'<pocToYear>2012</pocToYear><pocOfQ>1</pocOfQ><pocOfY>2012</pocOfY><isTrading>0</isTrading>'
+//				+'<showCol>ShortName Region Branch Ticker</showCol></request>';
 //		}
+
+		function getXmlSerID(id) {
+		
+			return '<request><EmitentId>'
+				+ id
+				+ '</EmitentId></request>';
+		}
 		
 //		function getXmlIntradaySerID(id) {
 //		
@@ -88,87 +88,37 @@
 //				+'<parentId>EmitentQuotesArchive</parentId></request>';
 //		}
 
-		var companies = [];
+		var companies = {};
 		
-		function loadSearchResultByISIN(isin) {
-			
-			var xhr = new XMLHttpRequest();
-			
-			var url = primeUrlSearchIds,
-				headers = {
-					"Content-Type": "application/estyle-xml-request",
-					"Origin": "http://emitent.1prime.ru",
-					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentSearchResult.aspx"
-				};
-			
-			xhr.open('POST', 'http://collaboratoria.local/proxy/post', true);
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			
-			xhr.onreadystatechange = function (event) {  
-				
-				if (xhr.readyState === 4) {  
-					if (xhr.status === 200) {
-						reactor.innerHTML = xhr.responseText;
-						var row = reactor.querySelector('tr.even-row');
-						renderTo.appendChild(row);
-						parse(row);
-						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
-						if (listISIN.length) {
-							loadSearchResultByISIN(listISIN.shift());
-						} else {
-							console.log (companies);
-							copy(JSON.stringify({companies: companies}));
-						}
-					} else {  
-						console.log("Error", xhr.statusText);  
-					}
-				}
-			};
-			
-			
-			xhr.send(JSON.stringify({url: url, headers: headers, request: getXmlSerISIN(isin)}));
-		}
-		
-		loadSearchResultByISIN(listISIN.shift());
-		
-		function parse(row) {
-		
-			var id = row.id,
-				title = row.childNodes[1].title.replace(/(ОАО |«|»)/g,''),
-				tickers = row.childNodes[2].title.split(', '),
-				region = row.childNodes[3].title.replace(/ \(.+\)/g,''),
-				sector = row.childNodes[4].title;
-			
-			companies.push({
-				id: id,
-				title: title,
-				tickers: tickers,
-				region: region,
-				sector: sector
-			});
-		}
-//		function loadInfoByID(id) {
+//		function loadSearchResultByISIN(isin) {
 //			
 //			var xhr = new XMLHttpRequest();
 //			
-//			var url = encodeURI(primeUrlInfo),
-//				headers = encodeURI(JSON.stringify({
+//			var url = primeUrlSearchIds,
+//				headers = {
 //					"Content-Type": "application/estyle-xml-request",
 //					"Origin": "http://emitent.1prime.ru",
-//					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentQuotesIntraday.aspx?EmitentId=" + id
-//				}));
+//					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentSearchResult.aspx"
+//				};
 //			
-//			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
+//			xhr.open('POST', 'http://collaboratoria.local/proxy/post', true);
+//			xhr.setRequestHeader('Content-Type', 'application/json');
 //			
 //			xhr.onreadystatechange = function (event) {  
 //				
 //				if (xhr.readyState === 4) {  
 //					if (xhr.status === 200) {
 //						reactor.innerHTML = xhr.responseText;
-//						var row = reactor.querySelector('table');
+//						var row = reactor.querySelector('tr.even-row');
 //						renderTo.appendChild(row);
+//						parse(row);
 //						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
-//						if (idsList.length) loadInfoByID(idsList.shift());
+//						if (listISIN.length) {
+//							loadSearchResultByISIN(listISIN.shift());
+//						} else {
+//							console.log (companies);
+//							copy(JSON.stringify({companies: companies}));
+//						}
 //					} else {  
 //						console.log("Error", xhr.statusText);  
 //					}
@@ -176,33 +126,127 @@
 //			};
 //			
 //			
-//			xhr.send(getXmlSerID(id));
+//			xhr.send(JSON.stringify({url: url, headers: headers, request: getXmlSerISIN(isin)}));
 //		}
 //		
-//		loadInfoByID(idsList.shift());
+//		loadSearchResultByISIN(listISIN.shift());
+//		
+//		function parse(row) {
+//		
+//			var id = row.id,
+//				title = row.childNodes[1].title.replace(/(ОАО |«|»)/g,''),
+//				tickers = row.childNodes[2].title.split(', '),
+//				region = row.childNodes[3].title.replace(/ \(.+\)/g,''),
+//				sector = row.childNodes[4].title;
+//			
+//			companies.push({
+//				id: id,
+//				title: title,
+//				tickers: tickers,
+//				region: region,
+//				sector: sector
+//			});
+//		}
+		function loadInfoByID(id) {
+			
+			var xhr = new XMLHttpRequest();
+			
+			var url = primeUrlInfo,
+				headers = {
+					"Content-Type": "application/estyle-xml-request",
+					"Origin": "http://emitent.1prime.ru",
+					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentQuotesIntraday.aspx?EmitentId=" + id
+				};
+			
+			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			
+			xhr.onreadystatechange = function (event) {  
+				
+				if (xhr.readyState === 4) {  
+					if (xhr.status === 200) {
+						reactor.innerHTML = xhr.responseText;
+						var row = reactor.querySelector('table#GridBuilderGeneral_headTable tbody');
+						renderTo.appendChild(row);
+						parse(row, id);
+						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
+						if (idsList.length) loadInfoByID(idsList.shift());
+					} else {  
+						console.log("Error", xhr.statusText);  
+					}
+				}
+			};
+			
+			
+			xhr.send(JSON.stringify({
+				url: url,
+				headers: headers,
+				request: getXmlSerID(id)
+			}));
+		}
+		
+		loadInfoByID(idsList.shift());
+		
+		var infos = {}
+		
+		var rowsMap = {
+			'Полное наименование': 'fullTitle',
+			'Краткое наименование': 'shortTitle',
+			'Юридический адрес': 'address',
+			'Сайт в Интернете': 'site',
+			'Руководитель': 'ceo',
+			'Отрасль': 'sector',
+			'Сфера деятельности': 'field',
+			'Уставный капитал, тыс. руб.': 'authCapital',
+			'Регион': 'region',
+			'Количество учредителей': 'coFounderCount',
+			'Лицензии': 'licenceList'
+		};
+		
+		function parse(tbody, id) {
+		
+			var leftCells = tbody.querySelectorAll('td:first-child');
+			
+			var info = {};
+			
+			for (var i = 0; i < leftCells.length; i++) {
+				
+				var title = leftCells[i].title;
+				
+				if (rowsMap[title]) {
+					info[rowsMap[title]] = leftCells[i].nextElementSibling.title;
+				}			
+			}
+			
+			infos[id] = info;
+		}
 
 //		function loadDescriptionByID(id) {
 //			
 //			var xhr = new XMLHttpRequest();
 //			
-//			var url = encodeURI(primeUrlDescription),
-//				headers = encodeURI(JSON.stringify({
+//			var url = primeUrlDescription,
+//				headers = {
 //					"Content-Type": "application/estyle-xml-request",
 //					"Origin": "http://emitent.1prime.ru",
 //					"Referer": "http://emitent.1prime.ru/EmitentPages/EmitentActivities.aspx?EmitentId=" + id
-//				}));
+//				};
 //			
-//			xhr.open('POST', 'http://collaboratoria.local/proxy/post?url='+url+'&headers='+headers, true);
+//			xhr.open('POST', 'http://collaboratoria.local/proxy/post', true);
+//			xhr.setRequestHeader('Content-Type', 'application/json');
 //			
 //			xhr.addEventListener('readystatechange', function (event) {  
 //				
 //				if (xhr.readyState === 4) {  
 //					if (xhr.status === 200) {
 //						reactor.innerHTML = xhr.responseText;
-//						var row = reactor.querySelector('table');
+//						var row = reactor.querySelector('table#GridBuilderGeneral_headTable tbody tr td');
+//						companies[id] = row.innerHTML;
 //						renderTo.appendChild(row);
+//						row.id = id;
 //						while (reactor.firstChild) reactor.removeChild(reactor.firstChild);
 //						if (idsList.length) loadDescriptionByID(idsList.shift());
+//						else console.log (companies);
 //					} else {  
 //						console.log("Error", xhr.statusText);  
 //					}
@@ -210,7 +254,11 @@
 //			});
 //			
 //			
-//			xhr.send(getXmlSerID(id));
+//			xhr.send(JSON.stringify({
+//				url: url,
+//				headers: headers,
+//				request: getXmlSerID(id)
+//			}));
 //		}
 //		
 //		loadDescriptionByID(idsList.shift());

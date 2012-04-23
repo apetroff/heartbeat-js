@@ -9,7 +9,7 @@ Ext.define('Spief.view.about.Card', {
         iconCls: 'info',
 
         autoDestroy: false,
-
+		
 		items: [
 			{
 				xtype: 'aboutList'
