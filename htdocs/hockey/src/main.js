@@ -49,6 +49,8 @@
 			this.width = canvas.width / this.scale;
 			this.height = canvas.height / this.scale;
 
+			this.destroyedBodies = [];
+
 			var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(canvas.getContext('2d'));
 			debugDraw.SetDrawScale(this.scale);
@@ -69,6 +71,7 @@
 		},
 
 		reset: function () {
+			this.addWalls();
 			this.addBalls();
 		},
 
@@ -83,50 +86,64 @@
 		},
 
 		createWorld: function () {			       
-			var world = new b2World(
+			return new b2World(
 				// gravity
                new b2Vec2(0, 0),
 			   // allow sleep
                false
 			);
-		    
+		},
+
+		addWalls: function () {
 			var fixDef = new b2FixtureDef;
 			fixDef.density = 1.0;
-			fixDef.friction = 0;
-			fixDef.restitution = 1.1;
-         
+			fixDef.friction = 0.5;
+			fixDef.restitution = 0.2;
+			
 			var bodyDef = new b2BodyDef;
 
-			var borderW = 0;
-			var one = 0 / this.scale;
+			var w = 120 / 2 / this.scale;
+			var h = 120 / 2 / this.scale;
 
-			//create ground
+			var nX = 14;
+			var nY = 7;
+			
 			bodyDef.type = b2Body.b2_staticBody;
+			
 			fixDef.shape = new b2PolygonShape;
+			fixDef.shape.SetAsBox(w, h);
 
-			/* |  | */
-			fixDef.shape.SetAsBox(borderW, this.height + one * 2);
+			var index = 0;
 
-			bodyDef.position.Set(-one, this.height + one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
+			var tl = nX + 1 + nY + 1 + nX + 1 + nY + 1; // 46
+			var bl = nX + 1 + nY + 1 + nX + 1;          // 38
+			var br = nX + 1 + nY + 1;                   // 23
+			var tr = nX + 1;                            // 15
 
-			bodyDef.position.Set(this.width + one, this.height + one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
+			for (var i = 1; i < tl; i += 1) {
+				// corners
+				if (i == tr || i == br || i == bl) {
+					continue;
+				}
 
-			/* _ - */
-			fixDef.shape.SetAsBox(this.width + one * 2, borderW);
+				if (i < tr) {
+					bodyDef.position.Set((i + 0.5) * w * 2, h);
+				} else if (i < br) {
+					bodyDef.position.Set((tr + 0.5) * w * 2, (-((br - i) - (nY + 1)) + 0.5) * h * 2);
+				} else if (i < bl) {
+					bodyDef.position.Set((bl - i + 0.5) * 2 * 2, (nY + 1 + 0.5) * h * 2);
+				} else {
+					bodyDef.position.Set(w, (tl - i + 0.5) * h * 2);
+				}
 
-			bodyDef.position.Set(-one, -one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-			bodyDef.position.Set(-one, this.height + one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-			return world;
+				bodyDef.userData = { index: index };
+				this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+				index += 1;
+			}
 		},
 
 		addBalls: function () {
-			var offset = 13 / this.scale;
+			var offset = 135 / this.scale;
 
 			for (var i = 0; i < this.ballCount; i += 1) {
 				var x = this.width * (i % 2) +
@@ -158,34 +175,60 @@
 			return bodyDef;
 		},
 
+		createMembrane: function (pos, index) {
+			var bodyDef = new b2BodyDef;
+  
+			var fixDef = new b2FixtureDef;
+			fixDef.density = 1.0;
+			fixDef.friction = 1;
+			fixDef.restitution = 1;
+       
+			bodyDef.type = b2Body.b2_dynamicBody;
+			fixDef.shape = new b2PolygonShape;
+			fixDef.shape.SetAsBox(
+				120 / 2 / this.scale,
+				120 / 2 / this.scale
+            );
+			bodyDef.position.x = pos.x;
+            bodyDef.position.y = pos.y;
+			bodyDef.fixedRotation = true;
+			bodyDef.userData = { index: index };
+
+            this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+			return bodyDef;
+		},
+
+		destroyQueue: function () {
+			while (this.destroyedBodies.length) {
+				var body = this.destroyedBodies.shift();
+				var pos = body.GetPosition();
+				var data = body.GetUserData();
+
+				if (b2Body.b2_staticBody === body.type) {
+					this.createMembrane(pos, data.index);
+				}
+
+				this.world.DestroyBody(body);
+			}
+		},
+
 		drawWorld: function () {
 			this.updateMouse();
+			this.destroyQueue();
 
             this.world.Step(this.FPS, 10, 10);
             this.world.DrawDebugData();
             this.world.ClearForces();
 		},
 
-		explode: function (pos) {
+		explode: function (body) {
+			this.destroyedBodies.push(body);
+
 			if (this.options.explosionSound) {
 				this.options.explosionSound.src = this.options.explosionSound.src; // FIXME
 				this.options.explosionSound.play();
 			}
-		},
-
-		getContactPoint: function (contact) {
-			var contactPoints = contact.GetManifold();
-			var firstPoint = contactPoints.m_points[0].m_localPoint;
-			var fixture = contact.GetFixtureB();
-			var body = fixture.GetBody();
-			var pos = body.GetWorldPoint(firstPoint);
-
-			return {
-				x: ~~(pos.x * this.scale),
-				y: ~~(pos.y * this.scale),
-				body: body,
-				fixture: fixture
-			};
 		},
 
 		bindCollision: function () {
@@ -193,49 +236,49 @@
 
 			var contactListener = new b2ContactListener;
 
-			var count = 0;
-
 			contactListener.PreSolve = function (contact) {
 				if ('b2PolyAndCircleContact' != contact.constructor.name) {
 					return;
 				}
 
-				var point = self.getContactPoint(contact);
+				var fixture = contact.GetFixtureA();
+				var body = fixture.GetBody();
+				var data = body.GetUserData();
 
-				var preventDefault = self.options.onPreSolve(point, self);
+				var ballFix = contact.GetFixtureB();
+				var ballBody = fixture.GetBody();
+
+				if (null == data.index) {
+					return;
+				}
+
+				var preventDefault = self.options.onPreSolve(data.index);
 
 				if (preventDefault) {
 					contact.SetEnabled(false);
-
-					count += 1;
-
-					if (0 == count % self.ballCount) {
-						setTimeout(function () {
-							location.reload();
-						}, 10000);
-					}
-
-					/*
-					setTimeout(function () {
-						point.body.SetAwake(false);
-						point.body.DestroyFixture(point.fixture);
-						self.world.DestroyBody(point.body);
-					}, 3000);
-					*/
+					self.destroyedBodies.push(body);
+					self.destroyedBodies.push(ballBody);
 				}
 			};
+
 
 			contactListener.EndContact = function (contact) {
 				if ('b2PolyAndCircleContact' != contact.constructor.name) {
 					return;
 				}
 
-				var point = self.getContactPoint(contact);
+				var fixture = contact.GetFixtureA();
+				var body = fixture.GetBody();
+				var data = body.GetUserData();
 
-				var explode = self.options.onEndContact(point, self);
+				if (null == data.index) {
+					return;
+				}
+
+				var explode = self.options.onEndContact(data.index);
 
 				if (explode) {
-					self.explode(point);
+					self.explode(body);
 				}
 			};
 
