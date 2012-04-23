@@ -33,8 +33,7 @@
 
 			this.options = {
 				ballRadius: 60,
-				onEndContact: Boolean,
-				onPreSolve: Boolean
+				onEndContact: Boolean
 			};
 
 			if (options) {
@@ -145,12 +144,16 @@
 		addBalls: function () {
 			var offset = 135 / this.scale;
 
+			this.balls = [];
+
 			for (var i = 0; i < this.ballCount; i += 1) {
 				var x = this.width * (i % 2) +
 					(this.options.ballRadius + offset) * (i % 2 ? -1 : 1);
 				var y = this.height * (i > 1) +
 					(this.options.ballRadius + offset) * (i > 1 ? -1 : 1);
 				var ball = this.createBall(i, x, y);
+
+				this.balls.push(ball);
 			}
 		},
 
@@ -170,51 +173,42 @@
             bodyDef.position.y = y;
 			bodyDef.fixedRotation = true;
 
-            this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+            var body = this.world.CreateBody(bodyDef);
+			body.CreateFixture(fixDef);
 
-			return bodyDef;
+			return body;
 		},
 
-		createMembrane: function (pos, index) {
-			var bodyDef = new b2BodyDef;
-  
-			var fixDef = new b2FixtureDef;
-			fixDef.density = 1.0;
-			fixDef.friction = 1;
-			fixDef.restitution = 1;
-       
-			bodyDef.type = b2Body.b2_dynamicBody;
-			fixDef.shape = new b2PolygonShape;
-			fixDef.shape.SetAsBox(
-				120 / 2 / this.scale,
-				120 / 2 / this.scale
-            );
-			bodyDef.position.x = pos.x;
-            bodyDef.position.y = pos.y;
-			bodyDef.fixedRotation = true;
-			bodyDef.userData = { index: index };
+		destroyOffScreen: function () {
+			var self = this;
 
-            this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+			this.balls.forEach(function (ball, i) {
+				var pos = ball.GetPosition();
+				var r = self.options.ballRadius;
 
-			return bodyDef;
+				if (
+					pos.x - r < 0 ||
+					pos.y - r < 0 ||
+					pos.x + r > self.width ||
+					pos.y + r > self.height
+				) {
+					ball.SetAwake(false);
+					self.destroyedBodies.push(ball);
+				}
+			});
 		},
 
 		destroyQueue: function () {
 			while (this.destroyedBodies.length) {
 				var body = this.destroyedBodies.shift();
-				var pos = body.GetPosition();
-				var data = body.GetUserData();
-
-				if (b2Body.b2_staticBody === body.type) {
-					this.createMembrane(pos, data.index);
-				}
-
 				this.world.DestroyBody(body);
 			}
 		},
 
 		drawWorld: function () {
 			this.updateMouse();
+			this.destroyOffScreen();
+
 			this.destroyQueue();
 
             this.world.Step(this.FPS, 10, 10);
@@ -235,32 +229,6 @@
 			var self = this;
 
 			var contactListener = new b2ContactListener;
-
-			contactListener.PreSolve = function (contact) {
-				if ('b2PolyAndCircleContact' != contact.constructor.name) {
-					return;
-				}
-
-				var fixture = contact.GetFixtureA();
-				var body = fixture.GetBody();
-				var data = body.GetUserData();
-
-				var ballFix = contact.GetFixtureB();
-				var ballBody = fixture.GetBody();
-
-				if (null == data.index) {
-					return;
-				}
-
-				var preventDefault = self.options.onPreSolve(data.index);
-
-				if (preventDefault) {
-					contact.SetEnabled(false);
-					self.destroyedBodies.push(body);
-					self.destroyedBodies.push(ballBody);
-				}
-			};
-
 
 			contactListener.EndContact = function (contact) {
 				if ('b2PolyAndCircleContact' != contact.constructor.name) {
