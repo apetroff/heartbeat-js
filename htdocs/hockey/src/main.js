@@ -79,7 +79,7 @@
 			requestAnimationFrame(function frame() {
 				self.step();
 				requestAnimationFrame(frame);
-			});
+			}, this.canvas);
 		},
 
 		createWorld: function () {			       
@@ -224,7 +224,7 @@
 
 		step: function () {
 			this.updateMouse();
-			this.destroyOffScreen();
+			//this.destroyOffScreen();
 
 			this.destroyQueue();
 
@@ -382,24 +382,33 @@
 			var PIx2 = Math.PI * 2;
 			var r = this.options.ballRadius * $;
 
+			var img = document.createElement('img');
+			img.src = '/hockey/a/puck.png';
+
 			this.drawCircle = function (pos) {
+				/*
 				this.ctx.beginPath();
 				this.ctx.arc(
 					pos.x * $, pos.y * $,
 					r, 0, PIx2, false
 				);
-				this.ctx.stroke();
+				this.ctx.closePath();
+				this.ctx.fill();
+				*/
+				this.ctx.drawImage(
+					img,
+					pos.x * $ - r, pos.y * $ - r
+				);
 			};
 
 			return this.drawCircle(pos);
 		},
 
 		drawWorld: function () {
-			var self = this;
-			Object.keys(this.balls).forEach(function (i) {
-				var ball = self.balls[i];
-				self.drawCircle(ball.GetPosition());
-			});
+			for (var i in this.balls) {
+				var ball = this.balls[i];
+				this.drawCircle(ball.GetPosition());
+			}
 		}
 	};
 

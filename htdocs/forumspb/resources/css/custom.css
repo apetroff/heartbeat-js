@@ -89,19 +89,14 @@
     display: block;
 }
 
-#game {
-	position: absolute;
-	z-index: 1;
-	left: 120px;
-	top: 120px;
-	width: 1680px;
-	height: 840px;
-	overflow: hidden;
+.x-dataview-tiles .x-dataview-inner {
+	position: relative;
+	z-index: 2;
 }
 
-#game canvas {
+canvas {
 	position: absolute;
 	z-index: 1;
-	left: -120px;
-	top: -120px;
+	left: 0;
+	top: 0;
 }

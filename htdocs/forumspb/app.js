@@ -75,8 +75,11 @@ Ext.application({
 			return index;
 		};
 
-		window.arcanoid = initArcanoid(
-			document.querySelector('canvas'), {
+		var canvas = document.querySelector('canvas');
+		var cont = document.querySelector('.x-dataview-tiles');
+		cont.appendChild(canvas);
+
+		window.arcanoid = initArcanoid(canvas, {
 				ballRadius: 30,
 
 				explosionSound: document.querySelector('audio'),
@@ -94,15 +97,13 @@ Ext.application({
 
 						if (tile) {
 							tile.style.visibility = 'hidden';
-
 							playedTiles[index] = true;
-
-							return true;
 						} else {
 							console.error('No tile with index %d', index);
 						}
-					}
 
+						return true;
+					}
 					return false;
 				}
 			}
