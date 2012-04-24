@@ -13,7 +13,6 @@
 		b2MassData			= Box2D.Collision.Shapes.b2MassData,
 		b2PolygonShape		= Box2D.Collision.Shapes.b2PolygonShape,
 		b2CircleShape		= Box2D.Collision.Shapes.b2CircleShape,
-		b2DebugDraw			= Box2D.Dynamics.b2DebugDraw,
 		b2MouseJointDef		= Box2D.Dynamics.Joints.b2MouseJointDef,
 		b2ContactListener	= Box2D.Dynamics.b2ContactListener;
 
@@ -46,6 +45,7 @@
 			this.options.ballRadius /= this.scale;
 
 			this.canvas = canvas;
+			this.ctx = canvas.getContext('2d');
 			this.width = canvas.width / this.scale;
 			this.height = canvas.height / this.scale;
 
@@ -54,15 +54,7 @@
 			this.walls = {};
 			this.balls = {};
 
-			var debugDraw = new b2DebugDraw();
-			debugDraw.SetSprite(canvas.getContext('2d'));
-			debugDraw.SetDrawScale(this.scale);
-			debugDraw.SetFillAlpha(0.5);
-			debugDraw.SetLineThickness(1.0);
-			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-
 			this.world = this.createWorld();
-			this.world.SetDebugDraw(debugDraw);
 
 			this.reset();
 
@@ -84,10 +76,8 @@
 
 		startLoop: function () {
 			var self = this;
-
 			requestAnimationFrame(function frame() {
-				self.drawWorld();
-
+				self.step();
 				requestAnimationFrame(frame);
 			});
 		},
@@ -232,18 +222,23 @@
 			}
 		},
 
-		drawWorld: function () {
+		step: function () {
 			this.updateMouse();
 			this.destroyOffScreen();
 
 			this.destroyQueue();
 
+			this.clearWorld();
+
             this.world.Step(this.FPS, 10, 10);
-            this.world.DrawDebugData();
             this.world.ClearForces();
+
+			this.drawWorld();
 		},
 
 		explode: function (body) {
+			var pos = body.GetPosition();
+
 			this.destroyedBodies.push(body);
 
 			if (this.options.explosionSound) {
@@ -358,6 +353,53 @@
 					}
 				}
 			};
+		},
+
+		clearWorld: function () {
+			var $ = this.scale;
+			this.ctx.clearRect(0, 0, this.width * $, this.height * $);
+
+			/*
+			var self = this;
+			var r = this.options.ballRadius * $;
+
+			Object.keys(this.balls).forEach(function (i) {
+				var ball = self.balls[i];
+				var pos = ball.GetPosition();
+
+				self.ctx.clearRect(
+					pos.x * $ - r,
+					pos.y * $ - r,
+					r * 2,
+					r * 2
+				);
+			});
+			*/
+		},
+
+		drawCircle: function (pos) {
+			var $ = this.scale;
+			var PIx2 = Math.PI * 2;
+			var r = this.options.ballRadius * $;
+
+			this.drawCircle = function (pos) {
+				this.ctx.beginPath();
+				this.ctx.arc(
+					pos.x * $, pos.y * $,
+					r, 0, PIx2, false
+				);
+				this.ctx.stroke();
+			};
+
+			return this.drawCircle(pos);
+		},
+
+		drawWorld: function () {
+			var self = this;
+			Object.keys(this.balls).forEach(function (i) {
+				var ball = self.balls[i];
+				self.drawCircle(ball.GetPosition());
+			});
 		}
 	};
 

@@ -89,9 +89,19 @@
     display: block;
 }
 
-canvas {
+#game {
 	position: absolute;
 	z-index: 1;
-	left: 0;
-	top: 0;
+	left: 120px;
+	top: 120px;
+	width: 1680px;
+	height: 840px;
+	overflow: hidden;
+}
+
+#game canvas {
+	position: absolute;
+	z-index: 1;
+	left: -120px;
+	top: -120px;
 }
