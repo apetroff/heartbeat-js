@@ -32,6 +32,7 @@
 
 			this.options = {
 				ballRadius: 60,
+				explosionDuration: 10,
 				onEndContact: Boolean,
 				onReset: Boolean
 			};
@@ -42,7 +43,7 @@
 				});
 			}
 
-			this.options.ballRadius /= this.scale;
+			this.ballRadius = this.options.ballRadius / this.scale;
 
 			this.canvas = canvas;
 			this.ctx = canvas.getContext('2d');
@@ -93,19 +94,18 @@
 
 		removeWalls: function () {
 			var self = this;
-			var wallKeys = Object.keys(this.walls);
-			wallKeys.forEach(function (i) {
-				var wall = self.walls[i];
-				delete self.walls[i];
-				self.destroyedBodies.push(wall);
-			});
+			for (var i in this.walls) {
+				var wall = this.walls[i];
+				delete this.walls[i];
+				this.destroyedBodies.push(wall);
+			}
 		},
 
 		addWalls: function () {
 			var fixDef = new b2FixtureDef;
 			fixDef.density = 1.0;
-			fixDef.friction = 0.5;
-			fixDef.restitution = 0.2;
+			fixDef.friction = 1;
+			fixDef.restitution = 1;
 			
 			var bodyDef = new b2BodyDef;
 
@@ -156,9 +156,9 @@
 
 			for (var i = 0; i < this.ballCount; i += 1) {
 				var x = this.width * (i % 2) +
-					(this.options.ballRadius + offset) * (i % 2 ? -1 : 1);
+					(this.ballRadius + offset) * (i % 2 ? -1 : 1);
 				var y = this.height * (i > 1) +
-					(this.options.ballRadius + offset) * (i > 1 ? -1 : 1);
+					(this.ballRadius + offset) * (i > 1 ? -1 : 1);
 				var ball = this.createBall(i, x, y);
 
 				this.balls[i] = ball;
@@ -175,11 +175,10 @@
        
 			bodyDef.type = b2Body.b2_dynamicBody;
 			fixDef.shape = new b2CircleShape(
-				this.options.ballRadius
+				this.ballRadius
             );
 			bodyDef.position.x = x;
             bodyDef.position.y = y;
-			bodyDef.fixedRotation = true;
 
             var body = this.world.CreateBody(bodyDef);
 			body.CreateFixture(fixDef);
@@ -200,7 +199,7 @@
 			ballKeys.forEach(function (i) {
 				var ball = self.balls[i];
 				var pos = ball.GetPosition();
-				var r = self.options.ballRadius;
+				var r = self.ballRadius;
 
 				if (
 					pos.x - r < 0 ||
@@ -224,7 +223,7 @@
 
 		step: function () {
 			this.updateMouse();
-			//this.destroyOffScreen();
+			this.destroyOffScreen();
 
 			this.destroyQueue();
 
@@ -237,14 +236,15 @@
 		},
 
 		explode: function (body) {
-			var pos = body.GetPosition();
+			this.explosionFrame = this.options.explosionDuration;
+			this.explosionPosition = body.GetPosition();
 
-			this.destroyedBodies.push(body);
-
+			/*
 			if (this.options.explosionSound) {
 				this.options.explosionSound.src = this.options.explosionSound.src; // FIXME
 				this.options.explosionSound.play();
 			}
+			*/
 		},
 
 		bindCollision: function () {
@@ -267,9 +267,13 @@
 
 				var explode = self.options.onEndContact(data.index);
 
-				if (explode) {
-					delete self.walls[data.index];
+				if (explode && data.index in self.walls) {
 					self.explode(body);
+
+					setTimeout(function () {
+						self.destroyedBodies.push(body);
+						delete self.walls[data.index];
+					}, 100);
 				}
 			};
 
@@ -380,7 +384,7 @@
 		drawCircle: function (pos) {
 			var $ = this.scale;
 			var PIx2 = Math.PI * 2;
-			var r = this.options.ballRadius * $;
+			var r = this.options.ballRadius;
 
 			var img = document.createElement('img');
 			img.src = '/hockey/a/puck.png';
@@ -405,6 +409,26 @@
 		},
 
 		drawWorld: function () {
+			if (this.explosionFrame > 0) {
+				this.explosionFrame -= 1;
+
+				var pos = this.explosionPosition;
+				var $ = this.scale;
+				var r = this.explosionFrame * this.ballRadius * 10;
+
+				this.ctx.beginPath();
+				this.ctx.arc(
+					pos.x * $, pos.y * $,
+					r, 0, Math.PI * 2, false
+				);
+				this.ctx.closePath();
+				
+				var red = ~~(255 - this.explosionFrame);
+				console.log(red);
+				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';
+				this.ctx.fill();
+			}
+
 			for (var i in this.balls) {
 				var ball = this.balls[i];
 				this.drawCircle(ball.GetPosition());
