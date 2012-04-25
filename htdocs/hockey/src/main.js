@@ -55,6 +55,7 @@
 			this.currentBodies = {};
 			this.walls = {};
 			this.balls = {};
+			this.mouse = {};
 
 			this.world = this.createWorld();
 
@@ -286,26 +287,36 @@
 			var self = this;
 
 			var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
-			var canvasPosition = this.canvas.getBoundingClientRect();
+			var canvasPos = this.canvas.getBoundingClientRect();
 
-			document.addEventListener('mousedown', onMouseDown, true);
-			document.addEventListener('mouseup', onMouseUp, true);
+			document.addEventListener('mousedown', onMouseDown,     true);
+			document.addEventListener('mouseup',   onMouseUp,       true);
+			document.addEventListener('mousemove', handleMouseMove, true);
 
 			function onMouseUp() {
 				isMouseDown = false;
 				mouseX = undefined;
 				mouseY = undefined;
+				self.mouse.start = null;
+				delete self.mouse.start;
+				delete self.mouse.end;
+
 			}
 
 			function onMouseDown(e) {
 				isMouseDown = true;
 				handleMouseMove(e);
-				document.addEventListener('mousemove', handleMouseMove, true);
 			};
 
 			function handleMouseMove(e) {
-				mouseX = (e.clientX - canvasPosition.left) / self.scale;
-				mouseY = (e.clientY - canvasPosition.top) / self.scale;
+				if (isMouseDown) {
+					mouseX = (e.clientX - canvasPos.left) / self.scale;
+					mouseY = (e.clientY - canvasPos.top) / self.scale;
+					self.mouse.start = {
+						x: mouseX,
+						y: mouseY
+					};
+				}
 			}
 
 			function getBodyAtMouse() {
@@ -340,6 +351,7 @@
 					if (data && self.movingBalls.indexOf(body) == -1) {
 						var index = data.index;
 
+						self.mouse.end = body.GetPosition();
 						self.movingBalls.push(body);
 
 						var md = new b2MouseJointDef();
@@ -351,13 +363,14 @@
 						mouseJoint = self.world.CreateJoint(md);
 						body.SetAwake(true);
 
-
 						if (!(index in self.currentBodies)) {
 							self.currentBodies[data.index] = body;
 
 							setTimeout(function () {
 								if (isMouseDown && index in self.currentBodies) {
 									isMouseDown = false;
+									delete self.mouse.start;
+									delete self.mouse.end;
 									delete self.currentBodies[index];
 								}
 							}, 1000);
@@ -426,28 +439,43 @@
 		},
 
 		drawWorld: function () {
+			var $ = this.scale;
+
 			if (this.explosionFrame > 0) {
 				this.explosionFrame -= 1;
 
 				var pos = this.explosionPosition;
-				var $ = this.scale;
-				var r = this.explosionFrame * this.ballRadius * 10;
+				var r = ~~(this.explosionFrame * this.ballRadius * 10);
 
 				this.ctx.beginPath();
 				this.ctx.arc(
-					pos.x * $, pos.y * $,
+					~~(pos.x * $),
+					~~(pos.y * $),
 					r, 0, Math.PI * 2, false
 				);
 				this.ctx.closePath();
-				
 				var red = ~~(255 - this.explosionFrame);
-				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';
+				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';				
 				this.ctx.fill();
 			}
 
 			for (var i in this.balls) {
 				var ball = this.balls[i];
 				this.drawCircle(ball.GetPosition());
+			}
+
+			if (this.mouse.start && this.mouse.end) {
+				this.ctx.beginPath();
+				this.ctx.moveTo(
+					~~(this.mouse.start.x * $),
+					~~(this.mouse.start.y * $)
+				);
+				this.ctx.lineTo(
+					~~(this.mouse.end.x * $),
+					~~(this.mouse.end.y * $)
+				);
+				this.ctx.stroke();
+				this.ctx.closePath();
 			}
 		}
 	};
