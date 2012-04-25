@@ -75,36 +75,35 @@ Ext.application({
 			return index;
 		};
 
-		window.arcanoid = initArcanoid(
-			document.querySelector('canvas'), {
+		var canvas = document.querySelector('canvas');
+		var cont = document.querySelector('.x-dataview-tiles');
+		cont.appendChild(canvas);
+
+		window.arcanoid = initArcanoid(canvas, {
 				ballRadius: 30,
 
 				explosionSound: document.querySelector('audio'),
 
-				onPreSolve: function (point, game) {
-					var index = getIndex(point, game);
-					return index in playedTiles;
+				onReset: function () {
+					playedTiles = {};
+					[].forEach.call(tiles, function (tile) {
+						tile.style.visibility = '';
+					});
 				},
 
-				onEndContact: function (point, game) {
-					var index = getIndex(point, game);
-
+				onEndContact: function (index) {
 					if (!playedTiles[index]) {
 						var tile = tiles[index];
 
 						if (tile) {
 							tile.style.visibility = 'hidden';
-
-							setTimeout(function () {
-								playedTiles[index] = true;
-							}, 50);
-
-							return true;
+							playedTiles[index] = true;
 						} else {
 							console.error('No tile with index %d', index);
 						}
-					}
 
+						return true;
+					}
 					return false;
 				}
 			}

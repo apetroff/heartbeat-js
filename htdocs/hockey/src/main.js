@@ -13,7 +13,6 @@
 		b2MassData			= Box2D.Collision.Shapes.b2MassData,
 		b2PolygonShape		= Box2D.Collision.Shapes.b2PolygonShape,
 		b2CircleShape		= Box2D.Collision.Shapes.b2CircleShape,
-		b2DebugDraw			= Box2D.Dynamics.b2DebugDraw,
 		b2MouseJointDef		= Box2D.Dynamics.Joints.b2MouseJointDef,
 		b2ContactListener	= Box2D.Dynamics.b2ContactListener;
 
@@ -33,8 +32,9 @@
 
 			this.options = {
 				ballRadius: 60,
+				explosionDuration: 10,
 				onEndContact: Boolean,
-				onPreSolve: Boolean
+				onReset: Boolean
 			};
 
 			if (options) {
@@ -43,21 +43,19 @@
 				});
 			}
 
-			this.options.ballRadius /= this.scale;
+			this.ballRadius = this.options.ballRadius / this.scale;
 
 			this.canvas = canvas;
+			this.ctx = canvas.getContext('2d');
 			this.width = canvas.width / this.scale;
 			this.height = canvas.height / this.scale;
 
-			var debugDraw = new b2DebugDraw();
-			debugDraw.SetSprite(canvas.getContext('2d'));
-			debugDraw.SetDrawScale(this.scale);
-			debugDraw.SetFillAlpha(0.5);
-			debugDraw.SetLineThickness(1.0);
-			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+			this.destroyedBodies = [];
+			this.movingBalls = [];
+			this.walls = {};
+			this.balls = {};
 
 			this.world = this.createWorld();
-			this.world.SetDebugDraw(debugDraw);
 
 			this.reset();
 
@@ -69,71 +67,101 @@
 		},
 
 		reset: function () {
+			this.movingBalls.length = 0;
+
+			this.removeWalls();
+			this.addWalls();
 			this.addBalls();
+			this.options.onReset();
 		},
 
 		startLoop: function () {
 			var self = this;
-
 			requestAnimationFrame(function frame() {
-				self.drawWorld();
-
+				self.step();
 				requestAnimationFrame(frame);
-			});
+			}, this.canvas);
 		},
 
 		createWorld: function () {			       
-			var world = new b2World(
+			return new b2World(
 				// gravity
                new b2Vec2(0, 0),
 			   // allow sleep
                false
 			);
-		    
+		},
+
+		removeWalls: function () {
+			var self = this;
+			for (var i in this.walls) {
+				var wall = this.walls[i];
+				delete this.walls[i];
+				this.destroyedBodies.push(wall);
+			}
+		},
+
+		addWalls: function () {
 			var fixDef = new b2FixtureDef;
 			fixDef.density = 1.0;
-			fixDef.friction = 0;
-			fixDef.restitution = 1.1;
-         
+			fixDef.friction = 1;
+			fixDef.restitution = 1;
+			
 			var bodyDef = new b2BodyDef;
 
-			var borderW = 0;
-			var one = 0 / this.scale;
+			var w = 120 / 2 / this.scale;
+			var h = 120 / 2 / this.scale;
 
-			//create ground
+			var nX = 14;
+			var nY = 7;
+			
 			bodyDef.type = b2Body.b2_staticBody;
+			
 			fixDef.shape = new b2PolygonShape;
+			fixDef.shape.SetAsBox(w, h);
 
-			/* |  | */
-			fixDef.shape.SetAsBox(borderW, this.height + one * 2);
+			var index = 0;
 
-			bodyDef.position.Set(-one, this.height + one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
+			var tl = nX + 1 + nY + 1 + nX + 1 + nY + 1; // 46
+			var bl = nX + 1 + nY + 1 + nX + 1;          // 38
+			var br = nX + 1 + nY + 1;                   // 23
+			var tr = nX + 1;                            // 15
 
-			bodyDef.position.Set(this.width + one, this.height + one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
+			for (var i = 1; i < tl; i += 1) {
+				// corners
+				if (i == tr || i == br || i == bl) {
+					continue;
+				}
 
-			/* _ - */
-			fixDef.shape.SetAsBox(this.width + one * 2, borderW);
+				if (i < tr) {
+					bodyDef.position.Set((i + 0.5) * w * 2, h);
+				} else if (i < br) {
+					bodyDef.position.Set((tr + 0.5) * w * 2, (-((br - i) - (nY + 1)) + 0.5) * h * 2);
+				} else if (i < bl) {
+					bodyDef.position.Set((bl - i + 0.5) * 2 * 2, (nY + 1 + 0.5) * h * 2);
+				} else {
+					bodyDef.position.Set(w, (tl - i + 0.5) * h * 2);
+				}
 
-			bodyDef.position.Set(-one, -one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-			bodyDef.position.Set(-one, this.height + one);
-			world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-			return world;
+				bodyDef.userData = { index: index };
+				var wall = this.world.CreateBody(bodyDef);
+				wall.CreateFixture(fixDef);
+				this.walls[index] = wall;
+				index += 1;
+			}
 		},
 
 		addBalls: function () {
-			var offset = 13 / this.scale;
+			var offset = 135 / this.scale;
 
 			for (var i = 0; i < this.ballCount; i += 1) {
 				var x = this.width * (i % 2) +
-					(this.options.ballRadius + offset) * (i % 2 ? -1 : 1);
+					(this.ballRadius + offset) * (i % 2 ? -1 : 1);
 				var y = this.height * (i > 1) +
-					(this.options.ballRadius + offset) * (i > 1 ? -1 : 1);
+					(this.ballRadius + offset) * (i > 1 ? -1 : 1);
 				var ball = this.createBall(i, x, y);
+
+				this.balls[i] = ball;
 			}
 		},
 
@@ -147,45 +175,76 @@
        
 			bodyDef.type = b2Body.b2_dynamicBody;
 			fixDef.shape = new b2CircleShape(
-				this.options.ballRadius
+				this.ballRadius
             );
 			bodyDef.position.x = x;
             bodyDef.position.y = y;
-			bodyDef.fixedRotation = true;
 
-            this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+            var body = this.world.CreateBody(bodyDef);
+			body.CreateFixture(fixDef);
 
-			return bodyDef;
+			return body;
 		},
 
-		drawWorld: function () {
+		destroyOffScreen: function () {
+			var self = this;
+
+			var ballKeys = Object.keys(this.balls);
+
+			if (!ballKeys.length) {
+				this.reset();
+				return;
+			}
+
+			ballKeys.forEach(function (i) {
+				var ball = self.balls[i];
+				var pos = ball.GetPosition();
+				var r = self.ballRadius;
+
+				if (
+					pos.x - r < 0 ||
+					pos.y - r < 0 ||
+					pos.x + r > self.width ||
+					pos.y + r > self.height
+				) {
+					ball.SetAwake(false);
+					self.destroyedBodies.push(ball);
+					delete self.balls[i];
+				}
+			});
+		},
+
+		destroyQueue: function () {
+			while (this.destroyedBodies.length) {
+				var body = this.destroyedBodies.shift();
+				this.world.DestroyBody(body);
+			}
+		},
+
+		step: function () {
 			this.updateMouse();
+			this.destroyOffScreen();
+
+			this.destroyQueue();
+
+			this.clearWorld();
 
             this.world.Step(this.FPS, 10, 10);
-            this.world.DrawDebugData();
             this.world.ClearForces();
+
+			this.drawWorld();
 		},
 
-		explode: function (pos) {
+		explode: function (body) {
+			this.explosionFrame = this.options.explosionDuration;
+			this.explosionPosition = body.GetPosition();
+
+			/*
 			if (this.options.explosionSound) {
 				this.options.explosionSound.src = this.options.explosionSound.src; // FIXME
 				this.options.explosionSound.play();
 			}
-		},
-
-		getContactPoint: function (contact) {
-			var contactPoints = contact.GetManifold();
-			var firstPoint = contactPoints.m_points[0].m_localPoint;
-			var fixture = contact.GetFixtureB();
-			var body = fixture.GetBody();
-			var pos = body.GetWorldPoint(firstPoint);
-
-			return {
-				x: ~~(pos.x * this.scale),
-				y: ~~(pos.y * this.scale),
-				body: body,
-				fixture: fixture
-			};
+			*/
 		},
 
 		bindCollision: function () {
@@ -193,49 +252,28 @@
 
 			var contactListener = new b2ContactListener;
 
-			var count = 0;
-
-			contactListener.PreSolve = function (contact) {
-				if ('b2PolyAndCircleContact' != contact.constructor.name) {
-					return;
-				}
-
-				var point = self.getContactPoint(contact);
-
-				var preventDefault = self.options.onPreSolve(point, self);
-
-				if (preventDefault) {
-					contact.SetEnabled(false);
-
-					count += 1;
-
-					if (0 == count % self.ballCount) {
-						setTimeout(function () {
-							location.reload();
-						}, 10000);
-					}
-
-					/*
-					setTimeout(function () {
-						point.body.SetAwake(false);
-						point.body.DestroyFixture(point.fixture);
-						self.world.DestroyBody(point.body);
-					}, 3000);
-					*/
-				}
-			};
-
 			contactListener.EndContact = function (contact) {
 				if ('b2PolyAndCircleContact' != contact.constructor.name) {
 					return;
 				}
 
-				var point = self.getContactPoint(contact);
+				var fixture = contact.GetFixtureA();
+				var body = fixture.GetBody();
+				var data = body.GetUserData();
 
-				var explode = self.options.onEndContact(point, self);
+				if (null == data.index) {
+					return;
+				}
 
-				if (explode) {
-					self.explode(point);
+				var explode = self.options.onEndContact(data.index);
+
+				if (explode && data.index in self.walls) {
+					self.explode(body);
+
+					setTimeout(function () {
+						self.destroyedBodies.push(body);
+						delete self.walls[data.index];
+					}, 100);
 				}
 			};
 
@@ -252,12 +290,9 @@
 			document.addEventListener('mouseup', onMouseUp, true);
 
 			function onMouseUp() {
-				document.removeEventListener('mousemove', handleMouseMove, true);
 				isMouseDown = false;
 				mouseX = undefined;
 				mouseY = undefined;
-
-				document.removeEventListener('mousedown', onMouseDown);
 			}
 
 			function onMouseDown(e) {
@@ -299,7 +334,9 @@
 				if (isMouseDown && !mouseJoint) {
 					var body = getBodyAtMouse();
 
-					if (body) {
+					if (body && self.movingBalls.indexOf(body) == -1) {
+						self.movingBalls.push(body);
+
 						var md = new b2MouseJointDef();
 						md.bodyA = this.world.GetGroundBody();
 						md.bodyB = body;
@@ -320,6 +357,82 @@
 					}
 				}
 			};
+		},
+
+		clearWorld: function () {
+			var $ = this.scale;
+			this.ctx.clearRect(0, 0, this.width * $, this.height * $);
+
+			/*
+			var self = this;
+			var r = this.options.ballRadius * $;
+
+			Object.keys(this.balls).forEach(function (i) {
+				var ball = self.balls[i];
+				var pos = ball.GetPosition();
+
+				self.ctx.clearRect(
+					pos.x * $ - r,
+					pos.y * $ - r,
+					r * 2,
+					r * 2
+				);
+			});
+			*/
+		},
+
+		drawCircle: function (pos) {
+			var $ = this.scale;
+			var PIx2 = Math.PI * 2;
+			var r = this.options.ballRadius;
+
+			var img = document.createElement('img');
+			img.src = '/hockey/a/puck.png';
+
+			this.drawCircle = function (pos) {
+				/*
+				this.ctx.beginPath();
+				this.ctx.arc(
+					pos.x * $, pos.y * $,
+					r, 0, PIx2, false
+				);
+				this.ctx.closePath();
+				this.ctx.fill();
+				*/
+				this.ctx.drawImage(
+					img,
+					pos.x * $ - r, pos.y * $ - r
+				);
+			};
+
+			return this.drawCircle(pos);
+		},
+
+		drawWorld: function () {
+			if (this.explosionFrame > 0) {
+				this.explosionFrame -= 1;
+
+				var pos = this.explosionPosition;
+				var $ = this.scale;
+				var r = this.explosionFrame * this.ballRadius * 10;
+
+				this.ctx.beginPath();
+				this.ctx.arc(
+					pos.x * $, pos.y * $,
+					r, 0, Math.PI * 2, false
+				);
+				this.ctx.closePath();
+				
+				var red = ~~(255 - this.explosionFrame);
+				console.log(red);
+				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';
+				this.ctx.fill();
+			}
+
+			for (var i in this.balls) {
+				var ball = this.balls[i];
+				this.drawCircle(ball.GetPosition());
+			}
 		}
 	};
 
