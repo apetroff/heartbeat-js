@@ -52,6 +52,7 @@
 
 			this.destroyedBodies = [];
 			this.movingBalls = [];
+			this.currentBodies = {};
 			this.walls = {};
 			this.balls = {};
 
@@ -179,6 +180,7 @@
             );
 			bodyDef.position.x = x;
             bodyDef.position.y = y;
+			bodyDef.userData = { index: index };
 
             var body = this.world.CreateBody(bodyDef);
 			body.CreateFixture(fixDef);
@@ -333,8 +335,11 @@
 			this.updateMouse = function () {
 				if (isMouseDown && !mouseJoint) {
 					var body = getBodyAtMouse();
+					var data = body && body.GetUserData();
 
-					if (body && self.movingBalls.indexOf(body) == -1) {
+					if (data && self.movingBalls.indexOf(body) == -1) {
+						var index = data.index;
+
 						self.movingBalls.push(body);
 
 						var md = new b2MouseJointDef();
@@ -345,6 +350,18 @@
 						md.maxForce = 300.0 * body.GetMass();
 						mouseJoint = self.world.CreateJoint(md);
 						body.SetAwake(true);
+
+
+						if (!(index in self.currentBodies)) {
+							self.currentBodies[data.index] = body;
+
+							setTimeout(function () {
+								if (isMouseDown && index in self.currentBodies) {
+									isMouseDown = false;
+									delete self.currentBodies[index];
+								}
+							}, 1000);
+						}
 					}
 				}
 				
@@ -424,7 +441,6 @@
 				this.ctx.closePath();
 				
 				var red = ~~(255 - this.explosionFrame);
-				console.log(red);
 				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';
 				this.ctx.fill();
 			}
