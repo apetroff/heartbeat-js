@@ -17,7 +17,8 @@ Ext.define('Spief.view.Main', {
 			{ xclass: 'Spief.view.companies.Card' },
 			{ xclass: 'Spief.view.about.Card' },
 			
-			{ xclass: 'Spief.view.user.Form'},
+			{ xclass: 'Spief.view.user.Login'},
+			{ xclass: 'Spief.view.user.Logout'},
 			{ xclass: 'Spief.view.trade.Form'}
 		]
 	}

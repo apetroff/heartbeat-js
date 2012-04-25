@@ -5,7 +5,7 @@ Ext.define('Spief.view.about.Card', {
 
 	config: {
 
-		title: 'Инфо',
+		title: 'Информация',
         iconCls: 'info',
 
         autoDestroy: false,

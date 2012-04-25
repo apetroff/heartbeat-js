@@ -66,7 +66,7 @@ Ext.define('Spief.controller.Companies', {
 	},
 	
 	onFirstLoad: function() {
-		console.log('loaded');
+		
 	},
 
 	onCompanyTap: function(list, idx, el, record) {

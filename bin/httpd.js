@@ -156,10 +156,10 @@ module.exports = {
 	getProfile: function (config) {
 		var result = {};
 		var user = config.request.user;
-		if (user && user.email && user.name) {
-			result.email = user.email;
-			result.name = user.name;
-			result.avatar = user.avatar || '';
+		if (user) {
+			util.extend(result, user);
+			delete result.tokens;
+			delete result.sessionUIDs;
 		} else {
 			result.statusCode = 401;
 			result.err = 'User not authorized';
@@ -170,67 +170,6 @@ module.exports = {
 };
 
 // - - -
-
-var prepareConfig;
-
-function requestHandler(req, res, basicWf) {
-	
-	var prepare = basicWf.prepare;
-	
-	if (prepare) {
-		
-		if (prepareConfig) {
-			
-			var wfChain = [];
-			
-			// create chain of wfs
-		
-			prepare.forEach(function(p, index, arr) {
-				
-				var innerWfConfig = prepareConfig[p];
-				var innerWf = new workflow(innerWfConfig, {request: req, response: res, stage: 'prepare'});
-				
-				wfChain.push(innerWf);
-				
-			});
-			
-			// push basic wf to chain
-			
-			wfChain.push(basicWf)
-			
-			// subscribe they
-			
-			for (var i = 0; i < wfChain.length-1; i++) {
-			
-				var currentWf = wfChain[i];
-				currentWf.nextWf = wfChain[i+1];
-				
-				currentWf.on('completed', function(cWF) {
-					
-					setTimeout(cWF.nextWf.run.bind (cWF.nextWf), 0);
-				
-				});
-				
-				currentWf.on('failed', function(cWF) {
-				
-					console.log ('failed', cWF.id);
-				
-				})
-			
-			}
-			
-			wfChain[0].run();
-		
-		} else {
-			
-			throw "Config doesn't contain such prepare type: " + wf.prepare;
-			
-		}
-		
-	}	
-}
-
-// ----------------------------------------
 
 project.on ('ready', function () {
 	
@@ -243,14 +182,10 @@ project.on ('ready', function () {
 	
 	defaultSharingGroupId = project.config.consumerConfig.facebook.defaultSharingGroupId;
 
-	prepareConfig = project.config.prepare;
-	
 	// - - - -
 
 	
 	var httpInititator = new httpdi (httpdiConfig);
-	
-	httpInititator.on('detected', requestHandler);
 	
 	// - - - -
 	

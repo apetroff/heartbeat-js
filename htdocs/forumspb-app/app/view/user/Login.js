@@ -1,7 +1,7 @@
-Ext.define('Spief.view.user.Form', {
+Ext.define('Spief.view.user.Login', {
 	
 	extend: 'Ext.form.Panel',
-	xtype: 'userForm',
+	xtype: 'userLogin',
 
 	config: {
 		cls: 'user',
@@ -9,7 +9,6 @@ Ext.define('Spief.view.user.Form', {
 		
 		modal: true,
 		centered: true,
-		hideOnMaskTap: true,
 		hidden: true,
 		
 		width: 270,
@@ -28,11 +27,11 @@ Ext.define('Spief.view.user.Form', {
 			items: [{
 				xtype: 'textfield',
 				label: 'Имя',
-				name: 'name'
+				name: 'username'
 			}, {
-				xtype: 'textfield',
+				xtype: 'passwordfield',
 				label: 'Код',
-				name: 'code'
+				name: 'password'
 			}]
 		}, {
 			xtype: 'container',
@@ -58,4 +57,4 @@ Ext.define('Spief.view.user.Form', {
 			height: 5
 		}]
 	}
- });
+});
