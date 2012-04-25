@@ -1,0 +1,53 @@
+{
+	"session": {
+		"tasks": [{
+			"className": "task/post",
+			"request": "{$request}",
+			"produce": "data.body"
+		}, {
+			"className": "task/cookie",
+			"description": "get cookie headers and parse it",
+			"headers": "{$request.headers}",
+			"method": "parse",
+			"produce": "data.cookies"
+		}, {
+			"className": "task/cookie",
+			"description": "generate SessionUID and compose session Cookie, render request.sessionUID",
+			"request": "{$request}",
+			"reqCookies": "{$data.cookies}",
+			"secret": "4d4ywyTuy8UYTU4y",
+			"cookieTpl": {
+				"name": "stoken",
+				"domain": "collaboratoria.com",
+				"path": "/",
+				"expirePeriod": "+172800000",
+				"httpOnly": true
+			},
+			"method": "session",
+			"produce": "data.sessionCookie"
+		}, {
+			"className": "task/cookie",
+			"description": "render set-cookie header to response + update expired period",
+			"cookies": ["{$data.sessionCookie}"],
+			"method": "render",
+			"output": "{$response}"
+		}]
+	},
+	"user": {
+		"tasks": [{
+			"className":  "task/mongoRequest",
+			"description": "get user WHERE sessionUIDs[i] == request.sessionUID",
+			"connector":  "mongo",
+			"filter": {"sessionUIDs": "{$request.sessionUID}"},
+			"collection": "users",
+			"produce":    "data.mongoResponse"
+		}, {
+			"className": "task/user",
+			"description": "render request.user from mongoResponse",
+			"request": "{$request}",
+			"found": "{$data.mongoResponse}",
+			"method": "render",
+			"produce": "data.user"
+		}]
+	}
+}

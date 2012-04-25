@@ -1,39 +1,7 @@
 [{
-	"path": "suggest",
-	"tasks": [{
-		"functionName": "parseFilter",
-		"url": "{$request.url}",
-		"produce": "data.query"
-	}, {
-		"className": "task/ldapRequest",
-		"connector": "ldap",
-		"fields": "msexchhomeservername mailnickname department telephonenumber division cn givenname statetitle samaccountname sn title mail dn userprincipalname",
-		"pager": "{$data.query.person}",
-		"searchPattern": "(&(|(mail=*{}*)(userPrincipalName=*{}*)(telephoneNumber=*{}*)(cn={}*))(userPrincipalName=*))",
-		"keyName": "data",
-		"toLowerCase": true,
-		"mapping": {"_id": "mail", "text": "cn"},
-		"produce": "data.dataResponse"
-	}, {
-		"className":  "task/mongoRequest",
-		"connector":  "mongo",
-		"collection": "tags",
-		"pager":     "{$data.query.tag}",
-		"produce":    "data.dataResponse"
-	}, {
-		"functionName": "compose",
-		"filter": "{$data.query.filter}",
-		"dataResponse": "{$data.dataResponse}",
-		"produce": "data.compose"
-	}],
-	"presenter": {
-		"type": "json",
-		"vars": "{$data.compose}"
-	}
-}, {
-	"path": "tasks",
+	"path": "users",
 	"workflows": [{
-		"pattern": "list.json",
+		"path": "list.json",
 		"prepare": ["session", "user"],
 		"tasks": [{
 			"functionName": "parseQuery",
@@ -46,125 +14,10 @@
 			"pager": "{$data.query}",
 			"options": {
 				"fields": {
-					"shared": 0
-				}
-			},
-			"collection": "tasks",
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}, {
-		"path": "create.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "insert",
-			"timestamp": false,
-			"insertingSafe": true,
-			"collection": "tags",
-			"data": "{$request.body.fields.tags}",
-			"produce": "data.tagsResponse"
-		}, {
-			"functionName": "updateTags",
-			"mongoResponse": "{$data.tagsResponse}",
-			"user": "{$request.user}",
-			"data": "{$request.body.fields}",
-			"produce": "data.updatedRecord"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "insert",
-			"collection": "tasks",
-			"data":       "{$data.updatedRecord}",
-			"produce":    "data.taskResponse"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.taskResponse}"
-		}
-	}, {
-		"path": "update.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "update",
-			"collection": "tasks",
-			"data":       "{$request.body.fields}",
-			"produce":    "data.updatedId"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "insert",
-			"collection": "tags",
-			"data":       "{$request.body.fields.tags}",
-			"produce":    "data.tags"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"collection": "tasks",
-			"filter":      "{$data.updatedId}",
-			"options": {
-				"fields": {
 					"shared":0
 				}
 			},
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}, {
-		"path": "destroy.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "remove",
-			"collection": "tasks",
-			"data":       "{$request.body.fields}"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"collection": "tasks",
-			"filter":      "{$data.updatedId}",
-			"options": {
-				"fields": {
-					"shared":0
-				}
-			},
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}]
-}, {
-	"path": "ktree",
-	"workflows": [{
-		"path": "list.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"functionName": "parseQuery",
-			"url": "{$request.url}",
-			"user": "{$request.user}",
-			"produce": "data.query"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"filter": "{$data.query.filter}",
-			"options": {
-				"fields": {
-					"shared":0
-				}
-			},
-			"collection": "ktree",
+			"collection": "users",
 			"produce":    "data.records"
 		}],
 		"presenter": {
@@ -183,7 +36,7 @@
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
 			"method":     "insert",
-			"collection": "ktree",
+			"collection": "users",
 			"data":       "{$data.personalData}",
 			"produce":    "data.taskResponse"
 		}],
@@ -198,159 +51,13 @@
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
 			"method":     "update",
-			"collection": "ktree",
-			"data":		  "{$request.body.fields}",
-			"produce":    "data.updatedId"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"collection": "ktree",
-			"filter":     "{$data.updatedId}",
-			"options": {
-				"fields": {
-					"shared":0
-				}
-			},
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}]
-}, {
-	"path": "events",
-	"workflows": [{
-		"path": "list.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"functionName": "parseQuery",
-			"url": "{$request.url}",
-			"user": "{$request.user}",
-			"produce": "data.query"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"pager": "{$data.query}",
-			"options": {
-				"fields": {
-					"shared":0
-				}
-			},
-			"collection": "events",
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}, {
-		"path": "create.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"functionName": "addUserData",
-			"data": "{$request.body.fields}",
-			"user": "{$request.user}",
-			"produce": "data.personalData"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "insert",
-			"collection": "events",
-			"data":       "{$data.personalData}",
-			"produce":    "data.taskResponse"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.taskResponse}"
-		}
-	}, {
-		"path": "update.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "update",
-			"collection": "events",
+			"collection": "users",
 			"data":       "{$request.body.fields}",
 			"produce":    "data.updatedId"
 		}, {
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
-			"collection": "events",
-			"filter":      "{$data.updatedId}",
-			"options": {
-				"fields": {
-					"shared":0
-				}
-			},
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}] 
-}, {
-	"path": "content",
-	"workflows": [{
-		"path": "list.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"functionName": "parseQuery",
-			"url": "{$request.url}",
-			"user": "{$request.user}",
-			"produce": "data.query"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"pager": "{$data.query}",
-			"options": {
-				"fields": {
-					"shared":0
-				}
-			},
-			"collection": "content",
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}, {
-		"path": "create.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"functionName": "addUserData",
-			"data": "{$request.body.fields}",
-			"user": "{$request.user}",
-			"produce": "data.personalData"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "insert",
-			"collection": "content",
-			"data":       "{$data.personalData}",
-			"produce":    "data.taskResponse"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.taskResponse}"
-		}
-	}, {
-		"path": "update.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "update",
-			"collection": "content",
-			"data":       "{$request.body.fields}",
-			"produce":    "data.updatedId"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"collection": "content",
+			"collection": "users",
 			"filter":      "{$data.updatedId}",
 			"options": {
 				"fields": {

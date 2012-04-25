@@ -13,7 +13,7 @@ Ext.require(['Spief.util.Proxy']);
 Ext.application({
     // Change the values below to re-configure the app for a different conference.
 
-    title:   'ПМЭФ-2012',
+    title:   'ПМЭФ 2012',
     dataUrl: 'http://2012.forumspb.com/index_ru.html',
 
     mapCenter: [59.928294,30.236024],
@@ -21,7 +21,7 @@ Ext.application({
 	
     aboutPages: [
         {
-            title: 'О форуме',
+            title: 'ПМЭФ 2012',
             xtype: 'htmlPage',
             url: 'data/about.html'
         },
@@ -94,7 +94,8 @@ Ext.application({
         'about.HtmlPage',
 		
 		'user.Panel',
-		'user.Form'
+		'user.Login',
+		'user.Logout'
     ],
 
     controllers: [

@@ -10,10 +10,9 @@ Ext.define('Spief.view.companies.InfoCard', {
 		scrollable: false,
 		margin: '20',
 		
-		disabled: true,
-		
 		defaults: {
 			defaults: {
+				readOnly: true,
 				labelWidth: 230,
 				clearIcon: false
 			}

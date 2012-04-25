@@ -186,11 +186,6 @@ h4 {
 
 .infoCard {
 
-	input, span {
-		color: #000 !important;
-		-webkit-text-fill-color: #000 !important;
-	}
-	
 	.x-description-field {
 		background-color: #FFF;
 		border-radius: 0.4em;
@@ -300,32 +295,30 @@ h4 {
 			}
 		}
 		
-		div.image {
-			box-shadow: white 0 1px 1px;
-			background-image: url('http://2012.forumspb.com/img/temp/main_pic.jpg');
-			width: 680px;
-			height: 354px;
-			border-radius: 0.4em;
-			border: solid #DDD 1px;
+		div.center {
+			
+			text-align: center;
+			
+			div.image {
+				box-shadow: white 0 1px 1px;
+				display: inline-block;
+				background-image: url('http://2012.forumspb.com/img/temp/main_pic.jpg');
+				width: 680px;
+				height: 354px;
+				border-radius: 0.4em;
+				border: solid #DDD 1px;
+			}
 		}
 	
-		h1 {
-			padding: 30px 0 10px 0;
-			text-shadow: white 0 1px 1px;
-			color: #333;
-			font-size: 26px;
-			font-weight: bold;
-		}
-		
 		h4 {
 			text-shadow: white 0 1px 1px;
 			margin: 1em 0.7em 0.3em;
-			color: #333;
-			font-weight: bold;
+			color: #BBB;
+			font-size: 14px;
 			white-space: nowrap;
 		}
 		
-		div {
+		div.border {
 			
 			padding: 20px;
 			background-color: #FFF;
@@ -357,5 +350,9 @@ form.user, form.trade {
 	.x-form-fieldset-title, .x-form-fieldset-instructions {
 		margin: 1em;
 		text-align: center;
+	}
+	
+	.x-form-fieldset-instructions .errors {
+		color: #F00;
 	}
 }

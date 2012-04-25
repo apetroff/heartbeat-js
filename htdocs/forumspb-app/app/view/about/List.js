@@ -4,7 +4,7 @@ Ext.define('Spief.view.about.List', {
 	xtype: 'aboutList',
 
 	config: {
-		title: 'Инфо',
+		title: 'Информация',
 		ui: 'round',
 		itemTpl: [ '{title}' ],
 		

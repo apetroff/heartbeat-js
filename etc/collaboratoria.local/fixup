@@ -10,58 +10,61 @@
 		}
 	},
 	
-	"prepare": {
-		"session": {
-			"tasks": [{
-				"className": "task/post",
-				"request": "{$request}",
-				"produce": "data.body"
-			}, {
-				"className": "task/cookieParser",
-				"description": "get cookie headers and parse it",
-				"headers": "{$request.headers}",
-				"produce": "data.cookies"
-			}, {
-				"className": "task/cookieSession",
-				"description": "generate SessionUID and compose session Cookie, render request.sessionUID",
-				"request": "{$request}",
-				"reqCookies": "{$data.cookies}",
-				"secret": "4d4ywyTuy8UYTU4y",
-				"cookieTpl": {
-					"name": "stoken",
-					"domain": "collaboratoria.local",
-					"path": "/",
-					"expirePeriod": "+172800000"
+	"initiator" : {
+		"httpd" : {
+			"prepare": {
+				"session": {
+					"tasks": [{
+						"className": "task/post",
+						"request": "{$request}",
+						"produce": "data.body"
+					}, {
+						"className": "task/cookie",
+						"description": "get cookie headers and parse it",
+						"headers": "{$request.headers}",
+						"method": "parse",
+						"produce": "data.cookies"
+					}, {
+						"className": "task/cookie",
+						"description": "generate SessionUID and compose session Cookie, render request.sessionUID",
+						"request": "{$request}",
+						"reqCookies": "{$data.cookies}",
+						"secret": "4d4ywyTuy8UYTU4y",
+						"cookieTpl": {
+							"name": "stoken",
+							"domain": "collaboratoria.local",
+							"path": "/",
+							"expirePeriod": "+172800000",
+							"httpOnly": true
+						},
+						"method": "session",
+						"produce": "data.sessionCookie"
+					}, {
+						"className": "task/cookie",
+						"description": "render set-cookie header to response + update expired period",
+						"cookies": ["{$data.sessionCookie}"],
+						"method": "render",
+						"output": "{$response}"
+					}]
 				},
-				"produce": "data.sessionCookie"
-			}, {
-				"className": "task/cookieRender",
-				"description": "render set-cookie header to response + update expired period",
-				"cookies": ["{$data.sessionCookie}"],
-				"output": "{$response}"
-			}]
-		},
-		"user": {
-			"tasks": [{
-				"className":  "task/mongoRequest",
-				"description": "get user WHERE sessionUIDs[i] == request.sessionUID",
-				"connector":  "mongo",
-				"filter": {"sessionUIDs": "{$request.sessionUID}"},
-				"collection": "users",
-				"produce":    "data.mongoResponse"
-			}, {
-				"className": "task/userRender",
-				"description": "render request.user from mongoResponse",
-				"request": "{$request}",
-				"found": "{$data.mongoResponse}",
-				"produce": "data.user"
-			}]
-		},
-		"authWithRedirect": {
-			"className": "task/redirect",
-			"if": "{$data.anonimous}",
-			"url": "/google/login",
-			"output": "{$response}"
+				"user": {
+					"tasks": [{
+						"className":  "task/mongoRequest",
+						"description": "get user WHERE sessionUIDs[i] == request.sessionUID",
+						"connector":  "mongo",
+						"filter": {"sessionUIDs": "{$request.sessionUID}"},
+						"collection": "users",
+						"produce":    "data.mongoResponse"
+					}, {
+						"className": "task/user",
+						"description": "render request.user from mongoResponse",
+						"request": "{$request}",
+						"found": "{$data.mongoResponse}",
+						"method": "render",
+						"produce": "data.user"
+					}]
+				}
+			}
 		}
 	}
 }

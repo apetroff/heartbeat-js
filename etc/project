@@ -4,60 +4,6 @@
 
 	"consumerConfig": "<consumerConfig>",
 
-	"prepare": {
-		"session": {
-			"tasks": [{
-				"className": "task/post",
-				"request": "{$request}",
-				"produce": "data.body"
-			}, {
-				"className": "task/cookieParser",
-				"description": "get cookie headers and parse it",
-				"headers": "{$request.headers}",
-				"produce": "data.cookies"
-			}, {
-				"className": "task/cookieSession",
-				"description": "generate SessionUID and compose session Cookie, render request.sessionUID",
-				"request": "{$request}",
-				"reqCookies": "{$data.cookies}",
-				"secret": "4d4ywyTuy8UYTU4y",
-				"cookieTpl": {
-					"name": "stoken",
-					"domain": "collaboratoria.com",
-					"path": "/",
-					"expirePeriod": "+172800000"
-				},
-				"produce": "data.sessionCookie"
-			}, {
-				"className": "task/cookieRender",
-				"description": "render set-cookie header to response + update expired period",
-				"cookies": ["{$data.sessionCookie}"],
-				"output": "{$response}"
-			}]
-		},
-		"user": {
-			"tasks": [{
-				"className":  "task/mongoRequest",
-				"description": "get user WHERE sessionUIDs[i] == request.sessionUID",
-				"connector":  "mongo",
-				"filter": {"sessionUIDs": "{$request.sessionUID}"},
-				"collection": "users",
-				"produce":    "data.mongoResponse"
-			}, {
-				"className": "task/userRender",
-				"description": "render request.user from mongoResponse",
-				"request": "{$request}",
-				"found": "{$data.mongoResponse}",
-				"produce": "data.user"
-			}]
-		},
-		"authWithRedirect": {
-			"className": "task/redirect",
-			"if": "{$data.anonimous}",
-			"url": "/google/login",
-			"output": "{$response}"
-		}
-	},
 	"initiator" : {
 		"httpd" : {
 			"port": 50088,
@@ -65,40 +11,141 @@
 				"index": "index.html"
 			},
 			"router": "hierarchical",
+			"prepare": "<prepare>",
 			"workflows": [{
-				"path": "save",
-				"tasks": [{
-					"className": "task/post",
-					"request": "{$request}",
-					"produce": "data.body"
-				}],
-				"presenter": {
-					"type": "json",
-					"vars": "{$data.body}"
-				}
-			}, {
 				"path": "entity",
 				"workflows": "<entity>"
-			}, {
-				"path": "upload",
-				"tasks": [{
-					"className": "task/upload",
-					"request": "{$request}",
-					"dumpData": true,
-					"jsonEncoded": true,
-					"produce": "data.post"
-				}],
-				"presenter": {
-					"type": "json",
-					"vars": "{$data.post}"
-				}
 			}, {
 				"path": "",
 				"tasks": [{
 					"className": "task/redirect",
-					"url": "/editor/",
+					"url": "/forumspb/",
 					"output": "{$response}"
 				}]
+			}, {
+				"path": "basic",
+				"workflows": [{
+					"path": "login",
+					"prepare": ["session"],
+					"tasks": [{
+						"className":"task/mongoRequest",
+						"description": "get user account",
+						"connector": "mongo",
+						"collection": "users",
+						"pager": {
+							"filter": {
+								"name": "{$request.body.fields.username}"
+							}
+						},						
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/basic",
+						"method": "checkExistAndRender",
+						"description": "if exist user with credentials then associate user data with sessionUID",
+						"sessionUID": "{$request.sessionUID}",
+						"password": "{$request.body.fields.password}",
+						"mongoResponse": "{$data.mongoResponse}",
+						"produce": "data.user"
+					}, {
+						"className": "task/mongoRequest",
+						"description": "store user/sessionUID",
+						"connector": "mongo",
+						"method": "update",
+						"collection": "users",
+						"data": "{$data.user}",
+						"produce": "data.ids"
+					}, {
+						"className":"task/mongoRequest",
+						"description": "get user account",
+						"connector": "mongo",
+						"collection": "users",
+						"pager": {
+							"filter": "{$data.ids}"
+						},
+						"options": {
+							"fields": {
+								"tokens": 0,
+								"sessionUIDs": 0
+							}
+						},						
+						"produce": "data.mongoUpdateResponse"
+					}],
+					"presenter": {
+						"completed": {
+							"type": "json",
+							"vars": "{$data.mongoUpdateResponse}"
+						},
+						"failed": {
+							"type": "json",
+							"vars": "{$error}"
+						}
+					}
+				}, {
+					"path": "registration",
+					"prepare": ["session"],
+					"tasks": [{
+						"className":"task/mongoRequest",
+						"description": "get user account",
+						"connector": "mongo",
+						"collection": "users",
+						"pager": {
+							"filter": {
+								"name": "{$request.body.fields.username}"
+							}
+						},						
+						"produce": "data.mongoResponse"
+					}, {
+						"className": "task/basic",
+						"method": "checkNoExistAndRender",
+						"description": "if noexist user with username then create and associate user data with sessionUID",
+						"mongoResponse": "{$data.mongoResponse}",
+						"sessionUID": "{$request.sessionUID}",
+						"fields": "{$request.body.fields}",
+						"produce": "data.user"
+					}, {
+						"className":"task/mongoRequest",
+						"description": "save user",
+						"connector": "mongo",
+						"method": "insert",
+						"insertingSafe": true,
+						"collection": "users",
+						"data": ["{$data.user}"],
+						"produce": "data.mongoCreateResponse"
+					}],
+					"presenter": {
+						"completed": {
+							"type": "json",
+							"vars": "{$data.mongoCreateResponse}"
+						},
+						"failed": {
+							"type": "json",
+							"vars": "{$error}"
+						}
+					}
+				}]
+			}, {
+					"path": "logout",
+					"prepare": ["session", "user"],
+					"tasks": [{
+						"className": "task/basic",
+						"method": "logout",
+						"description": "remove sessionUID from sessionUIDs",
+						"sessionUID": "{$request.sessionUID}",
+						"user": "{$request.user}",
+						"produce": "data.user"
+					}, {
+						"className":"task/mongoRequest",
+						"description": "update user data",
+						"connector": "mongo",
+						"method": "update",
+						"collection": "users",
+						"data": "{$data.user}",
+						"produce": "data.mongoResponse"
+					}],
+					"presenter": {
+						"type": "json",
+						"vars": "{$data.mongoResponse}"
+					}
 			}, {
 				"path": "google",
 				"workflows": [{
@@ -151,10 +198,11 @@
 						"method": "profile",
 						"produce": "data.userData"
 					}, {
-						"className": "task/userParser",
+						"className": "task/user",
 						"description": "compose userData and sessionsData in one object",
 						"request": "{$request}",
 						"userData":"{$data.userData}",
+						"method": "parse",
 						"produce": "data.user"
 					}, {
 						"className": "task/mongoRequest",
@@ -168,7 +216,7 @@
 						"className": "task/redirect",
 						"description": "redirect to action or root",
 						"if": "{$data.mongoResponse}",
-						"url": "{$data.redirectUrl}",
+						"url": "/profile.html",
 						"output": "{$response}"
 					}]
 				}]
@@ -225,11 +273,12 @@
 						"method": "grouplist",
 						"produce": "data.groupsData"
 					}, {
-						"className": "task/userParser",
+						"className": "task/user",
 						"description": "compose userData, groupsData and sessionsData in one object",
 						"request": "{$request}",
 						"userData": "{$data.userData}",
 						"groupsData": "{$data.groupsData}",
+						"method": "parse",
 						"produce": "data.user"
 					}, {
 						"className": "task/mongoRequest",
@@ -243,24 +292,7 @@
 						"className": "task/redirect",
 						"description": "redirect to action or root",
 						"if": "{$data.mongoResponse}",
-						"url": "{$data.redirectUrl}",
-						"output": "{$response}"
-					}]
-				}, {
-					"path": "logout",
-					"prepare": ["session", "user"],
-					"tasks": [{
-						"className":"task/mongoRequest",
-						"description": "remove user data",
-						"connector": "mongo",
-						"method": "remove",
-						"collection": "users",
-						"data": ["{$request.user}"],
-						"produce": "data.mongoResponse"
-					}, {
-						"className": "task/redirect",
-						"if": "{$data.mongoResponse}",
-						"url": "/",
+						"url": "/profile.html",
 						"output": "{$response}"
 					}]
 				}]
@@ -315,10 +347,11 @@
 						"method": "profile",
 						"produce": "data.userData"
 					}, {
-						"className": "task/userParser",
+						"className": "task/user",
 						"description": "compose userData and sessionsData in one object",
 						"request": "{$request}",
 						"userData":"{$data.userData}",
+						"method": "parse",
 						"produce": "data.user"
 					}, {
 						"className": "task/mongoRequest",
@@ -332,7 +365,7 @@
 						"className": "task/redirect",
 						"description": "redirect to action or root",
 						"if": "{$data.mongoResponse}",
-						"url": "/",
+						"url": "/profile.html",
 						"output": "{$response}"
 					}]
 				}]
@@ -382,10 +415,11 @@
 						"method": "profile",
 						"produce": "data.userData"
 					}, {
-						"className": "task/userParser",
+						"className": "task/user",
 						"description": "compose userData and sessionsData in one object",
 						"request": "{$request}",
 						"userData":"{$data.userData}",
+						"method": "parse",
 						"produce": "data.user"
 					}, {
 						"className": "task/mongoRequest",
@@ -399,7 +433,7 @@
 						"className": "task/redirect",
 						"description": "redirect to action or root",
 						"if": "{$data.mongoResponse}",
-						"url": "/",
+						"url": "/profile.html",
 						"output": "{$response}"
 					}]
 				}]
