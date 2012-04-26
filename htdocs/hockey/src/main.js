@@ -348,7 +348,6 @@
 				aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
 
 				// Query the world for overlapping shapes.
-
 				selectedBody = null;
 				self.world.QueryAABB(getBodyCB, aabb);
 				return selectedBody;
@@ -386,50 +385,43 @@
 		clearWorld: function () {
 			var $ = this.scale;
 			this.ctx.clearRect(0, 0, this.width * $, this.height * $);
-
-			/*
-			var self = this;
-			var r = this.options.ballRadius * $;
-
-			Object.keys(this.balls).forEach(function (i) {
-				var ball = self.balls[i];
-				var pos = ball.GetPosition();
-
-				self.ctx.clearRect(
-					pos.x * $ - r,
-					pos.y * $ - r,
-					r * 2,
-					r * 2
-				);
-			});
-			*/
 		},
 
-		drawCircle: function (pos) {
+		drawCircle: function (ball) {
 			var $ = this.scale;
 			var PIx2 = Math.PI * 2;
 			var r = this.options.ballRadius;
 
-			var img = document.createElement('img');
-			img.src = '/hockey/a/puck.png';
+			var images = [
+				'/hockey/a/bird.png',
+				'/hockey/a/rio.png',
+				'/hockey/a/green.png',
+				'/hockey/a/yellow.png'
+			].map(function (src) {
+				var img = new Image;
+				img.src = src;
+				return img;
+			});
 
-			this.drawCircle = function (pos) {
-				/*
-				this.ctx.beginPath();
-				this.ctx.arc(
-					pos.x * $, pos.y * $,
-					r, 0, PIx2, false
-				);
-				this.ctx.closePath();
-				this.ctx.fill();
-				*/
+			this.drawCircle = function (ball) {
+				var pos = ball.GetPosition();
+				var index = ball.GetUserData().index;
+				var angle = ball.GetAngle();
+
+				this.ctx.save();
+				if (angle) {
+					this.ctx.translate(pos.x * $, pos.y * $);
+					this.ctx.rotate(angle);
+					this.ctx.translate(-pos.x * $, -pos.y * $);
+				}
 				this.ctx.drawImage(
-					img,
+					images[index],
 					pos.x * $ - r, pos.y * $ - r
 				);
+				this.ctx.restore();
 			};
 
-			return this.drawCircle(pos);
+			return this.drawCircle(ball);
 		},
 
 		drawWorld: function () {
@@ -454,8 +446,7 @@
 			}
 
 			for (var i in this.balls) {
-				var ball = this.balls[i];
-				this.drawCircle(ball.GetPosition());
+				this.drawCircle(this.balls[i]);
 			}
 
 			if (this.mouse.start && this.mouse.end) {
