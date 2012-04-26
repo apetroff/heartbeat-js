@@ -1,5 +1,5 @@
 [{
-	"path": "users",
+	"path": "accounts",
 	"workflows": [{
 		"path": "list.json",
 		"prepare": ["session", "user"],
@@ -12,12 +12,7 @@
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
 			"pager": "{$data.query}",
-			"options": {
-				"fields": {
-					"shared":0
-				}
-			},
-			"collection": "users",
+			"collection": "accounts",
 			"produce":    "data.records"
 		}],
 		"presenter": {
@@ -36,7 +31,7 @@
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
 			"method":     "insert",
-			"collection": "users",
+			"collection": "accounts",
 			"data":       "{$data.personalData}",
 			"produce":    "data.taskResponse"
 		}],
@@ -51,19 +46,14 @@
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
 			"method":     "update",
-			"collection": "users",
+			"collection": "accounts",
 			"data":       "{$request.body.fields}",
 			"produce":    "data.updatedId"
 		}, {
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
-			"collection": "users",
+			"collection": "accounts",
 			"filter":      "{$data.updatedId}",
-			"options": {
-				"fields": {
-					"shared": 0
-				}
-			},
 			"produce":    "data.records"
 		}],
 		"presenter": {
