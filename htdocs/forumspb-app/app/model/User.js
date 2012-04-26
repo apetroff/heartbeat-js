@@ -3,14 +3,11 @@ Ext.define('Spief.model.User', {
 	
 	config: {
 		
-		idProperty: '_id',
-		
 		fields: [
-			'_id',
-			'username',
-			'password',
-			'role',
-			'briefcase'
+			{name: '_id', type: 'string'},
+			{name: 'username', type: 'string'},
+			{name: 'password', type: 'string'},
+			{name: 'role', type: 'string'}
 		],
 		
 		validations: [{

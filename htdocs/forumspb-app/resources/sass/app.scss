@@ -338,6 +338,15 @@ h4 {
 	}
 }
 
+.x-button.x-item-disabled .username {
+	opacity: 0.5;
+}
+	
+.x-button .username {
+	font-size: 14px;
+	margin: 5px 10px;
+}
+
 form.user, form.trade {
 
 	border-radius: 12px !important;

@@ -1,7 +1,7 @@
-Ext.define('Spief.view.user.Logout', {
+Ext.define('Spief.view.user.Account', {
 	
 	extend: 'Ext.form.Panel',
-	xtype: 'userLogout',
+	xtype: 'userAccount',
 
 	config: {
 		cls: 'user',
@@ -11,7 +11,7 @@ Ext.define('Spief.view.user.Logout', {
 		centered: true,
 		hidden: true,
 		
-		width: 270,
+		width: 350,
 		
 		layout: {
 			type: 'vbox',
@@ -19,42 +19,48 @@ Ext.define('Spief.view.user.Logout', {
 			align: 'center'
 		},
 		
-//		items: [{
-//			xtype: 'fieldset',
-//			width: 230,
-//			title: 'Авторизация',
-//			instructions: 'Используйте код на обороте вашего бейджа',
-//			items: [{
-//				xtype: 'textfield',
-//				label: 'Имя',
-//				name: 'name'
-//			}, {
-//				xtype: 'textfield',
-//				label: 'Код',
-//				name: 'id'
-//			}]
-//		}, {
-//			xtype: 'container',
-//			layout: 'hbox',
-//			docked: 'bottom',
-//			defaults: {
-//				xtype: 'button',
-//				flex: 1
-//			},
-//			items: [{
-//				ui: 'confirm',
-//				text: 'Войти'
-//			}, {
-//				xtype: 'spacer',
-//				width: 5
-//			},{
-//				ui: 'decline',
-//				text: 'Отмена'
-//			}]
-//		}, {
-//			xtype: 'spacer',
-//			docked: 'bottom',
-//			height: 5
-//		}]
+		items: [{
+			xtype: 'fieldset',
+			width: 300,
+			title: '',
+			instructions: 'Участвуйте в торгах, чтобы увеличить активы',
+			
+			defaults: {
+				readOnly: true,
+				labelWidth: 200,
+			},
+			
+			items: [{
+				xtype: 'textfield',
+				label: 'Оценка активов',
+				name: 'sum'
+			}, {
+				xtype: 'textfield',
+				label: 'Пакетов акций',
+				name: 'packageCount'
+			}]
+		}, {
+			xtype: 'container',
+			layout: 'hbox',
+			docked: 'bottom',
+			defaults: {
+				xtype: 'button',
+				flex: 1
+			},
+			items: [{
+				ui: 'confirm',
+				text: 'Выйти'
+			}, {
+				xtype: 'spacer',
+				width: 5
+			},{
+				ui: 'decline',
+				text: 'Отмена'
+			}]
+		}, {
+			xtype: 'spacer',
+			docked: 'bottom',
+			height: 5
+		}]
 	}
 });

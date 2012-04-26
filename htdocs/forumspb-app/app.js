@@ -95,7 +95,7 @@ Ext.application({
 		
 		'user.Panel',
 		'user.Login',
-		'user.Logout'
+		'user.Account'
     ],
 
     controllers: [
