@@ -32,6 +32,7 @@
 
 			this.options = {
 				ballRadius: 60,
+				springRatio: 5,
 				explosionDuration: 10,
 				onEndContact: Boolean,
 				onReset: Boolean
@@ -52,8 +53,10 @@
 
 			this.destroyedBodies = [];
 			this.movingBalls = [];
+			this.currentBodies = {};
 			this.walls = {};
 			this.balls = {};
+			this.mouse = {};
 
 			this.world = this.createWorld();
 
@@ -179,6 +182,7 @@
             );
 			bodyDef.position.x = x;
             bodyDef.position.y = y;
+			bodyDef.userData = { index: index };
 
             var body = this.world.CreateBody(bodyDef);
 			body.CreateFixture(fixDef);
@@ -283,27 +287,58 @@
 		bindMouse: function () {
 			var self = this;
 
-			var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
-			var canvasPosition = this.canvas.getBoundingClientRect();
+			var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint, body;
+			var canvasPos = this.canvas.getBoundingClientRect();
 
-			document.addEventListener('mousedown', onMouseDown, true);
-			document.addEventListener('mouseup', onMouseUp, true);
+			document.addEventListener('mousedown', onMouseDown,     true);
+			document.addEventListener('mouseup',   onMouseUp,       true);
+			document.addEventListener('mousemove', handleMouseMove, true);
 
 			function onMouseUp() {
+				if (body) {
+					var MIN_DX = 14;
+					var MIN_DY = 9;
+
+					var m = self.mouse;
+					var r = self.options.springRatio;
+
+					var dX = (m.start.x - m.end.x) * self.options.springRatio;
+					var dY = (m.start.y - m.end.y) * self.options.springRatio;
+
+					if (dX < MIN_DX && dY < MIN_DY) {
+						dX = (dX + 1) * 4;
+						dY = (dY + 1) * 4;
+					}
+
+					body.SetLinearVelocity(new b2Vec2(dX, dY));
+
+					body.SetAwake(true);
+				}
+
 				isMouseDown = false;
 				mouseX = undefined;
 				mouseY = undefined;
+				self.mouse.start = null;
+				delete self.mouse.start;
+				delete self.mouse.end;
 			}
 
 			function onMouseDown(e) {
 				isMouseDown = true;
 				handleMouseMove(e);
-				document.addEventListener('mousemove', handleMouseMove, true);
+				body = getBodyAtMouse();
 			};
 
 			function handleMouseMove(e) {
-				mouseX = (e.clientX - canvasPosition.left) / self.scale;
-				mouseY = (e.clientY - canvasPosition.top) / self.scale;
+				if (isMouseDown) {
+					mouseX = (e.clientX - canvasPos.left) / self.scale;
+					mouseY = (e.clientY - canvasPos.top) / self.scale;
+
+					self.mouse.start = {
+						x: mouseX,
+						y: mouseY
+					};
+				}
 			}
 
 			function getBodyAtMouse() {
@@ -332,28 +367,17 @@
 
 			this.updateMouse = function () {
 				if (isMouseDown && !mouseJoint) {
-					var body = getBodyAtMouse();
+					var data = body && body.GetUserData();
 
-					if (body && self.movingBalls.indexOf(body) == -1) {
+					if (data && self.movingBalls.indexOf(body) == -1) {
+						var index = data.index;
+
+						self.mouse.end = body.GetPosition();
 						self.movingBalls.push(body);
 
-						var md = new b2MouseJointDef();
-						md.bodyA = this.world.GetGroundBody();
-						md.bodyB = body;
-						md.target.Set(mouseX, mouseY);
-						md.collideConnected = true;
-						md.maxForce = 300.0 * body.GetMass();
-						mouseJoint = self.world.CreateJoint(md);
-						body.SetAwake(true);
-					}
-				}
-				
-				if (mouseJoint) {
-					if (isMouseDown) {
-						mouseJoint.SetTarget(new b2Vec2(mouseX, mouseY));
-					} else {
-						self.world.DestroyJoint(mouseJoint);
-						mouseJoint = null;
+						if (!(index in self.currentBodies)) {
+							self.currentBodies[data.index] = body;
+						}
 					}
 				}
 			};
@@ -409,29 +433,43 @@
 		},
 
 		drawWorld: function () {
+			var $ = this.scale;
+
 			if (this.explosionFrame > 0) {
 				this.explosionFrame -= 1;
 
 				var pos = this.explosionPosition;
-				var $ = this.scale;
-				var r = this.explosionFrame * this.ballRadius * 10;
+				var r = ~~(this.explosionFrame * this.ballRadius * 10);
 
 				this.ctx.beginPath();
 				this.ctx.arc(
-					pos.x * $, pos.y * $,
+					~~(pos.x * $),
+					~~(pos.y * $),
 					r, 0, Math.PI * 2, false
 				);
 				this.ctx.closePath();
-				
 				var red = ~~(255 - this.explosionFrame);
-				console.log(red);
-				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';
+				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';				
 				this.ctx.fill();
 			}
 
 			for (var i in this.balls) {
 				var ball = this.balls[i];
 				this.drawCircle(ball.GetPosition());
+			}
+
+			if (this.mouse.start && this.mouse.end) {
+				this.ctx.beginPath();
+				this.ctx.moveTo(
+					~~(this.mouse.start.x * $),
+					~~(this.mouse.start.y * $)
+				);
+				this.ctx.lineTo(
+					~~(this.mouse.end.x * $),
+					~~(this.mouse.end.y * $)
+				);
+				this.ctx.stroke();
+				this.ctx.closePath();
 			}
 		}
 	};
