@@ -11,8 +11,6 @@ var querystring = require('querystring');
 var task = require('task/base');
 var workflow = require('workflow');
 
-var defaultSharingGroupId;
-
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 module.exports = {
@@ -64,15 +62,7 @@ module.exports = {
 		var user = config.user;
 		
 		if (user) {
-			
-			var userId = user.email;
-			var shared = (user.groupIds && user.groupIds.indexOf(defaultSharingGroupId) >= 0);
-			
-			if (shared) {
-				query.filter['$or'] = [ {userId: userId} , {shared: 1}];
-			} else {
-				query.filter.userId = userId;
-			}
+			query.filter['author.userId'] = user._id;
 		}
 		
 		return query;
@@ -99,14 +89,7 @@ module.exports = {
 
 		}
 		
-		console.log (query);
-//		else if (query.filter.type == '$') {
-//
-//			query.share = newQuery;
-//			query.share = {type: query.filter.type, text: {"$regex": new RegExp('^'+query.filter.text)}};;
-//
-//		}
-		
+		console.log (query);		
 		return query;	
 	},
 	
@@ -124,17 +107,14 @@ module.exports = {
 		var data = config.data;
 		
 		var user = config.user;
-		var shared = (user.groupIds.indexOf(defaultSharingGroupId) >= 0);
 		
 		var author = {
-			userId: user.userId,
-			name: user.name,
-			avatar: user.avatar
+			userId: user._id,
+			name: user.name
 		};
 		
 		data.author = author;
-		data.shared = ~~(shared);
-
+		
 		return data;
 	},
 	
@@ -183,7 +163,6 @@ project.on ('ready', function () {
 	defaultSharingGroupId = project.config.consumerConfig.facebook.defaultSharingGroupId;
 
 	// - - - -
-
 	
 	var httpInititator = new httpdi (httpdiConfig);
 	

@@ -10,6 +10,7 @@ Ext.define('Spief.view.user.Panel', {
 		items: [{
 			xtype: 'button',
 			iconCls: 'lock_closed',
+			labelCls: 'username',
 			iconMask: true, 
 			ui: 'action'
 		}]

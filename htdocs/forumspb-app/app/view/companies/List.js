@@ -9,7 +9,11 @@ Ext.define('Spief.view.companies.List', {
 		
 		itemCls: 'companies',
         itemTpl: new Ext.XTemplate(
-			'<h2>{title}</h2>',
+			'<h2>{title}',
+				'<tpl if="daily.changeProc">',
+					' | {daily.code}',
+				'</tpl>',
+			'</h2>',
 			'<p>{region} | {sector}</p>',
 			'<tpl if="daily.changeProc">',
 				'<h3 class="{[this.getTrendClass(values.daily.changeProc)]}">',
