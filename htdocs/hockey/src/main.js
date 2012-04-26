@@ -32,6 +32,7 @@
 
 			this.options = {
 				ballRadius: 60,
+				springRatio: 5,
 				explosionDuration: 10,
 				onEndContact: Boolean,
 				onReset: Boolean
@@ -286,7 +287,7 @@
 		bindMouse: function () {
 			var self = this;
 
-			var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
+			var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint, body;
 			var canvasPos = this.canvas.getBoundingClientRect();
 
 			document.addEventListener('mousedown', onMouseDown,     true);
@@ -294,24 +295,45 @@
 			document.addEventListener('mousemove', handleMouseMove, true);
 
 			function onMouseUp() {
+				if (body) {
+					var MIN_DX = 14;
+					var MIN_DY = 9;
+
+					var m = self.mouse;
+					var r = self.options.springRatio;
+
+					var dX = (m.start.x - m.end.x) * self.options.springRatio;
+					var dY = (m.start.y - m.end.y) * self.options.springRatio;
+
+					if (dX < MIN_DX && dY < MIN_DY) {
+						dX = (dX + 1) * 4;
+						dY = (dY + 1) * 4;
+					}
+
+					body.SetLinearVelocity(new b2Vec2(dX, dY));
+
+					body.SetAwake(true);
+				}
+
 				isMouseDown = false;
 				mouseX = undefined;
 				mouseY = undefined;
 				self.mouse.start = null;
 				delete self.mouse.start;
 				delete self.mouse.end;
-
 			}
 
 			function onMouseDown(e) {
 				isMouseDown = true;
 				handleMouseMove(e);
+				body = getBodyAtMouse();
 			};
 
 			function handleMouseMove(e) {
 				if (isMouseDown) {
 					mouseX = (e.clientX - canvasPos.left) / self.scale;
 					mouseY = (e.clientY - canvasPos.top) / self.scale;
+
 					self.mouse.start = {
 						x: mouseX,
 						y: mouseY
@@ -345,7 +367,6 @@
 
 			this.updateMouse = function () {
 				if (isMouseDown && !mouseJoint) {
-					var body = getBodyAtMouse();
 					var data = body && body.GetUserData();
 
 					if (data && self.movingBalls.indexOf(body) == -1) {
@@ -354,36 +375,9 @@
 						self.mouse.end = body.GetPosition();
 						self.movingBalls.push(body);
 
-						var md = new b2MouseJointDef();
-						md.bodyA = this.world.GetGroundBody();
-						md.bodyB = body;
-						md.target.Set(mouseX, mouseY);
-						md.collideConnected = true;
-						md.maxForce = 300.0 * body.GetMass();
-						mouseJoint = self.world.CreateJoint(md);
-						body.SetAwake(true);
-
 						if (!(index in self.currentBodies)) {
 							self.currentBodies[data.index] = body;
-
-							setTimeout(function () {
-								if (isMouseDown && index in self.currentBodies) {
-									isMouseDown = false;
-									delete self.mouse.start;
-									delete self.mouse.end;
-									delete self.currentBodies[index];
-								}
-							}, 1000);
 						}
-					}
-				}
-				
-				if (mouseJoint) {
-					if (isMouseDown) {
-						mouseJoint.SetTarget(new b2Vec2(mouseX, mouseY));
-					} else {
-						self.world.DestroyJoint(mouseJoint);
-						mouseJoint = null;
 					}
 				}
 			};
