@@ -1,7 +1,7 @@
-Ext.define('Spief.view.trade.Form', {
+Ext.define('Spief.view.trade.SellForm', {
 	
 	extend: 'Ext.form.Panel',
-	xtype: 'tradeForm',
+	xtype: 'sellForm',
 
 	config: {
 		

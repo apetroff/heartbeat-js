@@ -13,14 +13,16 @@ Ext.define('Spief.controller.Companies', {
 			
 			infoCard: 'infoCard',
 			
-			tradeForm: 'tradeForm',
-			buyButton: 'companyInfo button[ui=confirm]',
-			sellButton: 'companyInfo button[ui=decline]'
+			buyForm: 'buyForm',
+			sellForm: 'sellForm',
+			
+			tradePanel: 'companyInfo tradePanel',
+			buyButton: 'tradePanel button[ui=confirm]',
+			sellButton: 'tradePanel button[ui=decline]'
 		},
 		
 		control: {
 			companies: {
-				activate: 'onActivate',
 				itemtap: 'onCompanyTap'
 			},
 			
@@ -34,35 +36,50 @@ Ext.define('Spief.controller.Companies', {
 		}
 	},
 	
-	onActivate: function() {
+	launch: function() {
 		
-		if (!this.loadedCompanies) {
-
-			this.companiesStore = Ext.getStore('Companies');
-			this.primeProxy = Spief.util.Prime;
-			
-			this.primeProxy.process('data/companies.js', Ext.bind(this.onFirstLoad));
-			
-			this.loadedCompanies = true;
+		this.companiesStore = Ext.getStore('Companies');
+		this.primeProxy = Spief.util.Prime;
+		
+		this.primeProxy.process('data/companies.js', Ext.bind(this.onFirstLoad));
+		
+		Spief.userModel.on('sync', this.onUserSync, this);
+		Spief.accountModel.on('sync', this.onAccountSync, this);
+	},
+	
+	onUserSync: function() {
+		
+		var tradePanel = this.getTradePanel();
+		
+		if (!tradePanel) return;
+		
+		if (Spief.userModel.get('role') == 'user') {
+			tradePanel.show();
+		} else {
+			tradePanel.hide();
 		}
+	},
+	
+	onAccountSync: function() {
+		
+		var buyButton = this.getBuyButton(),
+			sellButton = this.getSellButton();
+		if (!buyButton || !sellButton) return;
+		
+		var positive = Spief.accountModel.get('sume') > 0;
+		buyButton.setDisabled(positive);
+		
+		var briefCase = Spief.accountModel.get('briefcase');
+		sellButton.setDisabled(!briefCase);
+		
 	},
 	
 	onBuy: function( b, e, eOpts ) {
-
-		if (this.getTradeForm().getHidden()) {
-			this.getTradeForm().show();
-		} else {
-			this.getTradeForm().hide();
-		}
+		this.getBuyForm().show();
 	},
 	
 	onSell: function( b, e, eOpts ) {
-
-		if (this.getTradeForm().getHidden()) {
-			this.getTradeForm().show();
-		} else {
-			this.getTradeForm().hide();
-		}
+		this.getSellForm().show();
 	},
 	
 	onFirstLoad: function() {
@@ -76,6 +93,9 @@ Ext.define('Spief.controller.Companies', {
 		}
 		
 		var id = record.getId();
+		
+		this.onUserSync();
+		this.onAccountSync();
 		
 		this.currentRecord = record;
 		this.primeProxy.processCompany(id, true, this.onExtendedDataLoaded, this);

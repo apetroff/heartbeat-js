@@ -86,7 +86,8 @@ Ext.application({
 		'companies.InfoCard',
 		
 		'trade.Panel',
-        'trade.Form',
+		'trade.BuyForm',
+        'trade.SellForm',
 		
 		'about.Location',
         'about.Card',
@@ -103,6 +104,7 @@ Ext.application({
         'Speakers',
         'Companies',
 		'User',
+		'Trade',
         'About'
     ],
 
@@ -117,8 +119,11 @@ Ext.application({
     viewport: {
         autoMaximize: true
     },
-
+	
     launch: function() {
+	
+		Spief.userModel = Ext.create('Spief.model.User', {role: 'anonymous'});
+		Spief.accountModel = Ext.create('Spief.model.Account', {sum: 0, packageCount: 0});
 
         Ext.Viewport.setMasked({ xtype: 'loadmask', message: 'Загрузка...' });
 		

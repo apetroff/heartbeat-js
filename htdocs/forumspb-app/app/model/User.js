@@ -20,5 +20,14 @@ Ext.define('Spief.model.User', {
 			matcher: /^\d{4,6}$/,
 			message: 'Укажите код из 4-6 цифр'
 		}]
-	}
+	},
+	
+	setData: function() {
+		this.callParent(arguments);
+		this.fireEvent('sync');
+	},
+	
+	reset: function() {
+		this.setData({role: 'anonymous'});
+	},
 });

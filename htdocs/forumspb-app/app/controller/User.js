@@ -1,8 +1,6 @@
 Ext.define('Spief.controller.User', {
 	extend: 'Ext.app.Controller',
 	
-	requires: ['Spief.model.Account'],
-	
 	config: {
 		refs: {
 			userButton: 'userPanel button',
@@ -20,8 +18,7 @@ Ext.define('Spief.controller.User', {
 		
 		control: {
 			userButton: {
-				tap: 'onUserButtonTap',
-				activate: 'onUserButtonActivate'
+				tap: 'onUserButtonTap'
 			},
 			loginForm: {
 				initialize: 'onLoginFormInitialize'
@@ -41,34 +38,24 @@ Ext.define('Spief.controller.User', {
 		}
 	},
 	
-	constructor: function(config) {
-        this.callParent(arguments);
-		Spief.userModel = Ext.create('Spief.model.User', {role: 'anonymous'});
-	},
-	
-	onUserButtonActivate: function() {
+	launch: function() {
 		
-		if (!this.profileChecked) {
+		Ext.Ajax.request({
+			url: '/profile',
+			scope: this,
 			
-			this.profileChecked = true;
-			
-			Ext.Ajax.request({
-				url: '/profile',
-				scope: this,
-				
-				success: function(response, opts) {
-					var data = Ext.decode(response.responseText);
-					if (data.err || data.role && data.role == 'anonymous' || (data.statusCode && data.statusCode != 200)) {
-						this.onUserProfileFailed(data);
-					} else {
-						this.onUserProfileRecieved(data);
-					}
-				},
-				failure: function(response, opts) {
-					this.onUserProfileFailed({statusCode: response.status, err: response.statusText});
+			success: function(response, opts) {
+				var data = Ext.decode(response.responseText);
+				if (data.err || data.role && data.role == 'anonymous' || (data.statusCode && data.statusCode != 200)) {
+					this.onUserProfileFailed(data);
+				} else {
+					this.onUserProfileRecieved(data);
 				}
-			});
-		}
+			},
+			failure: function(response, opts) {
+				this.onUserProfileFailed({statusCode: response.status, err: response.statusText});
+			}
+		});
 	},
 	
 	onLoginFormInitialize: function() {
@@ -192,8 +179,8 @@ Ext.define('Spief.controller.User', {
 	},
 	onLogoutSuccess: function() {
 		
-		Spief.userModel = Ext.create('Spief.model.User', {role: 'anonymous'});
-		Spief.accountModel = Ext.create('Spief.model.Account', {});
+		Spief.userModel.reset();
+		Spief.accountModel.reset();
 		
 		this.setState('unauthorized');
 		this.getAccountForm().hide();
@@ -213,7 +200,6 @@ Ext.define('Spief.controller.User', {
 		switch (state) {
 			case 'unauthorized':
 			{
-				button.setText('');
 				button.setIconCls('lock_closed');
 				
 				this.getAccountFieldset().setTitle('');
@@ -233,8 +219,9 @@ Ext.define('Spief.controller.User', {
 			{
 				var userModel = Spief.userModel,
 					username = userModel.get('username');
+					
+				username = username[0].toUpperCase() + username.substring(1);
 				
-				button.setText(username);
 				button.setIconCls('user');
 				
 				this.getAccountFieldset().setTitle(username);
@@ -264,7 +251,9 @@ Ext.define('Spief.controller.User', {
 		var method = (arr.join) ? 'forEach' : 'each';
 		
 		arr[method](function(item) {
-			msg += '<li>' + (item.getMessage) ? (item.getMessage()) : (item) + '</li>';
+			msg += '<li>';
+			msg += item.getMessage ? item.getMessage() : item;
+			msg += '</li>';
 		});
 
 		msg += '</ul>';
@@ -316,9 +305,11 @@ Ext.define('Spief.controller.User', {
 	
 	getAccount: function(createAccount) {
 		
+		var accountModel = Spief.accountModel
+		
 		if (createAccount) {
 		
-			var accountModel = Spief.accountModel = Ext.create('Spief.model.Account', {sum: 100000, packageCount: 0});
+			accountModel.setData({sum: 100000, packageCount: 0});
 		
 			accountModel.save({
 				
@@ -349,8 +340,8 @@ Ext.define('Spief.controller.User', {
 					
 					if (!data.err && data.data && data.data.length == 1) {
 						data = data.data[0];
-						var record = Ext.create('Spief.model.Account', data);
-						this.setAccount(record);
+						 accountModel.setData(data);
+						this.setAccount(accountModel);
 					} else {
 						console.log(arguments);
 					}
@@ -365,8 +356,6 @@ Ext.define('Spief.controller.User', {
 	},
 	
 	setAccount: function(record) {
-		
-		Spief.accountModel = record;
 		
 		this.getAccountForm().setRecord(record);
 		this.setState('accountLoaded');

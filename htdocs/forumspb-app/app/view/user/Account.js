@@ -31,11 +31,11 @@ Ext.define('Spief.view.user.Account', {
 			},
 			
 			items: [{
-				xtype: 'textfield',
+				xtype: 'numberfield',
 				label: 'Оценка активов',
 				name: 'sum'
 			}, {
-				xtype: 'textfield',
+				xtype: 'numberfield',
 				label: 'Пакетов акций',
 				name: 'packageCount'
 			}]

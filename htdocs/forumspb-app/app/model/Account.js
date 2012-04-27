@@ -20,7 +20,16 @@ Ext.define('Spief.model.Account', {
         }
 	},
 	
+	setData: function() {
+		this.callParent(arguments);
+		this.fireEvent('sync');
+	},
+	
+	reset: function() {
+		this.setData({_id: null, sum: 0, packageCount: 0, briefcase: null});
+	},
+	
 	recalculateBriefcase: function() {
-		console.log ();
+		console.log ('recalculateBriefcase');
 	}
 });
