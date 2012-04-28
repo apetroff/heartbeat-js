@@ -56,7 +56,7 @@ h4 {
 }
 
 .x-title {
-	padding: 0 1em;
+	padding: 0 55px 0 10px;
 }
 
 .x-segmentedbutton-inner {
@@ -81,25 +81,18 @@ h4 {
 .x-list-item-label > .session {
 
     @include display-box;
-    @include box-orient(horizontal);
-    @include box-align(center);
+    @include box-orient(vertical);
+    @include box-align(left);
 
     .title {
         @include box-flex(1);
         font-weight: bold;
         font-size: 95%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     .topic {
         font-size: 12px !important;
-        margin-left: .5em;
-		margin-top: .4em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        margin-top: 0.5em;
     }
 
 }
@@ -146,19 +139,50 @@ h4 {
     .x-list-item {
         border-top: 1px solid white;
     }
+}
+
+.ticker {
 	
-	h3.negative {
-		color: #F00;
+	margin-top: 0.5em;
+	
+	.title {
+		color: #FFF !important;
+		padding: 1px 10px;
+		font-size: 90%;
+		border-radius: 6px;
 	}
 	
-	h3.positive {
-		color: #080;
+	span {
+		margin-right: 10px;
 	}
 	
-	.price {
+	.price, .title {
 		font-weight: bold;
 	}
 }
+
+.ticker.negative {
+	
+	span{		
+		color: #F00;
+	}
+	
+	.title {
+		@include background-gradient(#F00);
+	}
+}
+
+.ticker.positive {
+	
+	span {
+		color: #080;
+	}
+	
+	.title {
+		@include background-gradient(#080);
+	}
+}
+
 
 .companyInfo {
 
@@ -169,18 +193,6 @@ h4 {
         border-bottom: 1px solid #ccc;
         border-top: 1px solid #ddd;
         padding: 1em 0.8em;
-		
-		h3.negative {
-			color: #F00;
-		}
-		
-		h3.positive {
-			color: #080;
-		}
-		
-		.price {
-			font-weight: bold;
-		}
     }
 }
 
@@ -300,13 +312,15 @@ h4 {
 			text-align: center;
 			
 			div.image {
-				box-shadow: white 0 1px 1px;
+				
 				display: inline-block;
 				background-image: url('http://2012.forumspb.com/img/temp/main_pic.jpg');
-				width: 680px;
+				background-position: center center;
+				width: 100%;
+				max-width: 680px;
+				margin-bottom: 14px;
 				height: 354px;
 				border-radius: 0.4em;
-				border: solid #DDD 1px;
 			}
 		}
 	

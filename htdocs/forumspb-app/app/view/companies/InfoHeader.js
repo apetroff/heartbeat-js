@@ -14,15 +14,11 @@ Ext.define('Spief.view.companies.InfoHeader', {
 		
 		tpl: new Ext.XTemplate(
 			'<div class="header">',
-				'<h3>{title}',
+				'<h3>{title}</h3>',
 					'<tpl if="daily.changeProc">',
-						' | {daily.code}',
-					'</tpl>',
-				'</h3>',
-					'<tpl if="daily.changeProc">',
-					'<h3 class="{[this.getTrendClass(values.daily.changeProc)]}">',
-						'<span class="price">{daily.last}</span> <span class="percent">{daily.changeProc}%</span>',
-					'</h3>',
+					'<div class="ticker {[this.getTrendClass(values.daily.changeProc)]}">',
+						'<span class="title">{daily.code}</span><span class="price">{daily.last}</span><span class="percent">{daily.changeProc}%</span>',
+					'</div>',
 				'</tpl>',
 			'</div>',
 			{
