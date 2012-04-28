@@ -1,3 +1,44 @@
+/*
+var TUIO = Object.create({
+    listen: function (name, fn) {
+		if (!this.handlers) {
+			this.handlers = {};
+		}
+
+        if (!this.handlers[name]) {
+            this.handlers[name] = [];
+        }
+
+        this.handlers[name].push(fn);
+    },
+
+    trigger: function (name, data) {
+        var handlers = this.handlers[name];
+
+        if (handlers) {
+			var len = handlers.length;
+            for (var i = 0; i < len; i += 1) {
+                handlers[i].apply(null, data);
+            }
+        }
+    }
+});
+
+TUIO.eventTypes = {
+	'3': 'touchstart',
+	'4': 'touchmove',
+	'5': 'touchend'
+};
+
+
+function tuio_callback(type, sid, fid, x, y, angle)	{
+	TUIO.trigger(
+		TUIO.eventTypes[type],
+		[ sid, fid, x, y, angle ]
+	);
+}
+*/
+
 (function (globals, exports) {
 	'use strict';
 
@@ -52,11 +93,8 @@
 			this.height = canvas.height / this.scale;
 
 			this.destroyedBodies = [];
-			this.movingBalls = [];
-			this.currentBodies = {};
 			this.walls = {};
 			this.balls = {};
-			this.mouse = {};
 
 			this.world = this.createWorld();
 
@@ -70,8 +108,6 @@
 		},
 
 		reset: function () {
-			this.movingBalls.length = 0;
-
 			this.removeWalls();
 			this.addWalls();
 			this.addBalls();
@@ -291,28 +327,28 @@
 			this.mouseY = {};
 			this.mouseBodies = {};
 
-			var isMouseDown = {};
-
 			var mousePVec, selectedBody;
 
 			var canvasPos = this.canvas.getBoundingClientRect();
 
-			document.addEventListener('touchstart', onMouseDown, true);
-			document.addEventListener('touchend',   onMouseUp,   true);
-			document.addEventListener('touchmove',  onMouseMove, true);
+			document.addEventListener('touchstart', onMouseDown);
+			document.addEventListener('touchend',   onMouseUp);
+			document.addEventListener('touchmove',  onMouseMove);
 
 			function onMouseDown(e) {
-
 				for (var i = 0; i < e.targetTouches.length; i += 1) {
 					var finger = e.targetTouches[i];
 					var id = finger.identifier;
 
-					isMouseDown[id] = true;
-
 					self.mouseX[id] = (finger.pageX - canvasPos.left) / self.scale;
 					self.mouseY[id] = (finger.pageY - canvasPos.top) / self.scale;
 
-					self.mouseBodies[id] = getBodyAtMouse(id);
+					var body = getBodyAtMouse(id);
+
+					if (body) {
+						console.log(id);
+						self.mouseBodies[id] = getBodyAtMouse(id);
+					}
 				}
 			};
 
@@ -321,7 +357,7 @@
 					var finger = e.changedTouches[i];
 					var id = finger.identifier;
 
-					if (isMouseDown[id]) {
+					if (id in self.mouseBodies) {
 						self.mouseX[id] = (finger.pageX - canvasPos.left) / self.scale;
 						self.mouseY[id] = (finger.pageY - canvasPos.top) / self.scale;
 					}
@@ -329,15 +365,15 @@
 			}
 
 			function onMouseUp(e) {
+				var MIN_DX = 14;
+				var MIN_DY = 9;
+
 				for (var i = 0; i < e.changedTouches.length; i += 1) {
 					var finger = e.changedTouches[i];
 					var id = finger.identifier;
 					var body = self.mouseBodies[id];
 
 					if (body) {
-						var MIN_DX = 14;
-						var MIN_DY = 9;
-
 						var pos = body.GetPosition();
 						var r = self.options.springRatio;
 
@@ -351,12 +387,11 @@
 
 						body.SetLinearVelocity(new b2Vec2(dX, dY));
 						body.SetAwake(true);
-					}
 
-					delete isMouseDown[id];
-					delete self.mouseX[id];
-					delete self.mouseY[id];
-					delete self.mouseBodies[id];
+						delete self.mouseX[id];
+						delete self.mouseY[id];
+						delete self.mouseBodies[id];
+					}
 				}
 			}
 
@@ -384,26 +419,12 @@
 			}
 
 			this.updateMouse = function () {
-				var ids = Object.keys(isMouseDown);
+				var ids = Object.keys(this.mouseBodies);
 
 				for (var i = 0; i < ids.length; i += 1) {
 					var id = ids[i];
-					var isDown = isMouseDown[id];
-					var body = self.mouseBodies[id];
-
-					if (isDown && body) {
-						var data = body.GetUserData();
-
-						if (data && self.movingBalls.indexOf(body) == -1) {
-							var index = data.index;
-
-							self.movingBalls.push(body);
-
-							if (!(index in self.currentBodies)) {
-								self.currentBodies[data.index] = body;
-							}
-						}
-					}
+					var body = this.mouseBodies[id];
+					var data = body.GetUserData();
 				}
 			};
 		},
