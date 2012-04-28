@@ -80,33 +80,32 @@ Ext.application({
 		cont.appendChild(canvas);
 
 		window.arcanoid = initArcanoid(canvas, {
-				ballRadius: 30,
+			ballRadius: 30,
 
-				explosionSound: document.querySelector('audio'),
+			explosionSound: document.querySelector('audio'),
 
-				onReset: function () {
-					playedTiles = {};
-					[].forEach.call(tiles, function (tile) {
-						tile.style.visibility = '';
-					});
-				},
+			onReset: function () {
+				playedTiles = {};
+				[].forEach.call(tiles, function (tile) {
+					tile.style.visibility = '';
+				});
+			},
 
-				onEndContact: function (index) {
-					if (!playedTiles[index]) {
-						var tile = tiles[index];
+			onEndContact: function (index) {
+				if (!playedTiles[index]) {
+					var tile = tiles[index];
 
-						if (tile) {
-							tile.style.visibility = 'hidden';
-							playedTiles[index] = true;
-						} else {
-							console.error('No tile with index %d', index);
-						}
-
-						return true;
+					if (tile) {
+						tile.style.visibility = 'hidden';
+						playedTiles[index] = true;
+					} else {
+						console.error('No tile with index %d', index);
 					}
-					return false;
+
+					return true;
 				}
+				return false;
 			}
-		);
+		});
     }
 });

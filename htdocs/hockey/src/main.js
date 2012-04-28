@@ -287,65 +287,84 @@
 		bindMouse: function () {
 			var self = this;
 
-			var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint, body;
+			this.mouseX = {};
+			this.mouseY = {};
+			this.mouseBodies = {};
+
+			var isMouseDown = {};
+
+			var mousePVec, selectedBody;
+
 			var canvasPos = this.canvas.getBoundingClientRect();
 
-			document.addEventListener('mousedown', onMouseDown,     true);
-			document.addEventListener('mouseup',   onMouseUp,       true);
-			document.addEventListener('mousemove', handleMouseMove, true);
-
-			function onMouseUp() {
-				if (body) {
-					var MIN_DX = 14;
-					var MIN_DY = 9;
-
-					var m = self.mouse;
-					var r = self.options.springRatio;
-
-					var dX = (m.start.x - m.end.x) * self.options.springRatio;
-					var dY = (m.start.y - m.end.y) * self.options.springRatio;
-
-					if (dX < MIN_DX && dY < MIN_DY) {
-						dX = (dX + 1) * 4;
-						dY = (dY + 1) * 4;
-					}
-
-					body.SetLinearVelocity(new b2Vec2(dX, dY));
-
-					body.SetAwake(true);
-				}
-
-				isMouseDown = false;
-				mouseX = undefined;
-				mouseY = undefined;
-				self.mouse.start = null;
-				delete self.mouse.start;
-				delete self.mouse.end;
-			}
+			document.addEventListener('touchstart', onMouseDown, true);
+			document.addEventListener('touchend',   onMouseUp,   true);
+			document.addEventListener('touchmove',  onMouseMove, true);
 
 			function onMouseDown(e) {
-				isMouseDown = true;
-				handleMouseMove(e);
-				body = getBodyAtMouse();
+
+				for (var i = 0; i < e.targetTouches.length; i += 1) {
+					var finger = e.targetTouches[i];
+					var id = finger.identifier;
+
+					isMouseDown[id] = true;
+
+					self.mouseX[id] = (finger.pageX - canvasPos.left) / self.scale;
+					self.mouseY[id] = (finger.pageY - canvasPos.top) / self.scale;
+
+					self.mouseBodies[id] = getBodyAtMouse(id);
+				}
 			};
 
-			function handleMouseMove(e) {
-				if (isMouseDown) {
-					mouseX = (e.clientX - canvasPos.left) / self.scale;
-					mouseY = (e.clientY - canvasPos.top) / self.scale;
+			function onMouseMove(e) {
+				for (var i = 0; i < e.changedTouches.length; i += 1) {
+					var finger = e.changedTouches[i];
+					var id = finger.identifier;
 
-					self.mouse.start = {
-						x: mouseX,
-						y: mouseY
-					};
+					if (isMouseDown[id]) {
+						self.mouseX[id] = (finger.pageX - canvasPos.left) / self.scale;
+						self.mouseY[id] = (finger.pageY - canvasPos.top) / self.scale;
+					}
 				}
 			}
 
-			function getBodyAtMouse() {
-				mousePVec = new b2Vec2(mouseX, mouseY);
+			function onMouseUp(e) {
+				for (var i = 0; i < e.changedTouches.length; i += 1) {
+					var finger = e.changedTouches[i];
+					var id = finger.identifier;
+					var body = self.mouseBodies[id];
+
+					if (body) {
+						var MIN_DX = 14;
+						var MIN_DY = 9;
+
+						var pos = body.GetPosition();
+						var r = self.options.springRatio;
+
+						var dX = (self.mouseX[id] - pos.x) * r;
+						var dY = (self.mouseY[id] - pos.y) * r;
+
+						if (dX < MIN_DX && dY < MIN_DY) {
+							dX = (dX + 1) * 4;
+							dY = (dY + 1) * 4;
+						}
+
+						body.SetLinearVelocity(new b2Vec2(dX, dY));
+						body.SetAwake(true);
+					}
+
+					delete isMouseDown[id];
+					delete self.mouseX[id];
+					delete self.mouseY[id];
+					delete self.mouseBodies[id];
+				}
+			}
+
+			function getBodyAtMouse(id) {
+				mousePVec = new b2Vec2(self.mouseX[id], self.mouseY[id]);
 				var aabb = new b2AABB();
-				aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
-				aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
+				aabb.lowerBound.Set(self.mouseX[id] - 0.001, self.mouseY[id] - 0.001);
+				aabb.upperBound.Set(self.mouseX[id] + 0.001, self.mouseY[id] + 0.001);
 
 				// Query the world for overlapping shapes.
 				selectedBody = null;
@@ -365,17 +384,24 @@
 			}
 
 			this.updateMouse = function () {
-				if (isMouseDown && !mouseJoint) {
-					var data = body && body.GetUserData();
+				var ids = Object.keys(isMouseDown);
 
-					if (data && self.movingBalls.indexOf(body) == -1) {
-						var index = data.index;
+				for (var i = 0; i < ids.length; i += 1) {
+					var id = ids[i];
+					var isDown = isMouseDown[id];
+					var body = self.mouseBodies[id];
 
-						self.mouse.end = body.GetPosition();
-						self.movingBalls.push(body);
+					if (isDown && body) {
+						var data = body.GetUserData();
 
-						if (!(index in self.currentBodies)) {
-							self.currentBodies[data.index] = body;
+						if (data && self.movingBalls.indexOf(body) == -1) {
+							var index = data.index;
+
+							self.movingBalls.push(body);
+
+							if (!(index in self.currentBodies)) {
+								self.currentBodies[data.index] = body;
+							}
 						}
 					}
 				}
@@ -449,18 +475,24 @@
 				this.drawCircle(this.balls[i]);
 			}
 
-			if (this.mouse.start && this.mouse.end) {
-				this.ctx.beginPath();
-				this.ctx.moveTo(
-					~~(this.mouse.start.x * $),
-					~~(this.mouse.start.y * $)
-				);
-				this.ctx.lineTo(
-					~~(this.mouse.end.x * $),
-					~~(this.mouse.end.y * $)
-				);
-				this.ctx.stroke();
-				this.ctx.closePath();
+			for (var id in this.mouseX) {
+				var body = this.mouseBodies[id];
+
+				if (body) {
+					var bodyPos = body.GetPosition();
+
+					this.ctx.beginPath();
+					this.ctx.moveTo(
+						~~(this.mouseX[id] * $),
+						~~(this.mouseY[id] * $)
+					);
+					this.ctx.lineTo(
+						~~(bodyPos.x * $),
+						~~(bodyPos.y * $)
+					);
+					this.ctx.stroke();
+					this.ctx.closePath();
+				}
 			}
 		}
 	};
