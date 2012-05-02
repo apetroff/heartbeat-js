@@ -1,44 +1,3 @@
-/*
-var TUIO = Object.create({
-    listen: function (name, fn) {
-		if (!this.handlers) {
-			this.handlers = {};
-		}
-
-        if (!this.handlers[name]) {
-            this.handlers[name] = [];
-        }
-
-        this.handlers[name].push(fn);
-    },
-
-    trigger: function (name, data) {
-        var handlers = this.handlers[name];
-
-        if (handlers) {
-			var len = handlers.length;
-            for (var i = 0; i < len; i += 1) {
-                handlers[i].apply(null, data);
-            }
-        }
-    }
-});
-
-TUIO.eventTypes = {
-	'3': 'touchstart',
-	'4': 'touchmove',
-	'5': 'touchend'
-};
-
-
-function tuio_callback(type, sid, fid, x, y, angle)	{
-	TUIO.trigger(
-		TUIO.eventTypes[type],
-		[ sid, fid, x, y, angle ]
-	);
-}
-*/
-
 (function (globals, exports) {
 	'use strict';
 
@@ -73,7 +32,7 @@ function tuio_callback(type, sid, fid, x, y, angle)	{
 
 			this.options = {
 				ballRadius: 60,
-				springRatio: 5,
+				springCoef: 1000,
 				explosionDuration: 10,
 				onEndContact: Boolean,
 				onReset: Boolean
@@ -325,6 +284,7 @@ function tuio_callback(type, sid, fid, x, y, angle)	{
 
 			this.mouseX = {};
 			this.mouseY = {};
+			this.mouseStart = {};
 			this.mouseBodies = {};
 
 			var mousePVec, selectedBody;
@@ -346,7 +306,6 @@ function tuio_callback(type, sid, fid, x, y, angle)	{
 					var body = getBodyAtMouse(id);
 
 					if (body) {
-						console.log(id);
 						self.mouseBodies[id] = getBodyAtMouse(id);
 					}
 				}
@@ -360,6 +319,10 @@ function tuio_callback(type, sid, fid, x, y, angle)	{
 					if (id in self.mouseBodies) {
 						self.mouseX[id] = (finger.pageX - canvasPos.left) / self.scale;
 						self.mouseY[id] = (finger.pageY - canvasPos.top) / self.scale;
+
+						if (!(id in self.mouseStart)) {
+							self.mouseStart[id] = Date.now();
+						}
 					}
 				}
 			}
@@ -375,22 +338,21 @@ function tuio_callback(type, sid, fid, x, y, angle)	{
 
 					if (body) {
 						var pos = body.GetPosition();
-						var r = self.options.springRatio;
+						var k = self.options.springCoef;
+						var dT = 1 / (Date.now() - self.mouseStart[id]);
 
-						var dX = (self.mouseX[id] - pos.x) * r;
-						var dY = (self.mouseY[id] - pos.y) * r;
-
-						if (dX < MIN_DX && dY < MIN_DY) {
-							dX = (dX + 1) * 4;
-							dY = (dY + 1) * 4;
-						}
-
-						body.SetLinearVelocity(new b2Vec2(dX, dY));
-						body.SetAwake(true);
+						var dX = (self.mouseX[id] - pos.x) * dT * k;
+						var dY = (self.mouseY[id] - pos.y) * dT * k;
 
 						delete self.mouseX[id];
 						delete self.mouseY[id];
+						delete self.mouseStart[id];
 						delete self.mouseBodies[id];
+
+						if (Math.abs(dX) >= MIN_DX && Math.abs(dY) >= MIN_DY) {
+							body.SetLinearVelocity(new b2Vec2(dX, dY));
+							body.SetAwake(true);
+						}
 					}
 				}
 			}
