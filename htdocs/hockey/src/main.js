@@ -374,6 +374,16 @@
 			document.addEventListener('touchend',   onTouchUp);
 			document.addEventListener('touchmove',  onTouchMove);
 
+			document.addEventListener('gesturestart', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+			}, false);
+
+			document.addEventListener('contextmenu', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+			}, false);
+
 			function onTouchDown(e) {
 				for (var i = 0; i < e.targetTouches.length; i += 1) {
 					var finger = e.targetTouches[i];
