@@ -18,6 +18,7 @@ Ext.define('Spief.controller.User', {
 		
 		control: {
 			userButton: {
+				activate: 'onUserButtonActivate',
 				tap: 'onUserButtonTap'
 			},
 			loginForm: {
@@ -38,24 +39,29 @@ Ext.define('Spief.controller.User', {
 		}
 	},
 	
-	launch: function() {
+	onUserButtonActivate: function() {
 		
-		Ext.Ajax.request({
-			url: '/profile',
-			scope: this,
-			
-			success: function(response, opts) {
-				var data = Ext.decode(response.responseText);
-				if (data.err || data.role && data.role == 'anonymous' || (data.statusCode && data.statusCode != 200)) {
-					this.onUserProfileFailed(data);
-				} else {
-					this.onUserProfileRecieved(data);
+		if (!this.userButtonActivated) {
+		
+			this.userButtonActivated = true;
+		
+			Ext.Ajax.request({
+				url: '/profile',
+				scope: this,
+				
+				success: function(response, opts) {
+					var data = Ext.decode(response.responseText);
+					if (data.err || data.role && data.role == 'anonymous' || (data.statusCode && data.statusCode != 200)) {
+						this.onUserProfileFailed(data);
+					} else {
+						this.onUserProfileRecieved(data);
+					}
+				},
+				failure: function(response, opts) {
+					this.onUserProfileFailed({statusCode: response.status, err: response.statusText});
 				}
-			},
-			failure: function(response, opts) {
-				this.onUserProfileFailed({statusCode: response.status, err: response.statusText});
-			}
-		});
+			});
+		}
 	},
 	
 	onLoginFormInitialize: function() {
@@ -305,15 +311,19 @@ Ext.define('Spief.controller.User', {
 	
 	getAccount: function(createAccount) {
 		
-		var accountModel = Spief.accountModel
+		var accountModel = Spief.accountModel;
 		
 		if (createAccount) {
 		
-			accountModel.setData({sum: 100000, packageCount: 0});
-		
+			accountModel.set({cache: 100000, packageCount: 0, actives: 100000});
+			
 			accountModel.save({
 				
-				success: function(record) {
+				success: function(record, operation) {
+					
+					var data = Ext.decode(operation.getResponse().responseText).data[0];
+					accountModel.set(data);
+					accountModel.commit(true);
 					this.setAccount(record);
 				},
 				
@@ -340,7 +350,8 @@ Ext.define('Spief.controller.User', {
 					
 					if (!data.err && data.data && data.data.length == 1) {
 						data = data.data[0];
-						 accountModel.setData(data);
+						accountModel.set(data);
+						accountModel.commit(true);
 						this.setAccount(accountModel);
 					} else {
 						console.log(arguments);
@@ -357,7 +368,7 @@ Ext.define('Spief.controller.User', {
 	
 	setAccount: function(record) {
 		
-		this.getAccountForm().setRecord(record);
+		this.getAccountForm().setRecord(Spief.accountModel);
 		this.setState('accountLoaded');
 		
 	}
