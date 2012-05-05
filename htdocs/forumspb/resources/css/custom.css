@@ -100,6 +100,7 @@ body, canvas {
 
 canvas {
 	position: absolute;
+	background-color: #fff;
 	z-index: 1;
 	left: 0;
 	top: 0;

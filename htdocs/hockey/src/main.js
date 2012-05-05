@@ -64,6 +64,8 @@
 			this.bindTouch();
 			this.bindMouse();
 
+			this.initBackground();
+
 			this.startLoop();
 
 			return this;
@@ -515,6 +517,8 @@
 		drawWorld: function () {
 			var $ = this.scale;
 
+			this.squares.forEach(this.drawSquare);
+
 			if (this.explosionFrame > 0) {
 				this.explosionFrame -= 1;
 
@@ -556,9 +560,73 @@
 					this.ctx.closePath();
 				}
 			}
+		},
+
+		initBackground: function () {
+			var w = this.canvas.width;
+			var h = this.canvas.height;
+
+			this.colors = [
+				{ h: 216, s: 23, v: 80, a: 1 }, // blue
+				{ h: 323, s: 30, v: 80, a: 1 }, // red
+				{ h: 264, s: 11, v: 80, a: 1 }, // violet
+				{ h: 0,   s: 0,  v: 80, a: 0 }  // transparent
+			];
+
+			var rW = 120, rH = 120;
+
+			this.squares = [];
+			for (var x = rW; x < w - rW; x += rW) {
+				for (var y = rH; y < h - rH; y += rH) {
+					var color = this.randColor();
+					this.squares.push({
+						x: x,
+						y: y,
+						w: rW,
+						h: rH,
+						lum: 100 + ~~(Math.random() * (color.v - 100)),
+						color: color
+					});
+				}
+			}
+
+			/* Bind drawSquare. */
+			var drawSquare = this.drawSquare;
+			var self = this;
+			this.drawSquare = function (square) {
+				drawSquare.call(self, square);
+			};
+		},
+
+		randColor: function () {
+			return this.colors[~~(Math.random() * this.colors.length)];
+		},
+
+		drawSquare: function (square) {
+			var speed = 0.5;
+
+			square.lum += speed * (square.flip ? -1: 1);
+
+			if (square.lum === 100) {
+				square.color = this.randColor();
+				square.flip = true;
+			} else if (square.lum < square.color.v) {
+				square.lum = square.color.v; // min luminosity
+				square.flip = false;
+			}
+
+			this.ctx.fillStyle = 'hsla(' + [
+				square.color.h,
+				square.color.s + '%',
+				square.lum + '%',
+				square.color.a
+			] + ')';
+			this.ctx.fillRect(
+				square.x, square.y,
+				square.w, square.h
+			);
 		}
 	};
-
 
 	exports.initArcanoid = function (canvas, options) {
 		return Object.create(Arcanoid).init(canvas, options);
