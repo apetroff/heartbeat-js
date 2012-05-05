@@ -10,7 +10,6 @@ Ext.define('Spief.view.trade.SellForm', {
 		scrollable: false,
 		
 		hidden: true,
-		hideOnMaskTap: true,
 		modal: true,
 		centered: true,
 		
@@ -25,8 +24,8 @@ Ext.define('Spief.view.trade.SellForm', {
 		items: [{
 			xtype: 'fieldset',
 			width: 470,
-			title: 'Покупка',
-			instructions: 'Обменивайте свои активы на акции компаний',
+			title: 'Продажа',
+			instructions: 'Переводите купленные акции в кэш',
 			defaults: {
 				labelWidth: 200
 			},
@@ -36,17 +35,21 @@ Ext.define('Spief.view.trade.SellForm', {
 				groupButtons: false,
 				minValue: 100,
 				maxValue: 10000,
-				increment: 100,
+				increnment: 100,
 				defaultValue: 300,
-				name: 'count'
+				name: 'packageCount'
 			}, {
-				xtype: 'textfield',
+				xtype: 'numberfield',
 				label: 'Сумма',
-				name: 'sum'
+				inputCls: 'rur',
+				readOnly: true,
+				name: 'cache'
 			}, {
-				xtype: 'textfield',
-				label: 'Остаток',
-				name: 'account'
+				xtype: 'numberfield',
+				label: 'Кэш',
+				inputCls: 'rur',
+				readOnly: true,
+				name: 'remain'
 			}]
 		}, {
 			xtype: 'container',
@@ -58,7 +61,7 @@ Ext.define('Spief.view.trade.SellForm', {
 			},
 			items: [{
 				ui: 'confirm',
-				text: 'Купить'
+				text: 'Продать'
 			}, {
 				xtype: 'spacer',
 				width: 5

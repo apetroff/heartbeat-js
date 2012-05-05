@@ -21,19 +21,25 @@ Ext.define('Spief.view.user.Account', {
 		
 		items: [{
 			xtype: 'fieldset',
-			width: 300,
+			width: 330,
 			title: '',
 			instructions: 'Участвуйте в торгах, чтобы увеличить активы',
 			
 			defaults: {
 				readOnly: true,
-				labelWidth: 200,
+				labelWidth: 190,
 			},
 			
 			items: [{
 				xtype: 'numberfield',
 				label: 'Оценка активов',
-				name: 'sum'
+				inputCls: 'rur',
+				name: 'actives'
+			}, {
+				xtype: 'numberfield',
+				label: 'Кэш',
+				inputCls: 'rur',
+				name: 'cache'
 			}, {
 				xtype: 'numberfield',
 				label: 'Пакетов акций',

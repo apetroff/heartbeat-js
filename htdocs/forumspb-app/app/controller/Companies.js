@@ -43,35 +43,23 @@ Ext.define('Spief.controller.Companies', {
 		
 		this.primeProxy.process('data/companies.js', Ext.bind(this.onFirstLoad));
 		
-		Spief.userModel.on('sync', this.onUserSync, this);
-		Spief.accountModel.on('sync', this.onAccountSync, this);
+		Spief.userModel.on('sync', this.onSync, this);
+		Spief.accountModel.on('sync', this.onSync, this);
 	},
 	
-	onUserSync: function() {
+	onSync: function() {
 		
 		var tradePanel = this.getTradePanel();
 		
 		if (!tradePanel) return;
 		
 		if (Spief.userModel.get('role') == 'user') {
-			tradePanel.show();
+			
+			this.checkDaily();
+			
 		} else {
 			tradePanel.hide();
 		}
-	},
-	
-	onAccountSync: function() {
-		
-		var buyButton = this.getBuyButton(),
-			sellButton = this.getSellButton();
-		if (!buyButton || !sellButton) return;
-		
-		var positive = Spief.accountModel.get('sume') > 0;
-		buyButton.setDisabled(positive);
-		
-		var briefCase = Spief.accountModel.get('briefcase');
-		sellButton.setDisabled(!briefCase);
-		
 	},
 	
 	onBuy: function( b, e, eOpts ) {
@@ -94,19 +82,44 @@ Ext.define('Spief.controller.Companies', {
 		
 		var id = record.getId();
 		
-		this.onUserSync();
-		this.onAccountSync();
+		this.onSync();
 		
-		this.currentRecord = record;
+		Spief.companyModel = this.currentCompany = record;
 		this.primeProxy.processCompany(id, true, this.onExtendedDataLoaded, this);
+		
+		this.checkDaily();
+	},
+	
+	checkDaily: function() {
+		
+		var tradePanel = this.getTradePanel();
+		
+		if (this.currentCompany && this.currentCompany.get('daily').last) {
+			
+			tradePanel.show();
+			
+			var buyButton = this.getBuyButton(),
+				sellButton = this.getSellButton();
+		
+			if (!buyButton || !sellButton) return;
+			
+			var id = this.currentCompany.getId();
+			
+			buyButton.setDisabled(!Spief.accountModel.getBuyAbility(id));
+			sellButton.setDisabled(!Spief.accountModel.getSellAbility(id));
+			
+			
+		} else {
+			tradePanel.hide();
+		}		
 	},
 	
 	onExtendedDataLoaded: function() {
 		
-		this.company.config.title = this.currentRecord.get('title');
+		this.company.config.title = this.currentCompany.get('title');
 		this.getCompaniesContainer().push(this.company);
-		this.getCompanyInfo().setRecord(this.currentRecord);
-		this.getInfoCard().setRecord(this.currentRecord);
+		this.getCompanyInfo().setRecord(this.currentCompany);
+		this.getInfoCard().setRecord(this.currentCompany);
 	}
 
 });

@@ -187,11 +187,11 @@ h4 {
 .companyInfo {
 
     @include background-gradient(#eee);
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ddd;
 
     .header {
         
-        border-bottom: 1px solid #ccc;
-        border-top: 1px solid #ddd;
         padding: 1em 0.8em;
     }
 }
@@ -378,4 +378,10 @@ form.user, form.trade {
 	.x-form-fieldset-instructions .errors {
 		color: #F00;
 	}
+}
+
+input.rur {
+	background-image: url(../../resources/images/rouble.png);
+	background-repeat: no-repeat;
+	background-position: 93% center;
 }

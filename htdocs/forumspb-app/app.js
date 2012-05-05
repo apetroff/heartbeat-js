@@ -57,7 +57,7 @@ Ext.application({
 
     // Dependencies
 
-    requires: ['Spief.util.Proxy'],
+    requires: ['Spief.util.Proxy', 'Spief.model.User', 'Spief.model.Account'],
 
     models: [
         'Session',
@@ -123,7 +123,7 @@ Ext.application({
     launch: function() {
 	
 		Spief.userModel = Ext.create('Spief.model.User', {role: 'anonymous'});
-		Spief.accountModel = Ext.create('Spief.model.Account', {sum: 0, packageCount: 0});
+		Spief.accountModel = Ext.create('Spief.model.Account', {cache: 0, actives: 0, packageCount: 0});
 
         Ext.Viewport.setMasked({ xtype: 'loadmask', message: 'Загрузка...' });
 		
