@@ -4,26 +4,7 @@ Ext.define('Ria.view.TileItem', {
     requires: ['Ext.Img', 'Ria.mt.Gestures'],
 
     config: {
-	
-		dataMap: {
-            getTitle: {
-                setHtml: 'title'
-            },
-
-//            getImage: {
-//                setSrc: 'image'
-//            }
-        },
-
-        cls: Ext.baseCSSPrefix + 'list-item floatTile',
-
-        title: {
-            cls: 'title'
-        },
-
-//        image: {
-//            docked: 'left'
-//        },
+        cls: Ext.baseCSSPrefix + 'list-item emitent-tile',
 
         layout: {
             type: 'vbox',
@@ -32,25 +13,9 @@ Ext.define('Ria.view.TileItem', {
         }
     },
 
-    applyTitle: function(config) {
-        return Ext.factory(config, Ext.Component, this.getTitle());
-    },
-
-    updateTitle: function(newTitle) {
-        if (newTitle) {
-            this.add(newTitle);
-        }
-    },
-
-//    applyImage: function(config) {
-//        return Ext.factory(config, Ext.Img, this.getImage());
-//    },
-//
-//    updateImage: function(newImage) {
-//        if (newImage) {
-//            this.add(newImage);
-//        }
-//    }
+	tpl: new Ext.XTemplate(
+		'<div class="title">{title}</div>'
+	).compile(),
 
 	initialize: function() {
 		this.callParent(arguments);
@@ -63,9 +28,15 @@ Ext.define('Ria.view.TileItem', {
 			this.element.dom, 'tap',
 			this.onTileTap
 		);
+
+		var rec = this.getRecord();
+		this.element.dom.innerHTML = this.tpl.apply({
+			title: rec.get('tickers')[0]
+		});
 	},
 	
 	onTileTap: function (e) {
 		console.info('TAP', this.id);
 	}
 });
+

@@ -28,7 +28,7 @@ Ext.define('Ria.layout.MonopolyLayout', {
 		} else if (i < 42) {
 			
 			style.setProperty('left', 0 + 'px');
-			style.setProperty('top', (960 - (i-34) * 120)  + 'px');
+			style.setProperty('top', (960 - (i-34) * 120) + 'px');
 			style.setProperty('-webkit-transform', 'rotate(90deg)');
 			
 		} else {

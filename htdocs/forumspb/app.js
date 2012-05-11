@@ -57,7 +57,8 @@ Ext.application({
 
 		var playedTiles = {};
 
-		window.arcanoid = initHockey(canvas, {
+		/*
+		window.hockey = initHockey(canvas, {
 			ballRadius: 30,
 
 			explosionSound: document.querySelector('audio'),
@@ -85,6 +86,7 @@ Ext.application({
 				return false;
 			}
 		});
+		*/
     }
 });
 

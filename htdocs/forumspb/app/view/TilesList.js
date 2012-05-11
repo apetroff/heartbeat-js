@@ -21,8 +21,8 @@ Ext.define('Ria.view.TilesList', {
 			left: 0,
 			top: 0,
 			xtype: 'container',
-			width: 120,
-			height: 120,
+
+			cls: 'userspace-tile',
 			
 			layout: {
 				type: 'vbox',
@@ -38,8 +38,8 @@ Ext.define('Ria.view.TilesList', {
 			left: 1800,
 			top: 0,
 			xtype: 'container',
-			width: 120,
-			height: 120,
+
+			cls: 'userspace-tile',
 
 			layout: {
 				type: 'vbox',
@@ -55,8 +55,8 @@ Ext.define('Ria.view.TilesList', {
 			left: 1800,
 			top: 960,
 			xtype: 'container',
-			width: 120,
-			height: 120,
+
+			cls: 'userspace-tile',
 			
 			layout: {
 				type: 'vbox',
@@ -74,6 +74,8 @@ Ext.define('Ria.view.TilesList', {
 			xtype: 'container',
 			width: 120,
 			height: 120,
+
+			cls: 'userspace-tile',
 			
 			layout: {
 				type: 'vbox',
