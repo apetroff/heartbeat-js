@@ -94,10 +94,6 @@
 	z-index: 2;
 }
 
-body, canvas {
-	cursor: none !important;
-}
-
 canvas {
 	position: absolute;
 	background-color: #fff;
@@ -105,3 +101,9 @@ canvas {
 	left: 0;
 	top: 0;
 }
+
+/* TODO: uncomment for production
+body, canvas {
+	cursor: none !important;
+}
+*/

@@ -14,7 +14,7 @@ Ext.application({
     models: ['Tile'],
     stores: ['Tiles'],
 
-    launch: function() {
+	launch: function() {
         Ext.create('Ria.view.Main');
 
 		window.overlay = Ext.Viewport.add({
@@ -49,44 +49,22 @@ Ext.application({
             ]
         });
 
-		var playedTiles = {};
 		var tiles = document.getElementsByClassName('x-data-item');
-
-		var tileW = 120;
-		var tileH = 120;
-
-		var getIndex = function (point, game) {
-			var maxX = ~~((game.width * game.scale) / tileW);
-			var maxY = ~~((game.height * game.scale) / tileW);
-
-			var indexX = ~~(point.x / tileW) + 1;
-			var indexY = ~~(point.y / tileH) + 1;
-
-			if (indexY == maxY) {
-				var index = maxX + maxY + (maxX - indexX);
-			} else if (indexX == 1 && indexY > 1) {
-				index = maxX + maxX + maxY + (maxY - indexY);
-			} else if (indexY > 1) {
-				index = indexX + indexY - 1;
-			} else {
-				index = indexX - 1;
-			}
-
-			return index;
-		};
 
 		var canvas = document.querySelector('canvas');
 		var cont = document.querySelector('.x-dataview-tiles');
 		cont.appendChild(canvas);
 
-		window.arcanoid = initArcanoid(canvas, {
+		var playedTiles = {};
+
+		window.arcanoid = initHockey(canvas, {
 			ballRadius: 30,
 
 			explosionSound: document.querySelector('audio'),
 
 			onReset: function () {
-				playedTiles = {};
-				[].forEach.call(tiles, function (tile) {
+		        playedTiles = {};
+				Array.prototype.forEach.call(tiles, function (tile) {
 					tile.style.visibility = '';
 				});
 			},
@@ -109,3 +87,15 @@ Ext.application({
 		});
     }
 });
+
+
+/* Disable gestures and context menu. */
+document.addEventListener('gesturestart', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+}, false);
+
+document.addEventListener('contextmenu', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+}, false);

@@ -17,27 +17,7 @@ Ext.define('Ria.view.TilesList', {
         
 		scrollable: false,
 		
-		items: [/*{
-			
-			left: 120,
-			top: 120,
-			xtype: 'container',
-			width: 1680,
-			height: 840,
-			
-			style: 'background-color: #fff;',
-			
-			layout: {
-				type: 'vbox',
-				pack: 'middle',
-				align: 'center'
-			},
-			items: [{
-				html: '<img src="http://www.1prime.ru/Header/prime_new_logo.png" />'
-			}],
-			
-		},*/ {
-			
+		items: [ {
 			left: 0,
 			top: 0,
 			xtype: 'container',
@@ -108,7 +88,6 @@ Ext.define('Ria.view.TilesList', {
     },
 	
 	initialize: function() {
-	
 		this.callParent();
 		
 		this.container.setLayout('monopoly');

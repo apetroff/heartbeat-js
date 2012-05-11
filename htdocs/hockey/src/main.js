@@ -20,7 +20,7 @@
 		globals.webkitRequestAnimationFrame;
 
 
-	var Arcanoid = {
+	var Hockey = {
 		FPS: 1 / 60,
 
 		scale: 30,
@@ -376,16 +376,6 @@
 			document.addEventListener('touchend',   onTouchUp);
 			document.addEventListener('touchmove',  onTouchMove);
 
-			document.addEventListener('gesturestart', function (e) {
-				e.preventDefault();
-				e.stopPropagation();
-			}, false);
-
-			document.addEventListener('contextmenu', function (e) {
-				e.preventDefault();
-				e.stopPropagation();
-			}, false);
-
 			function onTouchDown(e) {
 				for (var i = 0; i < e.targetTouches.length; i += 1) {
 					var finger = e.targetTouches[i];
@@ -628,7 +618,7 @@
 		}
 	};
 
-	exports.initArcanoid = function (canvas, options) {
-		return Object.create(Arcanoid).init(canvas, options);
+	exports.initHockey = function (canvas, options) {
+		return Object.create(Hockey).init(canvas, options);
 	};
 }(this, this));
