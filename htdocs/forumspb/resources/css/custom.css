@@ -107,3 +107,22 @@ body, canvas {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+.emitent-info {
+	position: absolute;
+	z-index: 2000;
+	height: 360px;
+	width: 361px;
+	overflow: auto;
+	border: 1px solid #333;
+	background-color: #fff;
+	padding: 30px;
+	font-size: 14px;
+}
+
+.emitent-info h1 {
+	font-weight: normal;
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 16px;
+}

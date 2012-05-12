@@ -13,33 +13,10 @@ Ext.define('Ria.controller.Controller', {
 
         refs: {
             tilesList: 'tileslist'
-        },
-
-        control: {
-            'tileslist': {
-                select: 'onListTap'
-            }
         }
     },
 
     init: function() {
         
-    },
-
-    onListTap: function (list, tile) {
-		var tpl = new Ext.XTemplate(
-			'<h1>{title}</h1>',
-			'<dl>',
-				'<dt>Регион</dt>',
-				'<dd>{region}</dd>',
-				'<dt>Отрасль</dt>',
-				'<dd>{sector}</dd>',
-			'</dl>',
-			'<strong>{[values.tickers[0]]}</strong>',
-			'<span>&mdash;{[~~(Math.random() * 20)]}%</span>'
-		).compile();
-
-		window.overlay.setHtml(tpl.apply(tile.data));
-        window.overlay.showBy(Ext.getCmp(tile.id.replace('ext-record-', 'ext-tilesitem-')));
     }
 });
