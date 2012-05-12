@@ -14,11 +14,11 @@ Ext.define('Ria.view.TileItem', {
     },
 
 	tpl: new Ext.XTemplate(
-		'<div class="title">{title}</div>'
+		'<div class="title">{[values.tickers[0]]}</div>'
 	).compile(),
 
 	infoTpl: new Ext.XTemplate(
-		'<div class="emitent-info">',
+		'<div class="emitent-info"><div class="content">',
 			'<h1>{title}</h1>',
 			'<dl>',
 				'<dt>Регион</dt>',
@@ -28,7 +28,7 @@ Ext.define('Ria.view.TileItem', {
 			'</dl>',
 			'<strong>{[values.tickers[0]]}</strong>',
 			'<span>&mdash;{[~~(Math.random() * 20)]}%</span>',
-		'</div>'
+		'</div></div>'
 	).compile(),
 
 	infoWindowSize: 360,
@@ -136,17 +136,34 @@ Ext.define('Ria.view.TileItem', {
 			'rotate(' + this._position.angle + 'deg)'
 		);
 
+		this.element.addCls('tile-opened');
+
+		setTimeout(function () {
+			style.setProperty('opacity', 1);
+		}, 0);
+
 		this.infoWindowPos = pos;
 
 		/* Close and remove overlapping windows. */
 		for (var i = this.list.openedTiles.length - 1; i >= 0; i -= 1) {
-			var tile = this.list.openedTiles[i];
-			if (tile === this || this.overlaps(tile)) {
-				if (tile.infoWindow) {
-					container.removeChild(tile.infoWindow);
+			(function (tile, i, openedTiles, self) {
+				if (tile === self || self.overlaps(tile)) {
+					openedTiles.splice(i, 1);
+
+					var tW = tile.infoWindow;
+					if (tW) {
+						tW.style.setProperty('opacity', 0);
+
+						setTimeout(function () {
+							container.removeChild(tW);
+
+							if (-1 == openedTiles.indexOf(tile)) {
+								tile.element.removeCls('tile-opened');
+							}
+						}, 600);
+					}
 				}
-				this.list.openedTiles.splice(i, 1);
-			}
+			}(this.list.openedTiles[i], i, this.list.openedTiles, this));
 		}
 
 		this.infoWindow = infoWindow;

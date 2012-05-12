@@ -108,16 +108,28 @@ body, canvas {
 	text-overflow: ellipsis;
 }
 
+.emitent-tile.tile-opened {
+	border-top-width: 0 !important;
+}
+
 .emitent-info {
+	-webkit-transition: all 600ms ease-in;
 	position: absolute;
 	z-index: 2000;
-	height: 360px;
+	height: 361px;
 	width: 361px;
-	overflow: auto;
 	border: 1px solid #333;
-	background-color: #fff;
+	border-bottom-width: 0;
+	opacity: 0;
+}
+
+.emitent-info .content {
+	overflow: auto;
+	height: 359px;
+	background-color: rgba(255, 255, 255, 0.8);
 	padding: 30px;
 	font-size: 14px;
+	margin-bottom: 1px;
 }
 
 .emitent-info h1 {
