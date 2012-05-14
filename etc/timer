@@ -1,0 +1,12 @@
+{
+	"workflows": [
+		{
+			"interval": 1000,
+			"tasks": [{
+				"functionName": "getAllIndexes",
+				"token": "ticker",
+				"produce": "data.ids"
+			}]
+		}
+	]
+}

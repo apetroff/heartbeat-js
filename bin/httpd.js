@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
-var common  = require ('common');
-var httpdi  = require ('initiator/http');
-var socketi  = require ('initiator/socket');
-var util    = require ('util');
-var barrier = require ('barrier');
-var urlUtil = require ('url');
+var common  = require ('common'),
+	httpdi  = require ('initiator/http'),
+	timeri = require('initiator/timer'),
+	socketi  = require ('initiator/socket'),
+	util    = require ('util'),
+	barrier = require ('barrier'),
+	urlUtil = require ('url'),
 
-var querystring = require('querystring');
-var task = require('task/base');
-var workflow = require('workflow');
+	querystring = require('querystring'),
+	task = require('task/base'),
+	workflow = require('workflow');
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -146,6 +147,28 @@ module.exports = {
 		}
 
 		return result;
+	},
+	
+	getAllIndexes: function() {
+		var ids = ["1519","7785","8085","7805","1435","8233","8617","8801","8529","8793","8257","8473","8761","7913","8461","7697","8245","8633","8089","8209","7781","8113","8093","8417","12240","8321","8313","8405","8889","7813","8785","8157","8201","8649","7653","7817","7633","12715","8005","7953","8597","63715","8869","12219","8173","1423","7669","12727","8389","7985"];
+		
+		ids.map(function(id) {
+		
+		var wf = this.app.process ("ticker", {
+			url: ''
+			headers: {
+				Referer: 
+			},
+			body: ''
+		});
+		
+		});
+		
+		return ids;
+	},
+	
+	parseIndex: function() {
+		var responseText = config.responseText;
 	}
 };
 
@@ -156,17 +179,23 @@ project.on ('ready', function () {
 	var httpdiConfig = project.config.initiator.httpd;
 	httpdiConfig.static.root = project.root.fileIO ('htdocs');
 	
+	var timeriConfig = project.config.initiator.timerd;
+	
 	var socketiConfig = project.config.initiator.socketd;
 	
-	// - - - prepare configs
+	// prepare configs
 	
 	defaultSharingGroupId = project.config.consumerConfig.facebook.defaultSharingGroupId;
 
-	// - - - -
+	// httpdi
 	
 	var httpInititator = new httpdi (httpdiConfig);
 	
-	// - - - -
+	// timeri
+	
+	var timerInitiator = new timeri(timeriConfig);
+	
+	// socketi
 	
 	var socketInititator = new socketi (socketiConfig);
 

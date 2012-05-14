@@ -5,6 +5,8 @@
 	"consumerConfig": "<consumerConfig>",
 
 	"initiator" : {
+		"timerd": "<timer>"
+		"cbd": "<callback>",
 		"httpd" : {
 			"port": 50088,
 			"static": {

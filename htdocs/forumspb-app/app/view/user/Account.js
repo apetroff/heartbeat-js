@@ -11,7 +11,7 @@ Ext.define('Spief.view.user.Account', {
 		centered: true,
 		hidden: true,
 		
-		width: 350,
+		width: 370,
 		
 		layout: {
 			type: 'vbox',

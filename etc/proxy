@@ -6,7 +6,6 @@
 	},
 	{
 	   "className": "task/download",
-		"verbose": 1,
 		"retries": 2,
 		"timeout": 2,
 		"url": "{$data.query.url}",

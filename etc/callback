@@ -1,0 +1,21 @@
+{
+	"workflows": [{
+			"token": "ticker",
+			"tasks": [{
+				"className": "task/download",
+				"url": "{$url}",
+				"headers": "{$headers}",
+				"body": "{$body}",
+				"produce": "data.responseText"
+			}, {
+				"functionName": "parseTicker",
+				"responseText": "{$data.responseText}",
+				"produce": "data.ticker"
+			}, {
+				"className": "task/mongoRequest",
+				"method": "update",
+				"data": ["{P$data.ticker}"],
+				"produce": "data.mongoResponse"
+			}]
+	}]
+}
