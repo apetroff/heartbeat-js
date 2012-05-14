@@ -32,8 +32,8 @@
 
 			this.options = {
 				ballRadius: 60,
+				squareSize: 120,
 				springCoef: 1000,
-				explosionDuration: 10,
 				onEndContact: Boolean,
 				onReset: Boolean
 			};
@@ -112,8 +112,8 @@
 			
 			var bodyDef = new b2BodyDef;
 
-			var w = 120 / 2 / this.scale;
-			var h = 120 / 2 / this.scale;
+			var w = this.options.squareSize / 2 / this.scale;
+			var h = this.options.squareSize / 2 / this.scale;
 
 			var nX = 14;
 			var nY = 7;
@@ -244,7 +244,7 @@
 		},
 
 		explode: function (body) {
-			this.explosionFrame = this.options.explosionDuration;
+			this.explosionFrame = Math.PI;
 			this.explosionPosition = body.GetPosition();
 
 			/*
@@ -509,27 +509,40 @@
 			return this.drawCircle(ball);
 		},
 
+
+		overlaps: function (posA, posB) {
+			var t = 5;
+
+			return (
+				((posA.x <= posB.x && posA.x + posA.w - t >= posB.x) ||
+				 (posA.x >= posB.x && posA.x <= posB.x + posB.w - t))
+					&&
+				((posA.y <= posB.y && posA.y + posA.h - t >= posB.y) ||
+				 (posA.y >= posB.y && posA.y <= posB.y + posB.h - t))
+			);
+		},
+
 		drawWorld: function () {
 			var $ = this.scale;
 
 			this.squares.forEach(this.drawSquare);
 
 			if (this.explosionFrame > 0) {
-				this.explosionFrame -= 1;
+				this.explosionFrame -= 0.4;
 
+				var numSquares = 4;
 				var pos = this.explosionPosition;
-				var r = ~~(this.explosionFrame * this.ballRadius * 10);
+				var k = Math.sin(this.explosionFrame);
+				var r = this.options.squareSize * numSquares * k / 2;
 
-				this.ctx.beginPath();
-				this.ctx.arc(
-					~~(pos.x * $),
-					~~(pos.y * $),
-					r, 0, Math.PI * 2, false
-				);
-				this.ctx.closePath();
-				var red = ~~(255 - this.explosionFrame);
-				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';				
-				this.ctx.fill();
+				this.explosionRect = {
+					x: ~~(pos.x * $ - r),
+					y: ~~(pos.y * $ - r),
+					w: ~~(r * 2),
+					h: ~~(r * 2)
+				};
+			} else {
+				this.explosionRect = null;
 			}
 
 			for (var i in this.balls) {
@@ -564,11 +577,15 @@
 			this.colors = [
 				{ h: 216, s: 23, v: 80, a: 1 }, // blue
 				{ h: 323, s: 30, v: 80, a: 1 }, // red
-				{ h: 264, s: 11, v: 80, a: 1 }, // violet
+				{ h: 264, s: 11, v: 80, a: 1 }, // purple
 				{ h: 0,   s: 0,  v: 80, a: 0 }  // transparent
 			];
 
-			var rW = 120, rH = 120;
+			this.colors.blue   = this.colors[0];
+			this.colors.red    = this.colors[1];
+			this.colors.purple = this.colors[3];
+
+			var rW = this.options.squareSize, rH = rW;
 
 			this.squares = [];
 			for (var x = 0; x < w; x += rW) {
@@ -610,11 +627,21 @@
 				square.flip = false;
 			}
 
+			var color = square.color;
+			if (
+				this.explosionRect &&
+				this.overlaps(this.explosionRect, square)
+			) {
+				color = this.colors[~~(Math.random() * 3)];
+				square.lum = 60 + 10 *
+					~~(this.explosionRect.w / this.options.squareSize);
+			}
+
 			this.ctx.fillStyle = 'hsla(' + [
-				square.color.h,
-				square.color.s + '%',
+				color.h,
+				color.s + '%',
 				square.lum + '%',
-				square.color.a
+				color.a
 			] + ')';
 			this.ctx.fillRect(
 				square.x, square.y,
