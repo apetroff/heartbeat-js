@@ -9,7 +9,7 @@ Ext.define('Ria.layout.MonopolyLayout', {
 		var CENTER_RIGHT = 17;
 		var MAX_NUM = 42;
 
-		if (i == CENTER_LEFT || i == CENTER_RIGHT || i >= MAX_NUM) {
+		if (i >= MAX_NUM) {
 			item.element.dom.parentNode.removeChild(
 				item.element.dom
 			);

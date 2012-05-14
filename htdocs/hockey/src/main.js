@@ -196,7 +196,12 @@
 			var ballKeys = Object.keys(this.balls);
 
 			if (!ballKeys.length) {
-				this.reset();
+				if (!this.resetTimeout) {
+					this.resetTimeout = setTimeout(function () {
+						self.resetTimeout = null;
+						self.reset();
+					}, 3000);
+				}
 				return;
 			}
 
@@ -566,8 +571,8 @@
 			var rW = 120, rH = 120;
 
 			this.squares = [];
-			for (var x = rW; x < w - rW; x += rW) {
-				for (var y = rH; y < h - rH; y += rH) {
+			for (var x = 0; x < w; x += rW) {
+				for (var y = 0; y < h; y += rH) {
 					var color = this.randColor();
 					this.squares.push({
 						x: x,

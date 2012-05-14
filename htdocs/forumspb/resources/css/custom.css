@@ -93,6 +93,10 @@ body, canvas {
 	background-color: #fff;
 }
 
+.userspace-tile {
+	background-color: transparent;
+}
+
 .userspace-tile:nth-child(4) {
 	border-right-width: 0 !important;
 }
