@@ -45,7 +45,9 @@ Ext.define('Ria.view.TileItem', {
 			Ext.bind(this.onTileTap, this)
 		);
 
-		this.element.dom.addEventListener('click', Ext.bind(this.onTileTap, this), false);
+		this.element.dom.addEventListener(
+			'click', Ext.bind(this.onTileTap, this), false
+		);
 
 		var rec = this.getRecord();
 		this.element.dom.innerHTML = this.tpl.apply(rec.data);
@@ -113,7 +115,7 @@ Ext.define('Ria.view.TileItem', {
 			}
 		};
 
-		var pos = positions[this._position.angle];
+		var pos = positions[this._position.orientation];
 
 		if (pos.left <= 0) {
 			pos.left += this._size;
@@ -160,7 +162,7 @@ Ext.define('Ria.view.TileItem', {
 							if (-1 == openedTiles.indexOf(tile)) {
 								tile.element.removeCls('tile-opened');
 							}
-						}, 600);
+						}, 300);
 					}
 				}
 			}(this.list.openedTiles[i], i, this.list.openedTiles, this));
@@ -170,4 +172,3 @@ Ext.define('Ria.view.TileItem', {
 		this.list.openedTiles.push(this);
     }
 });
-

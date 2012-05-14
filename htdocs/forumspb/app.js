@@ -25,7 +25,6 @@ Ext.application({
 
 		var playedTiles = {};
 
-		/*
 		window.hockey = initHockey(canvas, {
 			ballRadius: 30,
 
@@ -54,7 +53,6 @@ Ext.application({
 				return false;
 			}
 		});
-		*/
     }
 });
 
