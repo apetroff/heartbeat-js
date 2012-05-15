@@ -104,11 +104,7 @@ Ext.define('Ria.view.TileItem', {
 
 		this.gestures.dontPropagate(infoWindow, [
 			'mousedown',
-			'mousemove',
-			'mouseup',
-			'touchstart',
-			'touchmove',
-			'touchend'
+			'touchstart'
 		]);
 
 		var style = infoWindow.style;
