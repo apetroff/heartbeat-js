@@ -27,11 +27,16 @@
 
 		ballCount: 4,
 
+		colorTpl: new Ext.XTemplate(
+			'hsla({h}, {s}%, {v}%, {a})'
+		).compile(),
+
 		init: function (canvas, options) {
 			var self = this;
 
 			this.options = {
-				ballRadius: 60,
+				ballRadius: 40,
+				ballHitpoints: 4,
 				squareSize: 120,
 				springCoef: 1000,
 				onEndContact: Boolean,
@@ -177,12 +182,15 @@
 			fixDef.restitution = 1;
        
 			bodyDef.type = b2Body.b2_dynamicBody;
-			fixDef.shape = new b2CircleShape(
-				this.ballRadius
-            );
+			fixDef.shape = new b2CircleShape(this.ballRadius);
 			bodyDef.position.x = x;
             bodyDef.position.y = y;
-			bodyDef.userData = { index: index };
+			bodyDef.userData = {
+				index: index,
+				hitpoints: this.options.ballHitpoints,
+				radius: this.ballRadius,
+				color: [ 'red', 'blue', 'yellow', 'purple' ][index % 4]
+			};
 
             var body = this.world.CreateBody(bodyDef);
 			body.CreateFixture(fixDef);
@@ -190,7 +198,7 @@
 			return body;
 		},
 
-		destroyOffScreen: function () {
+		destroyBalls: function () {
 			var self = this;
 
 			var ballKeys = Object.keys(this.balls);
@@ -207,14 +215,17 @@
 
 			ballKeys.forEach(function (i) {
 				var ball = self.balls[i];
+				var data = ball.GetUserData();
 				var pos = ball.GetPosition();
-				var r = self.ballRadius;
+				var r = data.radius;
 
 				if (
-					pos.x - r < 0 ||
-					pos.y - r < 0 ||
-					pos.x + r > self.width ||
-					pos.y + r > self.height
+					data.hitpoints <= 0 || (
+						pos.x - r < 0 ||
+						pos.y - r < 0 ||
+						pos.x + r > self.width ||
+						pos.y + r > self.height
+					)
 				) {
 					ball.SetAwake(false);
 					self.destroyedBodies.push(ball);
@@ -231,7 +242,7 @@
 		},
 
 		step: function () {
-			this.destroyOffScreen();
+			this.destroyBalls();
 
 			this.destroyQueue();
 
@@ -271,6 +282,18 @@
 
 				if (null == data.index) {
 					return;
+				}
+
+				var ballFix = contact.GetFixtureB();
+				var ball = ballFix.GetBody();
+				var ballData = ball.GetUserData();
+
+				ballData.hitpoints -= 1;
+
+				if (ballData.hitpoints > 0) {
+					ballData.radius = ballData.hitpoints *
+						(self.ballRadius / self.options.ballHitpoints);
+					ball.GetFixtureList().GetShape().SetRadius(ballData.radius);
 				}
 
 				var explode = self.options.onEndContact(data.index);
@@ -473,39 +496,33 @@
 		},
 
 		drawCircle: function (ball) {
+			var data = ball.GetUserData();
 			var $ = this.scale;
-			var r = this.options.ballRadius;
+			var pos = ball.GetPosition();
+			var index = data.index;
+			var angle = ball.GetAngle();
 
-			var images = [
-				'/hockey/a/bird.png',
-				'/hockey/a/rio.png',
-				'/hockey/a/green.png',
-				'/hockey/a/yellow.png'
-			].map(function (src) {
-				var img = new Image;
-				img.src = src;
-				return img;
-			});
+			this.ctx.save();
+			if (angle) {
+				this.ctx.translate(pos.x * $, pos.y * $);
+				this.ctx.rotate(angle);
+				this.ctx.translate(-pos.x * $, -pos.y * $);
+			}
 
-			this.drawCircle = function (ball) {
-				var pos = ball.GetPosition();
-				var index = ball.GetUserData().index;
-				var angle = ball.GetAngle();
+			this.ctx.beginPath();
+			this.ctx.arc(
+				pos.x * $, pos.y * $,
+				data.radius * $,
+				0, Math.PI * 2, true
+			);
+			this.ctx.closePath();
 
-				this.ctx.save();
-				if (angle) {
-					this.ctx.translate(pos.x * $, pos.y * $);
-					this.ctx.rotate(angle);
-					this.ctx.translate(-pos.x * $, -pos.y * $);
-				}
-				this.ctx.drawImage(
-					images[index],
-					pos.x * $ - r, pos.y * $ - r
-				);
-				this.ctx.restore();
-			};
-
-			return this.drawCircle(ball);
+			//this.ctx.fillStyle = this.colorTpl.apply(data.color);
+			this.ctx.fillStyle = data.color;
+			this.ctx.strokeStyle = '#999';
+			this.ctx.fill();
+			this.ctx.stroke();
+			this.ctx.restore();
 		},
 
 
@@ -636,12 +653,12 @@
 				);
 			}
 
-			this.ctx.fillStyle = 'hsla(' + [
-				color.h,
-				color.s + '%',
-				lum + '%',
-				color.a
-			] + ')';
+			this.ctx.fillStyle = this.colorTpl.apply({
+				h: color.h,
+				s: color.s + '%',
+				v: lum + '%',
+				a: color.a
+			});
 			this.ctx.fillRect(
 				square.x, square.y,
 				square.w, square.h

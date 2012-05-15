@@ -26,8 +26,6 @@ Ext.application({
 		var playedTiles = {};
 
 		window.hockey = initHockey(canvas, {
-			ballRadius: 30,
-
 			explosionSound: document.querySelector('audio'),
 
 			onReset: function () {
