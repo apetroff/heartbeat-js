@@ -58,6 +58,21 @@ Ext.define('Ria.view.TileItem', {
 		this.list.openedTiles = [];
 	},
 
+	_hide: function () {
+		this.element.hide();
+		this.removeInfoWindow();
+	},
+
+	_show: function () {
+		this.element.show();
+	},
+
+	removeInfoWindow: function () {
+		if (this.container) {
+			this.container.removeChild(this.infoWindow);
+		}
+	},
+
 	overlaps: function (tile) {
 		var tolerance = 5;
 
@@ -75,13 +90,26 @@ Ext.define('Ria.view.TileItem', {
 	},
 
 	onTileTap: function (e) {
+		if (this.list.openedTiles.indexOf(this) >= 0) {
+			return;
+		}
+
 		var record = this.getRecord();
 
-		var container = this.element.dom.offsetParent;
+		this.container = this.element.dom.offsetParent;
 
 		var infoWindow = this.infoTpl.append(
-			container, record.data, true
+			this.container, record.data, true
 		).dom;
+
+		this.gestures.dontPropagate(infoWindow, [
+			'mousedown',
+			'mousemove',
+			'mouseup',
+			'touchstart',
+			'touchmove',
+			'touchend'
+		]);
 
 		var style = infoWindow.style;
 
@@ -149,7 +177,7 @@ Ext.define('Ria.view.TileItem', {
 		/* Close and remove overlapping windows. */
 		for (var i = this.list.openedTiles.length - 1; i >= 0; i -= 1) {
 			(function (tile, i, openedTiles, self) {
-				if (tile === self || self.overlaps(tile)) {
+				if (self.overlaps(tile)) {
 					openedTiles.splice(i, 1);
 
 					var tW = tile.infoWindow;
@@ -157,7 +185,7 @@ Ext.define('Ria.view.TileItem', {
 						tW.style.setProperty('opacity', 0);
 
 						setTimeout(function () {
-							container.removeChild(tW);
+							tile.removeInfoWindow();
 
 							if (-1 == openedTiles.indexOf(tile)) {
 								tile.element.removeCls('tile-opened');

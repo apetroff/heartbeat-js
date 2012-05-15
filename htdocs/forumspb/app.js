@@ -33,7 +33,7 @@ Ext.application({
 			onReset: function () {
 		        playedTiles = {};
 				Array.prototype.forEach.call(tiles, function (tile) {
-					tile.style.visibility = '';
+					Ext.getCmp(tile.id)._show();
 				});
 			},
 
@@ -42,7 +42,7 @@ Ext.application({
 					var tile = tiles[index];
 
 					if (tile) {
-						tile.style.visibility = 'hidden';
+						Ext.getCmp(tile.id)._hide();
 						playedTiles[index] = true;
 					} else {
 						console.error('No tile with index %d', index);

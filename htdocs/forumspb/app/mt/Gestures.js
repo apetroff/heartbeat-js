@@ -124,5 +124,16 @@ Ext.define('Ria.mt.Gestures', {
 			el.scrollTop += deltaY;
 			e.preventDefault();
 		}, false);
+	},
+
+	_dont: function (e) {
+		e.stopPropagation();
+	},
+
+	dontPropagate: function (el, events) {
+		var dont = this._dont;
+		events.forEach(function (name) {
+			el.addEventListener(name, dont, false);
+		});
 	}
 });
