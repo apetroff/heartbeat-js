@@ -474,7 +474,6 @@
 
 		drawCircle: function (ball) {
 			var $ = this.scale;
-			var PIx2 = Math.PI * 2;
 			var r = this.options.ballRadius;
 
 			var images = [
@@ -539,7 +538,8 @@
 					x: ~~(pos.x * $ - r),
 					y: ~~(pos.y * $ - r),
 					w: ~~(r * 2),
-					h: ~~(r * 2)
+					h: ~~(r * 2),
+					color: this.colors[~~(Math.random() * 3)]
 				};
 			} else {
 				this.explosionRect = null;
@@ -581,10 +581,6 @@
 				{ h: 0,   s: 0,  v: 80, a: 0 }  // transparent
 			];
 
-			this.colors.blue   = this.colors[0];
-			this.colors.red    = this.colors[1];
-			this.colors.purple = this.colors[3];
-
 			var rW = this.options.squareSize, rH = rW;
 
 			this.squares = [];
@@ -615,11 +611,9 @@
 		},
 
 		drawSquare: function (square) {
-			var speed = 0.5;
+			var speed = 0.1;
 
-			square.lum += speed * (square.flip ? -1: 1);
-
-			if (square.lum === 100) {
+			if (square.lum > 100) {
 				square.color = this.randColor();
 				square.flip = true;
 			} else if (square.lum < square.color.v) {
@@ -627,20 +621,25 @@
 				square.flip = false;
 			}
 
+			square.lum += speed * (square.flip ? -1 : 1);
+
 			var color = square.color;
+			var lum = square.lum;
 			if (
 				this.explosionRect &&
 				this.overlaps(this.explosionRect, square)
 			) {
-				color = this.colors[~~(Math.random() * 3)];
-				square.lum = 60 + 10 *
-					~~(this.explosionRect.w / this.options.squareSize);
+				color = this.explosionRect.color;
+				square.lum = 95;
+				lum = 60 + 10 * ~~(
+					this.explosionRect.w / this.options.squareSize
+				);
 			}
 
 			this.ctx.fillStyle = 'hsla(' + [
 				color.h,
 				color.s + '%',
-				square.lum + '%',
+				lum + '%',
 				color.a
 			] + ')';
 			this.ctx.fillRect(
