@@ -27,6 +27,13 @@
 
 		ballCount: 4,
 
+		colors: [
+			{ h: 216, s: 23, v: 80, a: 1 }, // blue
+			{ h: 323, s: 30, v: 80, a: 1 }, // red
+			{ h: 264, s: 11, v: 80, a: 1 }, // purple
+			{ h: 0,   s: 0,  v: 80, a: 0 }  // transparent
+		],
+
 		colorTpl: new Ext.XTemplate(
 			'hsla({h}, {s}%, {v}%, {a})'
 		).compile(),
@@ -36,11 +43,14 @@
 
 			this.options = {
 				ballRadius: 40,
-				ballHitpoints: 4,
+				ballHitpoints: 6,
+				scoreDuration: 15,
 				squareSize: 120,
 				springCoef: 1000,
 				onEndContact: Boolean,
-				onReset: Boolean
+				onReset: Boolean,
+				colors: null,
+				font: null
 			};
 
 			if (options) {
@@ -50,11 +60,14 @@
 			}
 
 			this.ballRadius = this.options.ballRadius / this.scale;
+			this.colors = this.options.colors || this.colors;
 
 			this.canvas = canvas;
 			this.ctx = canvas.getContext('2d');
 			this.width = canvas.width / this.scale;
 			this.height = canvas.height / this.scale;
+
+			this.ctx.font = this.options.font || '50px Helvetica';
 
 			this.destroyedBodies = [];
 			this.walls = {};
@@ -204,11 +217,14 @@
 			var ballKeys = Object.keys(this.balls);
 
 			if (!ballKeys.length) {
+				this.canvas.classList.add('reset');
+
 				if (!this.resetTimeout) {
 					this.resetTimeout = setTimeout(function () {
 						self.resetTimeout = null;
+						self.canvas.classList.remove('reset');
 						self.reset();
-					}, 3000);
+					}, 600);
 				}
 				return;
 			}
@@ -254,9 +270,13 @@
 			this.drawWorld();
 		},
 
-		explode: function (body) {
+		addScore: function (ball, score) {
 			this.explosionFrame = Math.PI;
-			this.explosionPosition = body.GetPosition();
+			this.scoreFrame = this.options.scoreDuration;
+			this.explosionPosition = ball.GetPosition();
+
+			var data = ball.GetUserData();
+			data.score = score;
 
 			/*
 			if (this.options.explosionSound) {
@@ -296,15 +316,10 @@
 					ball.GetFixtureList().GetShape().SetRadius(ballData.radius);
 				}
 
-				var explode = self.options.onEndContact(data.index);
+				var score = self.options.onEndContact(data.index);
 
-				if (explode && data.index in self.walls) {
-					self.explode(body);
-
-					setTimeout(function () {
-						self.destroyedBodies.push(body);
-						delete self.walls[data.index];
-					}, 100);
+				if (score) {
+					self.addScore(ball, score);
 				}
 			};
 
@@ -502,27 +517,58 @@
 			var index = data.index;
 			var angle = ball.GetAngle();
 
+			var posX = ~~(pos.x * $);
+			var posY = ~~(pos.y * $);
+			var r = ~~(data.radius * $);
+
 			this.ctx.save();
 			if (angle) {
-				this.ctx.translate(pos.x * $, pos.y * $);
+				this.ctx.translate(posX, posY);
 				this.ctx.rotate(angle);
-				this.ctx.translate(-pos.x * $, -pos.y * $);
+				this.ctx.translate(-posX, -posY);
 			}
 
 			this.ctx.beginPath();
 			this.ctx.arc(
-				pos.x * $, pos.y * $,
-				data.radius * $,
+				posX, posY, r,
 				0, Math.PI * 2, true
 			);
 			this.ctx.closePath();
 
+			var radgrad = this.ctx.createRadialGradient(
+				posX, posY, ~~(r / 2),
+				posX, posY, r
+			);
+
+			radgrad.addColorStop(0, data.color);
+			radgrad.addColorStop(0.5, '#fff');
+			radgrad.addColorStop(1, data.color);
+
 			//this.ctx.fillStyle = this.colorTpl.apply(data.color);
-			this.ctx.fillStyle = data.color;
-			this.ctx.strokeStyle = '#999';
+			this.ctx.fillStyle = radgrad;
 			this.ctx.fill();
-			this.ctx.stroke();
 			this.ctx.restore();
+
+			if (data.score && this.scoreFrame > 0) {
+				this.scoreFrame -= 1;
+				var color = {
+					h: 0, s: 0, v: 100,
+					a: this.scoreFrame / this.options.scoreDuration
+				};
+				this.ctx.fillStyle = this.colorTpl.apply(color);
+				color.v = 0;
+				this.ctx.strokeStyle = this.colorTpl.apply(color);
+				this.ctx.fillText(
+					'+' + data.score,
+					posX - r,
+					posY - r
+				);
+				this.ctx.strokeText(
+					'+' + data.score,
+					posX - r,
+					posY - r
+				);
+			}
 		},
 
 
@@ -590,13 +636,6 @@
 		initBackground: function () {
 			var w = this.canvas.width;
 			var h = this.canvas.height;
-
-			this.colors = [
-				{ h: 216, s: 23, v: 80, a: 1 }, // blue
-				{ h: 323, s: 30, v: 80, a: 1 }, // red
-				{ h: 264, s: 11, v: 80, a: 1 }, // purple
-				{ h: 0,   s: 0,  v: 80, a: 0 }  // transparent
-			];
 
 			var rW = this.options.squareSize, rH = rW;
 

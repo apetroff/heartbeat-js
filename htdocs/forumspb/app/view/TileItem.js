@@ -58,18 +58,23 @@ Ext.define('Ria.view.TileItem', {
 		this.list.openedTiles = [];
 	},
 
-	_hide: function () {
-		this.element.hide();
+	collide: function () {
 		this.removeInfoWindow();
 	},
 
-	_show: function () {
-		this.element.show();
+	getScore: function () {
+		var rec = this.getRecord();
+		return rec.data.score;
 	},
 
 	removeInfoWindow: function () {
-		if (this.container) {
-			this.container.removeChild(this.infoWindow);
+		if (this.container && this.infoWindowSize) {
+			try {
+				this.container.removeChild(this.infoWindow);
+			} catch (e) {
+				console.error(e);
+			}
+			this.infoWindow = null;
 		}
 	},
 
@@ -96,7 +101,9 @@ Ext.define('Ria.view.TileItem', {
 
 		var record = this.getRecord();
 
-		this.container = this.element.dom.offsetParent;
+		if (!this.container) {
+			this.container = this.element.dom.offsetParent;
+		}
 
 		var infoWindow = this.infoTpl.append(
 			this.container, record.data, true

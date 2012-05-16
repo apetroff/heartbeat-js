@@ -13,9 +13,10 @@ Ext.define('Ria.model.Tile', {
             {name: "_id", type: "string"},
 			{name: "title", type: "string"},
 			"tickers",
-			{name: "region", type: "string"},
-			{name: "sector", type: "string"},
-            {name: "id", type: "string"}
+			'score',
+			{name: 'region', type: 'string'},
+			{name: 'sector', type: 'string'},
+            {name: 'id', type: 'string'}
         ]
     }
 });

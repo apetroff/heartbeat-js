@@ -23,32 +23,23 @@ Ext.application({
 		var cont = document.querySelector('.x-dataview-tiles');
 		cont.appendChild(canvas);
 
-		var playedTiles = {};
-
 		window.hockey = initHockey(canvas, {
 			explosionSound: document.querySelector('audio'),
 
 			onReset: function () {
-		        playedTiles = {};
-				Array.prototype.forEach.call(tiles, function (tile) {
-					Ext.getCmp(tile.id)._show();
-				});
 			},
 
 			onEndContact: function (index) {
-				if (!playedTiles[index]) {
-					var tile = tiles[index];
+				var tile = tiles[index];
 
-					if (tile) {
-						Ext.getCmp(tile.id)._hide();
-						playedTiles[index] = true;
-					} else {
-						console.error('No tile with index %d', index);
-					}
-
-					return true;
+				if (tile) {
+					var cmp = Ext.getCmp(tile.id);
+					cmp.collide();
+					return cmp.getScore();
+				} else {
+					console.error('No tile with index %d', index);
+					return null;
 				}
-				return false;
 			}
 		});
     }

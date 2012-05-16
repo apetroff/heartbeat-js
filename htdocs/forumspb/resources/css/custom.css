@@ -72,6 +72,18 @@ canvas {
 	z-index: 1;
 	left: 0;
 	top: 0;
+	-webkit-transform: rotate(0deg);
+	-webkit-transition: all 600ms ease-in;
+	width: 1920px;
+	height: 1080px;
+}
+
+canvas.reset {
+	-webkit-transform: rotate(1800deg);
+	left: 50%;
+	top: 50%;
+	width: 0;
+	height: 0;
 }
 
 /* TODO: uncomment for production
