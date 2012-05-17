@@ -62,8 +62,9 @@ Ext.application({
     models: [
         'Session',
         'Speaker',
+		'User',
 		'Company',
-		'User'
+		'Ticker'
     ],
 
     views: [
@@ -111,9 +112,12 @@ Ext.application({
     stores: [
         'Sessions',
         'SpeakerSessions',
-        'Speakers',
+        
+		'Speakers',
         'SessionSpeakers',
-        'Companies',
+        
+		'Companies',
+		'Tickers'
     ],
 
     viewport: {

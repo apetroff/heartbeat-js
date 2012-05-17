@@ -3,8 +3,10 @@ Ext.define('Spief.model.Company', {
 
 	config: {
 	
+		idProperty: '_id',
+		
 		fields: [
-			'id',
+			{name: '_id', type: 'number'},
 			'title',
 			'tickers',
 			'daily',

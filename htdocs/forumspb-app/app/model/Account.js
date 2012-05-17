@@ -4,16 +4,16 @@ Ext.define('Spief.model.Account', {
 	config: {
 		
 		fields: [
-			{name: '_id', type: 'string', defaulValue: ''},
-			{name: 'cache', type: 'number', defaulValue: 100000},
-			{name: 'actives', type: 'number', defaulValue: 100000},
-			{name: 'packageCount', type: 'number', defaulValue: 0},
+			'_id',
+			{name: 'cache', type: 'number'},
+			{name: 'actives', type: 'number'},
+			{name: 'packageCount', type: 'number'},
 			'briefcase'
 		],
 		
 		proxy: {
             type: 'ajax',
-            api : {
+			api : {
 				create: '/entity/accounts/create.json',
 				read: '/entity/accounts/list.json',
 				update: '/entity/accounts/update.json'
@@ -32,12 +32,11 @@ Ext.define('Spief.model.Account', {
 	
 	getBuyAbility: function(id) {
 		
-		var store = Ext.getStore('Companies'),
-			company = store.getById(id),
-			daily = company.get('daily'),
+		var store = Ext.getStore('Tickers'),
+			ticker = store.getById(id),
 			cache = this.get('cache');
 		
-		return cache >= daily.last;
+		return cache >= ticker.get('last');
 	},
 	
 	getSellAbility: function(id) {
@@ -49,18 +48,16 @@ Ext.define('Spief.model.Account', {
 	},
 	
 	recalculate: function() {
-		console.log ('recalculateBriefcase');
 		
 		var briefcase = this.get('briefcase'),
 			actives = 0,
-			store = Ext.getStore('Companies'),
-			company, daily,
+			store = Ext.getStore('Tickers'),
+			daily,
 			count = 0;
 		
 		for (var id in briefcase) {
-			company = store.getById(id);
-			daily = company.get('daily');
-			actives += briefcase[id] * daily.last;
+			daily = store.getById(id);
+			actives += briefcase[id] * daily.get('last');
 			count++;
 		}
 		

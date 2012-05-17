@@ -61,4 +61,64 @@
 			"vars": "{$data.records}"
 		}
 	}]
+}, {
+	"path": "tickers",
+	"workflows": [{
+		"path": "list.json",
+		"tasks": [{
+			"functionName": "parseQuery",
+			"url": "{$request.url}",
+			"produce": "data.query"
+		}, {
+			"className":  "task/mongoRequest",
+			"connector":  "mongo",
+			"pager": "{$data.query}",
+			"collection": "tickers",
+			"produce":    "data.records"
+		}],
+		"presenter": {
+			"type": "json",
+			"vars": "{$data.records}"
+		}
+	}]
+}, {
+	"path": "news",
+	"workflows": [{
+		"path": "list.json",
+		"tasks": [{
+			"functionName": "parseQuery",
+			"url": "{$request.url}",
+			"produce": "data.query"
+		}, {
+			"className":  "task/mongoRequest",
+			"connector":  "mongo",
+			"pager": "{$data.query}",
+			"collection": "news",
+			"produce":    "data.records"
+		}],
+		"presenter": {
+			"type": "json",
+			"vars": "{$data.records}"
+		}
+	}]
+}, {
+	"path": "comments",
+	"workflows": [{
+		"path": "list.json",
+		"tasks": [{
+			"functionName": "parseQuery",
+			"url": "{$request.url}",
+			"produce": "data.query"
+		}, {
+			"className":  "task/mongoRequest",
+			"connector":  "mongo",
+			"pager": "{$data.query}",
+			"collection": "comments",
+			"produce":    "data.records"
+		}],
+		"presenter": {
+			"type": "json",
+			"vars": "{$data.records}"
+		}
+	}]
 }]

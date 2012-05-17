@@ -1,20 +1,74 @@
 {
 	"workflows": [{
-			"token": "ticker",
+			"token": "tickers",
 			"tasks": [{
 				"className": "task/download",
 				"url": "{$url}",
 				"headers": "{$headers}",
-				"body": "{$body}",
+				"post": "{$body}",
 				"produce": "data.responseText"
 			}, {
 				"functionName": "parseTicker",
+				"companyId": "{$companyId}",
 				"responseText": "{$data.responseText}",
-				"produce": "data.ticker"
+				"produce": "data.index"
 			}, {
 				"className": "task/mongoRequest",
-				"method": "update",
-				"data": ["{P$data.ticker}"],
+				"connector":  "mongo",
+				"method":     "update",
+				"options": {
+					"upsert": 1
+				},
+				"collection": "tickers",
+				"data": ["{$data.index}"],
+				"produce": "data.mongoResponse"
+			}]
+	}, {
+			"token": "news",
+			"tasks": [{
+				"className": "task/download",
+				"url": "{$url}",
+				"headers": "{$headers}",
+				"post": "{$body}",
+				"produce": "data.responseText"
+			}, {
+				"functionName": "parseNews",
+				"companyId": "{$companyId}",
+				"responseText": "{$data.responseText}",
+				"produce": "data.news"
+			}, {
+				"className": "task/mongoRequest",
+				"connector":  "mongo",
+				"method":     "update",
+				"options": {
+					"upsert": 1
+				},
+				"collection": "news",
+				"data": ["{$data.news}"],
+				"produce": "data.mongoResponse"
+			}]
+	}, {
+			"token": "comments",
+			"tasks": [{
+				"className": "task/download",
+				"url": "{$url}",
+				"headers": "{$headers}",
+				"post": "{$body}",
+				"produce": "data.responseText"
+			}, {
+				"functionName": "parseComment",
+				"companyId": "{$companyId}",
+				"responseText": "{$data.responseText}",
+				"produce": "data.index"
+			}, {
+				"className": "task/mongoRequest",
+				"connector":  "mongo",
+				"method":     "update",
+				"options": {
+					"upsert": 1
+				},
+				"collection": "comments",
+				"data": ["{$data.index}"],
 				"produce": "data.mongoResponse"
 			}]
 	}]

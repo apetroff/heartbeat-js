@@ -1,18 +1,18 @@
 Ext.data.JsonP.companiesCb({
 	"companies": [
 		{
-			"id": "1519",
+			"_id": 1519,
 			"title": "Сбербанк России",
 			"tickers": [
-				"RUALR",
-				"RUALRS",
 				"SBER",
 				"SBERG",
 				"SBERP",
 				"SBERPG",
 				"SBERPS",
 				"SBERS",
-				"SBNA"
+				"SBNA",
+				"RUALR",
+				"RUALRS"
 			],
 			"region": "Москва",
 			"sector": "Прочее денежное посредничество",
@@ -32,13 +32,13 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7785",
+			"_id": 7785,
 			"title": "Газпром",
 			"tickers": [
-				"81JK",
-				"GAZ",
 				"GAZP",
 				"GAZP09",
+				"81JK",
+				"GAZ",
 				"gazp11",
 				"gazp13",
 				"GAZPS",
@@ -69,9 +69,10 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8085",
+			"_id": 8085,
 			"title": "ЛУКОЙЛ",
 			"tickers": [
+				"LUKOY",
 				"68FV",
 				"LKOD",
 				"LKOE",
@@ -83,7 +84,6 @@ Ext.data.JsonP.companiesCb({
 				"LKOHS",
 				"LKOR",
 				"LUK",
-				"LUKOY",
 				"RU000A0DGFW8",
 				"RU000A0JNYY8",
 				"RU000A0JNZ11",
@@ -114,7 +114,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7805",
+			"_id": 7805,
 			"title": "ГМК Норильский никель",
 			"tickers": [
 				"GMKN",
@@ -141,9 +141,11 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "1435",
+			"_id": 1435,
 			"title": "Банк ВТБ",
 			"tickers": [
+				"VTBR",
+				"VTBR-002D",
 				"36GK",
 				"KYM1",
 				"RU000A0AXJM2",
@@ -156,8 +158,6 @@ Ext.data.JsonP.companiesCb({
 				"RU000A0JS1P4",
 				"RU000A0JS1T6",
 				"RU000A0JS1U4",
-				"VTBR",
-				"VTBR-002D",
 				"VTBR04",
 				"VTBR05",
 				"VTBR06",
@@ -182,12 +182,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8233",
+			"_id": 8233,
 			"title": "НК Роснефть",
 			"tickers": [
+				"ROSN",
 				"40XT",
 				"OJS1",
-				"ROSN",
 				"ROSNG",
 				"ROSNS"
 			],
@@ -207,11 +207,11 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8617",
+			"_id": 8617,
 			"title": "Сургутнефтегаз",
 			"tickers": [
-				"SGGD",
 				"SGN",
+				"SGGD",
 				"SGNV",
 				"SNGS",
 				"SNGSG",
@@ -236,7 +236,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8801",
+			"_id": 8801,
 			"title": "Холдинг межрегиональных распределительных сетевых компаний",
 			"tickers": [
 				"MRKH",
@@ -260,9 +260,10 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8529",
+			"_id": 8529,
 			"title": "Северсталь",
 			"tickers": [
+				"SVST",
 				"50AW",
 				"CHMF",
 				"CHMFG",
@@ -270,8 +271,7 @@ Ext.data.JsonP.companiesCb({
 				"RTS2",
 				"RU000A0JQCC3",
 				"RU000A0JQSK2",
-				"RU000A0JQSL0",
-				"SVST"
+				"RU000A0JQSL0"
 			],
 			"region": "Вологодская область",
 			"sector": "Производство стали",
@@ -289,7 +289,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8793",
+			"_id": 8793,
 			"title": "ФСК ЕЭС",
 			"tickers": [
 				"FEES",
@@ -330,12 +330,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8257",
+			"_id": 8257,
 			"title": "Новолипецкий металлургический комбинат",
 			"tickers": [
+				"NLMK",
 				"N7MG",
 				"NLMA",
-				"NLMK",
 				"NLMKG",
 				"NLMKS",
 				"RU000A0JQH93",
@@ -361,7 +361,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8473",
+			"_id": 8473,
 			"title": "Федеральная гидрогенерирующая компания - РусГидро",
 			"tickers": [
 				"HYDR",
@@ -382,7 +382,7 @@ Ext.data.JsonP.companiesCb({
 				"fullTitle": "ОАО \"Федеральная гидрогенерирующая компания - РусГидро\"",
 				"shortTitle": "ОАО \"РусГидро\"",
 				"address": "660075, г Красноярск, ул Республики, д 51",
-				"site": "www.gidroogk.ru",
+				"site": "www.g_idroogk.ru",
 				"ceo": "ПРЕДСЕДАТЕЛЬ ПРАВЛЕНИЯ Дод Евгений Вячеславович",
 				"sector": "Производство электроэнергии гидроэлектростанциями",
 				"authCapital": "290302702",
@@ -391,13 +391,13 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8761",
+			"_id": 8761,
 			"title": "Уралкалий",
 			"tickers": [
+				"URKA",
 				"50TY",
 				"M6B1",
 				"RU000A0JR8M7",
-				"URKA",
 				"URKA-004D",
 				"URKA-005D",
 				"URKAG",
@@ -419,7 +419,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7913",
+			"_id": 7913,
 			"title": "ИНТЕР РАО ЕЭС",
 			"tickers": [
 				"IRAO",
@@ -445,11 +445,11 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8461",
+			"_id": 8461,
 			"title": "Ростелеком",
 			"tickers": [
-				"RKMD",
 				"RTKM",
+				"RKMD",
 				"RTKM-002D",
 				"RTKM-003D",
 				"RTKM-004D",
@@ -501,11 +501,11 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7697",
+			"_id": 7697,
 			"title": "Аэрофлот",
 			"tickers": [
-				"AETG",
 				"AFLT",
+				"AETG",
 				"AFLTG",
 				"RU000A0JQU88",
 				"RU000A0JQU96"
@@ -526,15 +526,15 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8245",
+			"_id": 8245,
 			"title": "НОВАТЭК",
 			"tickers": [
+				"NVTK",
 				"4B02-02-00268-E",
 				"4B02-03-00268-E",
 				"4B02-04-00268-E",
 				"65DB",
 				"N1O",
-				"NVTK",
 				"NVTKG",
 				"NVTKS",
 				"RU000A0JQXB1"
@@ -555,12 +555,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8633",
+			"_id": 8633,
 			"title": "Татнефть",
 			"tickers": [
+				"TATN",
 				"ATAD",
 				"RU000A0JR1T7",
-				"TATN",
 				"TATNG",
 				"TATNP",
 				"TATNPG",
@@ -583,12 +583,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8089",
+			"_id": 8089,
 			"title": "Магнит",
 			"tickers": [
+				"MGNT",
 				"50XD",
 				"5M71",
-				"MGNT",
 				"MGNT-004D",
 				"MGNT-005D",
 				"MGNT-006D",
@@ -615,12 +615,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8209",
+			"_id": 8209,
 			"title": "МТС",
 			"tickers": [
+				"MTSS",
 				"MKY",
 				"MTSI-002D",
-				"MTSS",
 				"mtss01",
 				"mtss02",
 				"mtss03",
@@ -652,7 +652,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7781",
+			"_id": 7781,
 			"title": "Газпром нефть",
 			"tickers": [
 				"GAZ",
@@ -685,10 +685,9 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8113",
+			"_id": 8113,
 			"title": "Мечел",
 			"tickers": [
-				"MHSA",
 				"MTLR",
 				"MTLR02",
 				"mtlr04",
@@ -696,6 +695,7 @@ Ext.data.JsonP.companiesCb({
 				"MTLRG",
 				"MTLRP",
 				"MTLRPG",
+				"MHSA",
 				"RU000A0GUBF6",
 				"RU000A0JQ8V9",
 				"RU000A0JQFQ6",
@@ -732,15 +732,15 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8093",
+			"_id": 8093,
 			"title": "Магнитогорский металлургический комбинат",
 			"tickers": [
+				"MMK",
 				"42CL",
 				"MAGN",
 				"MAGNG",
 				"MAGNS",
 				"MHQ",
-				"MMK",
 				"RU000A0JQJV8",
 				"RU000A0JQN12",
 				"RU000A0JQU05",
@@ -766,7 +766,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8417",
+			"_id": 8417,
 			"title": "Распадская",
 			"tickers": [
 				"RASP",
@@ -787,7 +787,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "12240",
+			"_id": 12240,
 			"title": "ТНК-BP Холдинг",
 			"tickers": [
 				"TNBP",
@@ -808,7 +808,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8321",
+			"_id": 8321,
 			"title": "Э.ОН Россия",
 			"tickers": [
 				"EONR",
@@ -829,12 +829,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8313",
+			"_id": 8313,
 			"title": "ОГК-2",
 			"tickers": [
+				"OGK2",
 				"37O1",
 				"54UQ",
-				"OGK2",
 				"OGKB",
 				"OGKB-004D",
 				"ogkb01",
@@ -857,11 +857,11 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8405",
+			"_id": 8405,
 			"title": "Полюс Золото",
 			"tickers": [
-				"P6J2",
 				"PLZL",
+				"P6J2",
 				"PLZLG",
 				"PLZLS"
 			],
@@ -880,7 +880,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8889",
+			"_id": 8889,
 			"title": "АФК Система",
 			"tickers": [
 				"AFKS",
@@ -910,12 +910,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7813",
+			"_id": 7813,
 			"title": "Группа ЛСР",
 			"tickers": [
+				"LSRG",
 				"3LSA",
 				"54UD",
-				"LSRG",
 				"lsrg02",
 				"LSRGG",
 				"RU000A0JPXB3",
@@ -940,12 +940,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8785",
+			"_id": 8785,
 			"title": "Фармстандарт",
 			"tickers": [
+				"PHST",
 				"70SK",
 				"GO12",
-				"PHST",
 				"PHSTG"
 			],
 			"region": "Московская область",
@@ -963,12 +963,12 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8157",
+			"_id": 8157,
 			"title": "Мосэнерго",
 			"tickers": [
+				"MSNG",
 				"AOMD",
 				"MRO",
-				"MSNG",
 				"MSNG01",
 				"MSNG02",
 				"msng03",
@@ -994,7 +994,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8201",
+			"_id": 8201,
 			"title": "МРСК Центра",
 			"tickers": [
 				"MRKC",
@@ -1015,14 +1015,14 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8649",
+			"_id": 8649,
 			"title": "ТГК-1",
 			"tickers": [
+				"TGKA",
 				"RU000A0JP435",
 				"RU000A0JQ722",
 				"RU000A0JS1W0",
 				"RU000A0JS470",
-				"TGKA",
 				"tgka01",
 				"TGKA-010D",
 				"TGKA-011D",
@@ -1044,11 +1044,11 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7653",
+			"_id": 7653,
 			"title": "Акрон",
 			"tickers": [
-				"34NF",
 				"AKRN",
+				"34NF",
 				"akrn02",
 				"akrn03",
 				"RU000A0JQCK6",
@@ -1072,7 +1072,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7817",
+			"_id": 7817,
 			"title": "Группа РАЗГУЛЯЙ",
 			"tickers": [
 				"GRAZ",
@@ -1108,7 +1108,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7633",
+			"_id": 7633,
 			"title": "АВТОВАЗ",
 			"tickers": [
 				"AVAZ",
@@ -1140,7 +1140,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "12715",
+			"_id": 12715,
 			"title": "ПРОТЕК",
 			"tickers": [
 				"PRTK",
@@ -1161,7 +1161,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8005",
+			"_id": 8005,
 			"title": "Корпорация ВСМПО-АВИСМА",
 			"tickers": [
 				"VSMO",
@@ -1183,7 +1183,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7953",
+			"_id": 7953,
 			"title": "КАМАЗ",
 			"tickers": [
 				"KMAZ",
@@ -1207,7 +1207,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8597",
+			"_id": 8597,
 			"title": "СОЛЛЕРС",
 			"tickers": [
 				"RU000A0AU608",
@@ -1233,7 +1233,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "63715",
+			"_id": 63715,
 			"title": "РБК",
 			"tickers": [
 				"RBCM",
@@ -1260,7 +1260,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8869",
+			"_id": 8869,
 			"title": "Южный Кузбасс",
 			"tickers": [
 				"UKUZ",
@@ -1281,7 +1281,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "12219",
+			"_id": 12219,
 			"title": "АК АЛРОСА",
 			"tickers": [
 				"ALRS",
@@ -1306,7 +1306,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8173",
+			"_id": 8173,
 			"title": "МОЭСК",
 			"tickers": [
 				"MSRS",
@@ -1331,7 +1331,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "1423",
+			"_id": 1423,
 			"title": "Банк Санкт-Петербург",
 			"tickers": [
 				"BSPB",
@@ -1362,7 +1362,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7669",
+			"_id": 7669,
 			"title": "Аптечная сеть 36,6",
 			"tickers": [
 				"APTK",
@@ -1385,7 +1385,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "12727",
+			"_id": 12727,
 			"title": "Золото Якутии",
 			"tickers": [
 				"ZOYA"
@@ -1405,7 +1405,7 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "8389",
+			"_id": 8389,
 			"title": "Пивоваренная компания Балтика",
 			"tickers": [
 				"PKBA",
@@ -1428,11 +1428,11 @@ Ext.data.JsonP.companiesCb({
 			}
 		},
 		{
-			"id": "7985",
+			"_id": 7985,
 			"title": "Компания М.видео",
 			"tickers": [
-				"MVID",
-				"MVIDG"
+				"MV_id",
+				"MV_idG"
 			],
 			"region": "Москва",
 			"sector": "Деятельность по управлению финансово - промышленными группами и холдинг - компаниями",

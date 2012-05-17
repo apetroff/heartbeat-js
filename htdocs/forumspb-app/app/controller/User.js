@@ -95,7 +95,7 @@ Ext.define('Spief.controller.User', {
 	},
 	
 	onUserProfileFailed: function(error) {
-		console.log ('Profile has not been recieved. Cause: ' + error.err);
+		console.log ('Profile has not been recieved. Cause:', error);
 	},
 	
 	onUserButtonTap: function( b, e, eOpts ) {
@@ -352,6 +352,7 @@ Ext.define('Spief.controller.User', {
 						data = data.data[0];
 						accountModel.set(data);
 						accountModel.commit(true);
+						accountModel.recalculate();
 						this.setAccount(accountModel);
 					} else {
 						console.log(arguments);

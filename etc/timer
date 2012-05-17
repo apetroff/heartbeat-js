@@ -1,12 +1,27 @@
 {
-	"workflows": [
-		{
-			"interval": 1000,
-			"tasks": [{
-				"functionName": "getAllIndexes",
-				"token": "ticker",
-				"produce": "data.ids"
-			}]
-		}
-	]
+	"workflows": [{
+		"interval": 600000,
+		"startRun": true,
+		"tasks": [{
+			"functionName": "getTickers",
+			"token": "tickers",
+			"produce": "data.tickersDone"
+		}]
+	}, {
+		"interval": 7200000,
+		"startRun": true,
+		"tasks": [{
+			"functionName": "getNews",
+			"token": "news",
+			"produce": "data.newsDone"
+		}]
+	}, {
+		"interval": 7200000,
+		"startRun": true,
+		"tasks": [{
+			"functionName": "getComments",
+			"token": "comments",
+			"produce": "data.commentsDone"
+		}]
+	}]
 }

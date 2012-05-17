@@ -82,20 +82,23 @@ Ext.define('Spief.controller.Companies', {
 		
 		var id = record.getId();
 		
+		Spief.companyModel = this.currentCompany = record;
+		
 		this.onSync();
 		
-		Spief.companyModel = this.currentCompany = record;
-		this.primeProxy.processCompany(id, true, this.onExtendedDataLoaded, this);
+		this.setCompanyInfo();
 		
-		this.checkDaily();
+		//this.checkDaily();
 	},
 	
 	checkDaily: function() {
 		
 		var tradePanel = this.getTradePanel();
 		
-		if (this.currentCompany && this.currentCompany.get('daily').last) {
-			
+		var daily = (this.currentCompany) ? this.currentCompany.get('daily') : null;
+		
+		if (this.currentCompany && daily && daily.last) {
+		
 			tradePanel.show();
 			
 			var buyButton = this.getBuyButton(),
@@ -114,7 +117,7 @@ Ext.define('Spief.controller.Companies', {
 		}		
 	},
 	
-	onExtendedDataLoaded: function() {
+	setCompanyInfo: function() {
 		
 		this.company.config.title = this.currentCompany.get('title');
 		this.getCompaniesContainer().push(this.company);
