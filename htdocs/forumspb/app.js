@@ -26,9 +26,6 @@ Ext.application({
 		window.hockey = initHockey(canvas, {
 			explosionSound: document.querySelector('audio'),
 
-			onReset: function () {
-			},
-
 			onEndContact: function (index) {
 				var tile = tiles[index];
 

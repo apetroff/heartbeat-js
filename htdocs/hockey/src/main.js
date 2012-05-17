@@ -38,21 +38,22 @@
 			'hsla({h}, {s}%, {v}%, {a})'
 		).compile(),
 
+		defaultOptions: {
+			ballRadius: 40,
+			ballHitpoints: 6,
+			scoreDuration: 15,
+			squareSize: 120,
+			springCoef: 1000,
+			onEndContact: Boolean,
+			font: '50px Helvetica',
+			explosionSound: null,
+			colors: null
+		},
+
 		init: function (canvas, options) {
 			var self = this;
 
-			this.options = {
-				ballRadius: 40,
-				ballHitpoints: 6,
-				scoreDuration: 15,
-				squareSize: 120,
-				springCoef: 1000,
-				onEndContact: Boolean,
-				onReset: Boolean,
-				colors: null,
-				font: null
-			};
-
+			this.options = Object.create(this.defaultOptions);
 			if (options) {
 				Object.keys(options).forEach(function (key) {
 					self.options[key] = options[key];
@@ -67,11 +68,11 @@
 			this.width = canvas.width / this.scale;
 			this.height = canvas.height / this.scale;
 
-			this.ctx.font = this.options.font || '50px Helvetica';
+			this.ctx.font = this.options.font;
 
 			this.destroyedBodies = [];
-			this.walls = {};
-			this.balls = {};
+			this.balls = [];
+			this.activatedBalls = [];
 
 			this.world = this.createWorld();
 
@@ -90,10 +91,13 @@
 		},
 
 		reset: function () {
-			this.removeWalls();
 			this.addWalls();
 			this.addBalls();
-			this.options.onReset();
+
+			var self = this;
+			setTimeout(function () {
+				self.canvas.classList.add('active');
+			}, 0);
 		},
 
 		startLoop: function () {
@@ -111,15 +115,6 @@
 			   // allow sleep
                false
 			);
-		},
-
-		removeWalls: function () {
-			var self = this;
-			for (var i in this.walls) {
-				var wall = this.walls[i];
-				delete this.walls[i];
-				this.destroyedBodies.push(wall);
-			}
 		},
 
 		addWalls: function () {
@@ -167,13 +162,14 @@
 				bodyDef.userData = { index: index };
 				var wall = this.world.CreateBody(bodyDef);
 				wall.CreateFixture(fixDef);
-				this.walls[index] = wall;
 				index += 1;
 			}
 		},
 
 		addBalls: function () {
-			var offset = 135 / this.scale;
+			var offset = (
+				this.options.squareSize / 2 - this.options.ballRadius
+			) / this.scale;
 
 			for (var i = 0; i < this.ballCount; i += 1) {
 				var x = this.width * (i % 2) +
@@ -183,6 +179,25 @@
 				var ball = this.createBall(i, x, y);
 
 				this.balls[i] = ball;
+			}
+		},
+
+		activateBall: function (i) {
+			var ball = this.balls[i];
+
+			if (ball && !this.activatedBalls[i]) {
+				var offset = (
+					this.options.squareSize * 1.5 - this.options.ballRadius
+				) / this.scale;
+
+				var pos = ball.GetPosition();
+				pos.x = this.width * (i % 2) +
+					(this.ballRadius + offset) * (i % 2 ? -1 : 1);
+				pos.y = this.height * (i > 1) +
+					(this.ballRadius + offset) * (i > 1 ? -1 : 1);
+				ball.SetPosition(pos);
+
+				this.activatedBalls[i] = ball;
 			}
 		},
 
@@ -212,25 +227,11 @@
 		},
 
 		destroyBalls: function () {
-			var self = this;
+			for (var i = 0; i < this.ballCount; i += 1) {
+				var ball = this.balls[i];
 
-			var ballKeys = Object.keys(this.balls);
+				if (!ball) { continue; }
 
-			if (!ballKeys.length) {
-				this.canvas.classList.add('reset');
-
-				if (!this.resetTimeout) {
-					this.resetTimeout = setTimeout(function () {
-						self.resetTimeout = null;
-						self.canvas.classList.remove('reset');
-						self.reset();
-					}, 600);
-				}
-				return;
-			}
-
-			ballKeys.forEach(function (i) {
-				var ball = self.balls[i];
 				var data = ball.GetUserData();
 				var pos = ball.GetPosition();
 				var r = data.radius;
@@ -239,15 +240,17 @@
 					data.hitpoints <= 0 || (
 						pos.x - r < 0 ||
 						pos.y - r < 0 ||
-						pos.x + r > self.width ||
-						pos.y + r > self.height
+						pos.x + r > this.width ||
+						pos.y + r > this.height
 					)
 				) {
 					ball.SetAwake(false);
-					self.destroyedBodies.push(ball);
-					delete self.balls[i];
+					this.destroyedBodies.push(ball);
+
+					this.balls[i] = null;
+					this.activatedBalls[i] = null;
 				}
-			});
+			}
 		},
 
 		destroyQueue: function () {
@@ -331,14 +334,15 @@
 
 			var mouseX, mouseY, mouseStart, mouseBody;
 			var mousePVec, selectedBody;
-
-			var canvasPos = this.canvas.getBoundingClientRect();
+			var canvasPos;
 
 			document.addEventListener('mousedown', onMouseDown);
 			document.addEventListener('mouseup',   onMouseUp);
 			document.addEventListener('mousemove', onMouseMove);
 
 			function onMouseDown(e) {
+				canvasPos = canvasPos || self.canvas.getBoundingClientRect();
+
 				mouseX = (e.clientX - canvasPos.left) / self.scale;
 				mouseY = (e.clientY - canvasPos.top) / self.scale;
 				mouseBody = getBodyAtMouse();
@@ -359,7 +363,10 @@
 				var MIN_DX = 14;
 				var MIN_DY = 9;
 
-				if (mouseBody) {
+				if (
+					mouseBody &&
+					self.activatedBalls.indexOf(mouseBody) >= 0
+				) {
 					var pos = mouseBody.GetPosition();
 					var k = self.options.springCoef;
 					var dT = 1 / (Date.now() - mouseStart);
@@ -371,12 +378,12 @@
 						mouseBody.SetLinearVelocity(new b2Vec2(dX, dY));
 						mouseBody.SetAwake(true);
 					}
-
-					mouseX = null;
-					mouseY = null;
-					mouseStart = null;
-					mouseBody = null;
 				}
+
+				mouseX = null;
+				mouseY = null;
+				mouseStart = null;
+				mouseBody = null;
 			}
 
 			function getBodyAtMouse() {
@@ -460,7 +467,10 @@
 					var id = finger.identifier;
 					var body = self.touchBodies[id];
 
-					if (body) {
+					if (
+						body &&
+						self.activatedBalls.indexOf(body) >= 0
+					) {
 						var pos = body.GetPosition();
 						var k = self.options.springCoef;
 						var dT = 1 / (Date.now() - self.touchStart[id]);
@@ -468,16 +478,16 @@
 						var dX = (self.touchX[id] - pos.x) * dT * k;
 						var dY = (self.touchY[id] - pos.y) * dT * k;
 
-						delete self.touchX[id];
-						delete self.touchY[id];
-						delete self.touchStart[id];
-						delete self.touchBodies[id];
-
 						if (Math.abs(dX) >= MIN_DX && Math.abs(dY) >= MIN_DY) {
 							body.SetLinearVelocity(new b2Vec2(dX, dY));
 							body.SetAwake(true);
 						}
 					}
+
+					delete self.touchX[id];
+					delete self.touchY[id];
+					delete self.touchStart[id];
+					delete self.touchBodies[id];
 				}
 			}
 
@@ -511,15 +521,17 @@
 		},
 
 		drawCircle: function (ball) {
-			var data = ball.GetUserData();
 			var $ = this.scale;
+
 			var pos = ball.GetPosition();
-			var index = data.index;
 			var angle = ball.GetAngle();
+			var data = ball.GetUserData();
+			var index = data.index;
 
 			var posX = ~~(pos.x * $);
 			var posY = ~~(pos.y * $);
-			var r = ~~(data.radius * $);
+			// yeah baby
+			var r = ~~(ball.GetFixtureList().GetShape().GetRadius() * $);
 
 			this.ctx.save();
 			if (angle) {
@@ -587,7 +599,10 @@
 		drawWorld: function () {
 			var $ = this.scale;
 
-			this.squares.forEach(this.drawSquare);
+			for (var i = 0, len = this.squares.length; i < len; i += 1) {
+				var sq = this.squares[i];
+				this.drawSquare(sq);
+			}
 
 			if (this.explosionFrame > 0) {
 				this.explosionFrame -= 0.4;
@@ -608,8 +623,11 @@
 				this.explosionRect = null;
 			}
 
-			for (var i in this.balls) {
-				this.drawCircle(this.balls[i]);
+			for (var j = 0; j < this.ballCount; j += 1) {
+				var ball = this.balls[j];
+				if (ball) {
+					this.drawCircle(ball);
+				}
 			}
 
 			for (var id in this.touchX) {
@@ -653,13 +671,6 @@
 					});
 				}
 			}
-
-			/* Bind drawSquare. */
-			var drawSquare = this.drawSquare;
-			var self = this;
-			this.drawSquare = function (square) {
-				drawSquare.call(self, square);
-			};
 		},
 
 		randColor: function () {

@@ -30,8 +30,8 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: 135,
-				uid: 1
+				angle: 180,
+				uid: 0
 			}) ]
 		}, {
 			
@@ -47,8 +47,8 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: -135,
-				uid: 2
+				angle: 180,
+				uid: 1
 			}) ]
 		}, {
 			
@@ -64,7 +64,7 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: -45,
+				angle: 0,
 				uid: 3
 			}) ]
 		}, {
@@ -83,8 +83,8 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: 45,
-				uid: 4
+				angle: 0,
+				uid: 2
 			}) ]
 		}]
     },
