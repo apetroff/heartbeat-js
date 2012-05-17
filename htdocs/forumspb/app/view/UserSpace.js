@@ -29,6 +29,7 @@ Ext.define('Ria.view.UserSpace', {
 
 		this.authForm = this.getAt(0);
 		this.authForm.config.uid = this.config.uid;
+		this.authForm.config.angle = this.config.angle;
 		this.authForm.initHtml();
 
 		this.element.dom.style.setProperty(
