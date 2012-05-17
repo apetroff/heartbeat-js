@@ -20,24 +20,40 @@
 		globals.webkitRequestAnimationFrame;
 
 
-	var Arcanoid = {
+	var Hockey = {
 		FPS: 1 / 60,
 
 		scale: 30,
 
 		ballCount: 4,
 
+		colors: [
+			{ h: 216, s: 23, v: 80, a: 1 }, // blue
+			{ h: 323, s: 30, v: 80, a: 1 }, // red
+			{ h: 264, s: 11, v: 80, a: 1 }, // purple
+			{ h: 0,   s: 0,  v: 80, a: 0 }  // transparent
+		],
+
+		colorTpl: new Ext.XTemplate(
+			'hsla({h}, {s}%, {v}%, {a})'
+		).compile(),
+
+		defaultOptions: {
+			ballRadius: 40,
+			ballHitpoints: 6,
+			scoreDuration: 15,
+			squareSize: 120,
+			springCoef: 1000,
+			onEndContact: Boolean,
+			font: '50px Helvetica',
+			explosionSound: null,
+			colors: null
+		},
+
 		init: function (canvas, options) {
 			var self = this;
 
-			this.options = {
-				ballRadius: 60,
-				springCoef: 1000,
-				explosionDuration: 10,
-				onEndContact: Boolean,
-				onReset: Boolean
-			};
-
+			this.options = Object.create(this.defaultOptions);
 			if (options) {
 				Object.keys(options).forEach(function (key) {
 					self.options[key] = options[key];
@@ -45,15 +61,18 @@
 			}
 
 			this.ballRadius = this.options.ballRadius / this.scale;
+			this.colors = this.options.colors || this.colors;
 
 			this.canvas = canvas;
 			this.ctx = canvas.getContext('2d');
 			this.width = canvas.width / this.scale;
 			this.height = canvas.height / this.scale;
 
+			this.ctx.font = this.options.font;
+
 			this.destroyedBodies = [];
-			this.walls = {};
-			this.balls = {};
+			this.balls = [];
+			this.activatedBalls = [];
 
 			this.world = this.createWorld();
 
@@ -64,16 +83,21 @@
 			this.bindTouch();
 			this.bindMouse();
 
+			this.initBackground();
+
 			this.startLoop();
 
 			return this;
 		},
 
 		reset: function () {
-			this.removeWalls();
 			this.addWalls();
 			this.addBalls();
-			this.options.onReset();
+
+			var self = this;
+			setTimeout(function () {
+				self.canvas.classList.add('active');
+			}, 0);
 		},
 
 		startLoop: function () {
@@ -93,15 +117,6 @@
 			);
 		},
 
-		removeWalls: function () {
-			var self = this;
-			for (var i in this.walls) {
-				var wall = this.walls[i];
-				delete this.walls[i];
-				this.destroyedBodies.push(wall);
-			}
-		},
-
 		addWalls: function () {
 			var fixDef = new b2FixtureDef;
 			fixDef.density = 1.0;
@@ -110,8 +125,8 @@
 			
 			var bodyDef = new b2BodyDef;
 
-			var w = 120 / 2 / this.scale;
-			var h = 120 / 2 / this.scale;
+			var w = this.options.squareSize / 2 / this.scale;
+			var h = this.options.squareSize / 2 / this.scale;
 
 			var nX = 14;
 			var nY = 7;
@@ -147,13 +162,14 @@
 				bodyDef.userData = { index: index };
 				var wall = this.world.CreateBody(bodyDef);
 				wall.CreateFixture(fixDef);
-				this.walls[index] = wall;
 				index += 1;
 			}
 		},
 
 		addBalls: function () {
-			var offset = 135 / this.scale;
+			var offset = (
+				this.options.squareSize / 2 - this.options.ballRadius
+			) / this.scale;
 
 			for (var i = 0; i < this.ballCount; i += 1) {
 				var x = this.width * (i % 2) +
@@ -166,6 +182,25 @@
 			}
 		},
 
+		activateBall: function (i) {
+			var ball = this.balls[i];
+
+			if (ball && !this.activatedBalls[i]) {
+				var offset = (
+					this.options.squareSize * 1.5 - this.options.ballRadius
+				) / this.scale;
+
+				var pos = ball.GetPosition();
+				pos.x = this.width * (i % 2) +
+					(this.ballRadius + offset) * (i % 2 ? -1 : 1);
+				pos.y = this.height * (i > 1) +
+					(this.ballRadius + offset) * (i > 1 ? -1 : 1);
+				ball.SetPosition(pos);
+
+				this.activatedBalls[i] = ball;
+			}
+		},
+
 		createBall: function (index, x, y) {
 			var bodyDef = new b2BodyDef;
   
@@ -175,12 +210,15 @@
 			fixDef.restitution = 1;
        
 			bodyDef.type = b2Body.b2_dynamicBody;
-			fixDef.shape = new b2CircleShape(
-				this.ballRadius
-            );
+			fixDef.shape = new b2CircleShape(this.ballRadius);
 			bodyDef.position.x = x;
             bodyDef.position.y = y;
-			bodyDef.userData = { index: index };
+			bodyDef.userData = {
+				index: index,
+				hitpoints: this.options.ballHitpoints,
+				radius: this.ballRadius,
+				color: [ 'red', 'blue', 'yellow', 'purple' ][index % 4]
+			};
 
             var body = this.world.CreateBody(bodyDef);
 			body.CreateFixture(fixDef);
@@ -188,32 +226,31 @@
 			return body;
 		},
 
-		destroyOffScreen: function () {
-			var self = this;
+		destroyBalls: function () {
+			for (var i = 0; i < this.ballCount; i += 1) {
+				var ball = this.balls[i];
 
-			var ballKeys = Object.keys(this.balls);
+				if (!ball) { continue; }
 
-			if (!ballKeys.length) {
-				this.reset();
-				return;
-			}
-
-			ballKeys.forEach(function (i) {
-				var ball = self.balls[i];
+				var data = ball.GetUserData();
 				var pos = ball.GetPosition();
-				var r = self.ballRadius;
+				var r = data.radius;
 
 				if (
-					pos.x - r < 0 ||
-					pos.y - r < 0 ||
-					pos.x + r > self.width ||
-					pos.y + r > self.height
+					data.hitpoints <= 0 || (
+						pos.x - r < 0 ||
+						pos.y - r < 0 ||
+						pos.x + r > this.width ||
+						pos.y + r > this.height
+					)
 				) {
 					ball.SetAwake(false);
-					self.destroyedBodies.push(ball);
-					delete self.balls[i];
+					this.destroyedBodies.push(ball);
+
+					this.balls[i] = null;
+					this.activatedBalls[i] = null;
 				}
-			});
+			}
 		},
 
 		destroyQueue: function () {
@@ -224,7 +261,7 @@
 		},
 
 		step: function () {
-			this.destroyOffScreen();
+			this.destroyBalls();
 
 			this.destroyQueue();
 
@@ -236,9 +273,13 @@
 			this.drawWorld();
 		},
 
-		explode: function (body) {
-			this.explosionFrame = this.options.explosionDuration;
-			this.explosionPosition = body.GetPosition();
+		addScore: function (ball, score) {
+			this.explosionFrame = Math.PI;
+			this.scoreFrame = this.options.scoreDuration;
+			this.explosionPosition = ball.GetPosition();
+
+			var data = ball.GetUserData();
+			data.score = score;
 
 			/*
 			if (this.options.explosionSound) {
@@ -266,15 +307,22 @@
 					return;
 				}
 
-				var explode = self.options.onEndContact(data.index);
+				var ballFix = contact.GetFixtureB();
+				var ball = ballFix.GetBody();
+				var ballData = ball.GetUserData();
 
-				if (explode && data.index in self.walls) {
-					self.explode(body);
+				ballData.hitpoints -= 1;
 
-					setTimeout(function () {
-						self.destroyedBodies.push(body);
-						delete self.walls[data.index];
-					}, 100);
+				if (ballData.hitpoints > 0) {
+					ballData.radius = ballData.hitpoints *
+						(self.ballRadius / self.options.ballHitpoints);
+					ball.GetFixtureList().GetShape().SetRadius(ballData.radius);
+				}
+
+				var score = self.options.onEndContact(data.index);
+
+				if (score) {
+					self.addScore(ball, score);
 				}
 			};
 
@@ -286,14 +334,15 @@
 
 			var mouseX, mouseY, mouseStart, mouseBody;
 			var mousePVec, selectedBody;
-
-			var canvasPos = this.canvas.getBoundingClientRect();
+			var canvasPos;
 
 			document.addEventListener('mousedown', onMouseDown);
 			document.addEventListener('mouseup',   onMouseUp);
 			document.addEventListener('mousemove', onMouseMove);
 
 			function onMouseDown(e) {
+				canvasPos = canvasPos || self.canvas.getBoundingClientRect();
+
 				mouseX = (e.clientX - canvasPos.left) / self.scale;
 				mouseY = (e.clientY - canvasPos.top) / self.scale;
 				mouseBody = getBodyAtMouse();
@@ -314,7 +363,10 @@
 				var MIN_DX = 14;
 				var MIN_DY = 9;
 
-				if (mouseBody) {
+				if (
+					mouseBody &&
+					self.activatedBalls.indexOf(mouseBody) >= 0
+				) {
 					var pos = mouseBody.GetPosition();
 					var k = self.options.springCoef;
 					var dT = 1 / (Date.now() - mouseStart);
@@ -326,12 +378,12 @@
 						mouseBody.SetLinearVelocity(new b2Vec2(dX, dY));
 						mouseBody.SetAwake(true);
 					}
-
-					mouseX = null;
-					mouseY = null;
-					mouseStart = null;
-					mouseBody = null;
 				}
+
+				mouseX = null;
+				mouseY = null;
+				mouseStart = null;
+				mouseBody = null;
 			}
 
 			function getBodyAtMouse() {
@@ -374,16 +426,6 @@
 			document.addEventListener('touchend',   onTouchUp);
 			document.addEventListener('touchmove',  onTouchMove);
 
-			document.addEventListener('gesturestart', function (e) {
-				e.preventDefault();
-				e.stopPropagation();
-			}, false);
-
-			document.addEventListener('contextmenu', function (e) {
-				e.preventDefault();
-				e.stopPropagation();
-			}, false);
-
 			function onTouchDown(e) {
 				for (var i = 0; i < e.targetTouches.length; i += 1) {
 					var finger = e.targetTouches[i];
@@ -425,7 +467,10 @@
 					var id = finger.identifier;
 					var body = self.touchBodies[id];
 
-					if (body) {
+					if (
+						body &&
+						self.activatedBalls.indexOf(body) >= 0
+					) {
 						var pos = body.GetPosition();
 						var k = self.options.springCoef;
 						var dT = 1 / (Date.now() - self.touchStart[id]);
@@ -433,16 +478,16 @@
 						var dX = (self.touchX[id] - pos.x) * dT * k;
 						var dY = (self.touchY[id] - pos.y) * dT * k;
 
-						delete self.touchX[id];
-						delete self.touchY[id];
-						delete self.touchStart[id];
-						delete self.touchBodies[id];
-
 						if (Math.abs(dX) >= MIN_DX && Math.abs(dY) >= MIN_DY) {
 							body.SetLinearVelocity(new b2Vec2(dX, dY));
 							body.SetAwake(true);
 						}
 					}
+
+					delete self.touchX[id];
+					delete self.touchY[id];
+					delete self.touchStart[id];
+					delete self.touchBodies[id];
 				}
 			}
 
@@ -477,64 +522,112 @@
 
 		drawCircle: function (ball) {
 			var $ = this.scale;
-			var PIx2 = Math.PI * 2;
-			var r = this.options.ballRadius;
 
-			var images = [
-				'/hockey/a/bird.png',
-				'/hockey/a/rio.png',
-				'/hockey/a/green.png',
-				'/hockey/a/yellow.png'
-			].map(function (src) {
-				var img = new Image;
-				img.src = src;
-				return img;
-			});
+			var pos = ball.GetPosition();
+			var angle = ball.GetAngle();
+			var data = ball.GetUserData();
+			var index = data.index;
 
-			this.drawCircle = function (ball) {
-				var pos = ball.GetPosition();
-				var index = ball.GetUserData().index;
-				var angle = ball.GetAngle();
+			var posX = ~~(pos.x * $);
+			var posY = ~~(pos.y * $);
+			// yeah baby
+			var r = ~~(ball.GetFixtureList().GetShape().GetRadius() * $);
 
-				this.ctx.save();
-				if (angle) {
-					this.ctx.translate(pos.x * $, pos.y * $);
-					this.ctx.rotate(angle);
-					this.ctx.translate(-pos.x * $, -pos.y * $);
-				}
-				this.ctx.drawImage(
-					images[index],
-					pos.x * $ - r, pos.y * $ - r
+			this.ctx.save();
+			if (angle) {
+				this.ctx.translate(posX, posY);
+				this.ctx.rotate(angle);
+				this.ctx.translate(-posX, -posY);
+			}
+
+			this.ctx.beginPath();
+			this.ctx.arc(
+				posX, posY, r,
+				0, Math.PI * 2, true
+			);
+			this.ctx.closePath();
+
+			var radgrad = this.ctx.createRadialGradient(
+				posX, posY, ~~(r / 2),
+				posX, posY, r
+			);
+
+			radgrad.addColorStop(0, data.color);
+			radgrad.addColorStop(0.5, '#fff');
+			radgrad.addColorStop(1, data.color);
+
+			//this.ctx.fillStyle = this.colorTpl.apply(data.color);
+			this.ctx.fillStyle = radgrad;
+			this.ctx.fill();
+			this.ctx.restore();
+
+			if (data.score && this.scoreFrame > 0) {
+				this.scoreFrame -= 1;
+				var color = {
+					h: 0, s: 0, v: 100,
+					a: this.scoreFrame / this.options.scoreDuration
+				};
+				this.ctx.fillStyle = this.colorTpl.apply(color);
+				color.v = 0;
+				this.ctx.strokeStyle = this.colorTpl.apply(color);
+				this.ctx.fillText(
+					'+' + data.score,
+					posX - r,
+					posY - r
 				);
-				this.ctx.restore();
-			};
+				this.ctx.strokeText(
+					'+' + data.score,
+					posX - r,
+					posY - r
+				);
+			}
+		},
 
-			return this.drawCircle(ball);
+
+		overlaps: function (posA, posB) {
+			var t = 5;
+
+			return (
+				((posA.x <= posB.x && posA.x + posA.w - t >= posB.x) ||
+				 (posA.x >= posB.x && posA.x <= posB.x + posB.w - t))
+					&&
+				((posA.y <= posB.y && posA.y + posA.h - t >= posB.y) ||
+				 (posA.y >= posB.y && posA.y <= posB.y + posB.h - t))
+			);
 		},
 
 		drawWorld: function () {
 			var $ = this.scale;
 
-			if (this.explosionFrame > 0) {
-				this.explosionFrame -= 1;
-
-				var pos = this.explosionPosition;
-				var r = ~~(this.explosionFrame * this.ballRadius * 10);
-
-				this.ctx.beginPath();
-				this.ctx.arc(
-					~~(pos.x * $),
-					~~(pos.y * $),
-					r, 0, Math.PI * 2, false
-				);
-				this.ctx.closePath();
-				var red = ~~(255 - this.explosionFrame);
-				this.ctx.fillStyle = 'rgba(' + red + ', 50, 50, 0.5)';				
-				this.ctx.fill();
+			for (var i = 0, len = this.squares.length; i < len; i += 1) {
+				var sq = this.squares[i];
+				this.drawSquare(sq);
 			}
 
-			for (var i in this.balls) {
-				this.drawCircle(this.balls[i]);
+			if (this.explosionFrame > 0) {
+				this.explosionFrame -= 0.4;
+
+				var numSquares = 4;
+				var pos = this.explosionPosition;
+				var k = Math.sin(this.explosionFrame);
+				var r = this.options.squareSize * numSquares * k / 2;
+
+				this.explosionRect = {
+					x: ~~(pos.x * $ - r),
+					y: ~~(pos.y * $ - r),
+					w: ~~(r * 2),
+					h: ~~(r * 2),
+					color: this.colors[~~(Math.random() * 3)]
+				};
+			} else {
+				this.explosionRect = null;
+			}
+
+			for (var j = 0; j < this.ballCount; j += 1) {
+				var ball = this.balls[j];
+				if (ball) {
+					this.drawCircle(ball);
+				}
 			}
 
 			for (var id in this.touchX) {
@@ -556,11 +649,74 @@
 					this.ctx.closePath();
 				}
 			}
+		},
+
+		initBackground: function () {
+			var w = this.canvas.width;
+			var h = this.canvas.height;
+
+			var rW = this.options.squareSize, rH = rW;
+
+			this.squares = [];
+			for (var x = 0; x < w; x += rW) {
+				for (var y = 0; y < h; y += rH) {
+					var color = this.randColor();
+					this.squares.push({
+						x: x,
+						y: y,
+						w: rW,
+						h: rH,
+						lum: 100 + ~~(Math.random() * (color.v - 100)),
+						color: color
+					});
+				}
+			}
+		},
+
+		randColor: function () {
+			return this.colors[~~(Math.random() * this.colors.length)];
+		},
+
+		drawSquare: function (square) {
+			var speed = 0.1;
+
+			if (square.lum > 100) {
+				square.color = this.randColor();
+				square.flip = true;
+			} else if (square.lum < square.color.v) {
+				square.lum = square.color.v; // min luminosity
+				square.flip = false;
+			}
+
+			square.lum += speed * (square.flip ? -1 : 1);
+
+			var color = square.color;
+			var lum = square.lum;
+			if (
+				this.explosionRect &&
+				this.overlaps(this.explosionRect, square)
+			) {
+				color = this.explosionRect.color;
+				square.lum = 95;
+				lum = 60 + 10 * ~~(
+					this.explosionRect.w / this.options.squareSize
+				);
+			}
+
+			this.ctx.fillStyle = this.colorTpl.apply({
+				h: color.h,
+				s: color.s + '%',
+				v: lum + '%',
+				a: color.a
+			});
+			this.ctx.fillRect(
+				square.x, square.y,
+				square.w, square.h
+			);
 		}
 	};
 
-
-	exports.initArcanoid = function (canvas, options) {
-		return Object.create(Arcanoid).init(canvas, options);
+	exports.initHockey = function (canvas, options) {
+		return Object.create(Hockey).init(canvas, options);
 	};
 }(this, this));

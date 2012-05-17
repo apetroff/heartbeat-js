@@ -17,32 +17,12 @@ Ext.define('Ria.view.TilesList', {
         
 		scrollable: false,
 		
-		items: [/*{
-			
-			left: 120,
-			top: 120,
-			xtype: 'container',
-			width: 1680,
-			height: 840,
-			
-			style: 'background-color: #fff;',
-			
-			layout: {
-				type: 'vbox',
-				pack: 'middle',
-				align: 'center'
-			},
-			items: [{
-				html: '<img src="http://www.1prime.ru/Header/prime_new_logo.png" />'
-			}],
-			
-		},*/ {
-			
+		items: [ {
 			left: 0,
 			top: 0,
 			xtype: 'container',
-			width: 120,
-			height: 120,
+
+			cls: 'userspace-tile',
 			
 			layout: {
 				type: 'vbox',
@@ -50,16 +30,16 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: 135,
-				uid: 1
+				angle: 180,
+				uid: 0
 			}) ]
 		}, {
 			
 			left: 1800,
 			top: 0,
 			xtype: 'container',
-			width: 120,
-			height: 120,
+
+			cls: 'userspace-tile',
 
 			layout: {
 				type: 'vbox',
@@ -67,16 +47,16 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: -135,
-				uid: 2
+				angle: 180,
+				uid: 1
 			}) ]
 		}, {
 			
 			left: 1800,
 			top: 960,
 			xtype: 'container',
-			width: 120,
-			height: 120,
+
+			cls: 'userspace-tile',
 			
 			layout: {
 				type: 'vbox',
@@ -84,7 +64,7 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: -45,
+				angle: 0,
 				uid: 3
 			}) ]
 		}, {
@@ -94,6 +74,8 @@ Ext.define('Ria.view.TilesList', {
 			xtype: 'container',
 			width: 120,
 			height: 120,
+
+			cls: 'userspace-tile',
 			
 			layout: {
 				type: 'vbox',
@@ -101,14 +83,13 @@ Ext.define('Ria.view.TilesList', {
 				align: 'center'
 			},
 			items: [ Ext.create('Ria.view.UserSpace', {
-				angle: 45,
-				uid: 4
+				angle: 0,
+				uid: 2
 			}) ]
 		}]
     },
 	
 	initialize: function() {
-	
 		this.callParent();
 		
 		this.container.setLayout('monopoly');

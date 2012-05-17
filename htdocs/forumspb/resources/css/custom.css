@@ -18,34 +18,6 @@
 	white-space: nowrap;
 }
 
-.floatTile {
-	position: absolute;
-	width: 120px;
-	height: 120px;
-	overflow: hidden;
-	border: 1px ridge #999 !important;
-	padding-left: 0 !important;
-	padding-right: 0 !important;
-}
-
-.floatTile .x-innerhtml {
-	font-size: 70% !important;
-	text-overflow: ellipsis;
-	text-align: center;
-	width: 120px;
-	overflow: hidden;
-}
-
-/*
-.floatTile:nth-child(2n+1) {
-	background-color: #FFF;
-}
-		
-.floatTile:nth-child(2n) {
-	background-color: #EEE;
-}
-*/
-
 #fsDiv:fullscreen {
     width: 100%;
     height: 100%;
@@ -94,13 +66,113 @@
 	z-index: 2;
 }
 
+canvas {
+	position: absolute;
+	background-color: #fff;
+	z-index: 1;
+	-webkit-transform: rotate(1800deg);
+	-webkit-transition: all 600ms ease-in;
+	left: 50%;
+	top: 50%;
+	width: 0;
+	height: 0;
+}
+
+canvas.active {
+	left: 0;
+	top: 0;
+	-webkit-transform: rotate(0deg);
+	width: 1920px;
+	height: 1080px;
+}
+
+/* TODO: uncomment for production
 body, canvas {
 	cursor: none !important;
 }
+*/
 
-canvas {
+.userspace-tile,
+.emitent-tile {
 	position: absolute;
-	z-index: 1;
-	left: 0;
-	top: 0;
+	overflow: hidden;
+	border-color: #333 !important;
+	border-style: solid !important;
+	border-width: 1px 1px !important;
+	padding: 0 !important;
+	width: 121px !important;
+	height: 121px !important;
+}
+
+.emitent-tile {
+	background-color: rgba(255, 255, 255, 0.9);
+}
+
+.userspace-tile {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.userspace-tile:nth-child(4) {
+	border-right-width: 0 !important;
+}
+
+.emitent-tile .title {
+	text-align: center;
+	width: 100px;
+	height: 20px;
+	line-height: 20px;
+	fomt-size: 16px;
+	margin: 50px 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.emitent-info {
+	-webkit-transition: all 300ms ease-in;
+	position: absolute;
+	z-index: 2000;
+	height: 361px;
+	width: 361px;
+	border: 1px solid #000;
+	opacity: 0;
+}
+
+.emitent-info .content {
+	overflow: auto;
+	width: 357px;
+	height: 356px;
+	background-color: rgba(255, 255, 255, 0.8);
+	padding: 30px;
+	font-size: 14px;
+	margin: 2px;
+}
+
+.emitent-info h1 {
+	font-weight: normal;
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 16px;
+}
+
+.emitent-tile.tile-opened {
+	z-index: 3000;
+}
+
+.emitent-tile.tile-orientation_180.tile-opened,
+.emitent-tile.tile-orientation_0.tile-opened {
+	border-top-color: #fff !important;
+}
+
+.emitent-tile.tile-orientation_-90.tile-angle_0.tile-opened,
+.emitent-tile.tile-orientation_90.tile-angle_180.tile-opened {
+	border-left-color: #fff !important;
+}
+
+.emitent-tile.tile-orientation_-90.tile-angle_180.tile-opened,
+.emitent-tile.tile-orientation_90.tile-angle_0.tile-opened {
+	border-right-color: #fff !important;
+}
+
+.emitent-tile.tile-angle_180 {
+	-webkit-transform: rotate(180deg);
 }

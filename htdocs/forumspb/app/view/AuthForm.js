@@ -6,19 +6,20 @@ Ext.define('Ria.view.AuthForm', {
 		'<form class="login" action="javascript:">',
 		'<input name="login" type="text"',
 		    ' autocomplete="off"',
-		    ' placeholder="ID" required="required" />',
+		    ' placeholder="ID" />',
 		'<button type="submit">Играть</button>',
 		'</form>'
 	).compile(),
 
 	authedTpl: new Ext.XTemplate(
 		'<form class="logout" action="javascript:">',
-		'<input name="login" type="text" readonly="readonly" value="{userId}" />',
+		'<label>{userId}</label>',
 		'<button type="submit">Не играть</button>',
+		'<button name="activate">Жетон</button>',
 		'</form>'
 	).compile(),
 
-	initialize: function () {
+	initialize: function (index) {
 		this.callParent(arguments);
 	},
 
@@ -45,18 +46,55 @@ Ext.define('Ria.view.AuthForm', {
 		var self = this;
 
 		var form = this.element.dom.querySelector('form');
+		var button = form.elements.activate;
 
-		form.addEventListener('submit', function (e) {
-			e.preventDefault();
+		var reset = function () {
+			form.removeEventListener('submit', onSubmit);
 
-			if (self.getUserId()) {
-				self.removeUserId();
-			} else {
-				self.setUserId(this.elements.login.value);
+			if (button) {
+				button.removeEventListener('click', onActivate);
 			}
 
 			self.setTemplate();
-		}, false);
+			self.bindEvents();
+		};
+
+		var onSubmit = function (e) {
+			e.preventDefault();
+
+			if (null == self.getUserId()) {
+				var input = form.elements.login;
+				var val = input && input.value;
+
+				if (val) {
+					self.setUserId(val);
+					reset();
+				}
+			} else {
+				self.removeUserId();
+				reset();
+			}
+		};
+
+		var onActivate = function (e) {
+			e.preventDefault();
+
+			window.hockey.activateBall(self.config.uid);
+		};
+
+		/* Bind form. */
+		form.addEventListener('submit', onSubmit, false);
+
+		/* Bind activate button. */
+		button && button.addEventListener(
+			'click', onActivate, false
+		);
+	},
+
+	getUserId: function () {
+		return window.localStorage.getItem(
+			'user-space-' + this.config.uid
+		);
 	},
 
 	setUserId: function (userId) {
@@ -68,12 +106,6 @@ Ext.define('Ria.view.AuthForm', {
 
 	removeUserId: function () {
 		return window.localStorage.removeItem(
-			'user-space-' + this.config.uid
-		);
-	},
-
-	getUserId: function () {
-		return window.localStorage.getItem(
 			'user-space-' + this.config.uid
 		);
 	}
