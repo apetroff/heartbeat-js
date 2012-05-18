@@ -8,15 +8,14 @@ Ext.define('Ria.model.Tile', {
     extend: 'Ext.data.Model',
 
     config: {
-		idProperty: "_id",
+		idProperty: 'id',
         fields: [
-            {name: "_id", type: "string"},
-			{name: "title", type: "string"},
-			"tickers",
+            {name: 'id', type: 'string'},
+			{name: 'title', type: 'string'},
+			'tickers',
 			'score',
 			{name: 'region', type: 'string'},
-			{name: 'sector', type: 'string'},
-            {name: 'id', type: 'string'}
+			{name: 'sector', type: 'string'}
         ]
     }
 });

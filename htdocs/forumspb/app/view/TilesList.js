@@ -116,5 +116,31 @@ Ext.define('Ria.view.TilesList', {
 
             me.getScrollable().getScroller().setDisabled(true);
         }
+
+		var loadTickers = function () {
+			if (me.loadingTickers) { return; }
+
+			me.loadingTickers = true;
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', '/entity/tickers/list.json');
+			xhr.onreadystatechange = function () {
+				if (200 == this.status && 'OK' == this.statusText) {
+					try {
+						var json = JSON.parse(this.responseText);
+					} catch (e) {}
+				}
+
+				if (json) {
+					// FIXME: don't export to window
+					window.tickersData = me.tickersData = json.data;
+					me.loadingTickers = false;
+				}
+			};
+			xhr.send();
+		};
+
+		setInterval(loadTickers, 20 * 60e3);
+
+		loadTickers();
     }
 });

@@ -41,7 +41,7 @@
 		defaultOptions: {
 			ballRadius: 40,
 			ballHitpoints: 6,
-			scoreDuration: 15,
+			scoreDuration: 20,
 			squareSize: 120,
 			springCoef: 1000,
 			onEndContact: Boolean,
