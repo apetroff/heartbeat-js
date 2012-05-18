@@ -31,7 +31,7 @@ Ext.application({
 
 				if (tile) {
 					var cmp = Ext.getCmp(tile.id);
-					cmp.collide();
+					cmp.closeTile();
 					return cmp.getScore();
 				} else {
 					console.error('No tile with index %d', index);

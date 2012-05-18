@@ -72,7 +72,6 @@
 
 			this.destroyedBodies = [];
 			this.balls = [];
-			this.activatedBalls = [];
 
 			this.world = this.createWorld();
 
@@ -92,7 +91,6 @@
 
 		reset: function () {
 			this.addWalls();
-			this.addBalls();
 
 			var self = this;
 			setTimeout(function () {
@@ -152,9 +150,11 @@
 				if (i < tr) {
 					bodyDef.position.Set((i + 0.5) * w * 2, h);
 				} else if (i < br) {
-					bodyDef.position.Set((tr + 0.5) * w * 2, (-((br - i) - (nY + 1)) + 0.5) * h * 2);
+					bodyDef.position.Set((tr + 0.5) * w * 2,
+						(-((br - i) - (nY + 1)) + 0.5) * h * 2);
 				} else if (i < bl) {
-					bodyDef.position.Set((bl - i + 0.5) * 2 * 2, (nY + 1 + 0.5) * h * 2);
+					bodyDef.position.Set((bl - i + 0.5) * 2 * 2,
+						(nY + 1 + 0.5) * h * 2);
 				} else {
 					bodyDef.position.Set(w, (tl - i + 0.5) * h * 2);
 				}
@@ -166,42 +166,32 @@
 			}
 		},
 
-		addBalls: function () {
-			var offset = (
-				this.options.squareSize / 2 - this.options.ballRadius
-			) / this.scale;
-
-			for (var i = 0; i < this.ballCount; i += 1) {
-				var x = this.width * (i % 2) +
-					(this.ballRadius + offset) * (i % 2 ? -1 : 1);
-				var y = this.height * (i > 1) +
-					(this.ballRadius + offset) * (i > 1 ? -1 : 1);
-				var ball = this.createBall(i, x, y);
-
-				this.balls[i] = ball;
-			}
-		},
-
 		activateBall: function (i) {
-			var ball = this.balls[i];
+			if (i < 0 || i >= this.ballCount) {
+				console.log('Wrong ball index.');
+				return;
+			}
 
-			if (ball && !this.activatedBalls[i]) {
+			if (!this.balls[i]) {
 				var offset = (
 					this.options.squareSize * 1.5 - this.options.ballRadius
 				) / this.scale;
-
-				var pos = ball.GetPosition();
-				pos.x = this.width * (i % 2) +
-					(this.ballRadius + offset) * (i % 2 ? -1 : 1);
-				pos.y = this.height * (i > 1) +
-					(this.ballRadius + offset) * (i > 1 ? -1 : 1);
-				ball.SetPosition(pos);
-
-				this.activatedBalls[i] = ball;
+				this.balls[i] = this.createBall(i, offset);
 			}
 		},
 
-		createBall: function (index, x, y) {
+		createBall: function (index, offset) {
+			if (offset == null) {
+				offset = (
+					this.options.squareSize / 2 - this.options.ballRadius
+				) / this.scale;
+			}
+
+			var x = this.width * (index % 2) +
+				(this.ballRadius + offset) * (index % 2 ? -1 : 1);
+			var y = this.height * (index > 1) +
+				(this.ballRadius + offset) * (index > 1 ? -1 : 1);
+
 			var bodyDef = new b2BodyDef;
   
 			var fixDef = new b2FixtureDef;
@@ -248,7 +238,6 @@
 					this.destroyedBodies.push(ball);
 
 					this.balls[i] = null;
-					this.activatedBalls[i] = null;
 				}
 			}
 		},
@@ -365,7 +354,7 @@
 
 				if (
 					mouseBody &&
-					self.activatedBalls.indexOf(mouseBody) >= 0
+					self.balls.indexOf(mouseBody) >= 0
 				) {
 					var pos = mouseBody.GetPosition();
 					var k = self.options.springCoef;
@@ -469,7 +458,7 @@
 
 					if (
 						body &&
-						self.activatedBalls.indexOf(body) >= 0
+						self.balls.indexOf(body) >= 0
 					) {
 						var pos = body.GetPosition();
 						var k = self.options.springCoef;
