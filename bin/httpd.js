@@ -375,7 +375,7 @@ module.exports = {
 			
 			var trData = textData.split(trSplitter);
 			
-			result.news = [];
+			result = [];
 			
 			trData.map(function(tr) {
 				
@@ -392,11 +392,10 @@ module.exports = {
 				});
 				
 				news.date = module.exports.parseDate(news.date);
+				news.companyId = config.companyId;
 								
-				result.news.push(news);
+				result.push(news);
 			});
-			
-			result._id = config.companyId;
 		}
 		catch (e) {
 			return null;
@@ -417,7 +416,7 @@ module.exports = {
 			trSplitter = '</tr>',
 			contentRegExp = /title='(.+?)' class='news_text'.+<font class="time">\/(.+)<\/font.+p class="cont_txt">(.+)<a style/,
 			cellNames = 'title date lead'.split(' '),
-			result = {},
+			result = [],
 			comment;
 			
 		try {
@@ -442,11 +441,10 @@ module.exports = {
 				});
 				
 				comment.date = module.exports.parseDate(comment.date);
-								
-				result.comments.push(comment);				
+				comment.companyId = config.companyId;
+				
+				result.push(comment);				
 			});
-			
-			result._id = config.companyId;
 		}
 		catch (e) {
 			return null;

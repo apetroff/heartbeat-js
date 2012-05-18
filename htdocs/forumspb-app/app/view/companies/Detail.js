@@ -6,14 +6,24 @@ Ext.define('Spief.view.companies.Detail', {
 	config: {
 
 		layout: 'vbox',
-		scrollable: 'vertical',
+		//scrollable: 'vertical',
 		
 		items: [
 			{
 				xtype: 'companyInfo'
-			},
-			{
-				xtype: 'infoCard'
+			}, {
+				xtype: 'tabpanel',
+				flex: 1,
+				defaults: {
+					flex: 1
+				},
+				items:[{
+					xtype: 'infoCard'
+				}, {
+					xtype: 'newslist'
+				}, {
+					xtype: 'commentslist'
+				}]
 			}
 		]
 

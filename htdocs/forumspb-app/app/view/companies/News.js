@@ -3,11 +3,10 @@ Ext.define('Spief.view.companies.News', {
     xtype: 'newslist',
 
     config: {
-		heigth: 300,
-		width: 300,
+		title: 'Новости',
 		itemCls: 'news',
-        itemTpl: new Ext.XTemplate(
-			'<h2>{title}</h2>'
-		)
+        ui: 'round',
+		itemTpl: [ '{date}','{title}' ],
+		store: 'News'
     }
 });

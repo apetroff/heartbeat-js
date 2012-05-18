@@ -14,16 +14,14 @@ Ext.define('Spief.view.companies.Card', {
 
         autoDestroy: false,
 
-		items: [
-			{
-				xtype: 'companies',
-				store: 'Companies',
-				grouped: true,
-				pinHeaders: false,
-				indexBar: {
-					letters: 'А Б В Г Д Е Ж З И К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ы Э Ю Я'.split(' ')
-				}
+		items: [{
+			xtype: 'companies',
+			store: 'Companies',
+			grouped: true,
+			pinHeaders: false,
+			indexBar: {
+				letters: 'А Б В Г Д Е Ж З И К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ы Э Ю Я'.split(' ')
 			}
-		]
+		}]
 	}
 });

@@ -11,7 +11,7 @@
 				"functionName": "parseTicker",
 				"companyId": "{$companyId}",
 				"responseText": "{$data.responseText}",
-				"produce": "data.index"
+				"produce": "data.ticker"
 			}, {
 				"className": "task/mongoRequest",
 				"connector":  "mongo",
@@ -20,7 +20,7 @@
 					"upsert": 1
 				},
 				"collection": "tickers",
-				"data": ["{$data.index}"],
+				"data": ["{$data.ticker}"],
 				"produce": "data.mongoResponse"
 			}]
 	}, {
@@ -39,12 +39,9 @@
 			}, {
 				"className": "task/mongoRequest",
 				"connector":  "mongo",
-				"method":     "update",
-				"options": {
-					"upsert": 1
-				},
+				"method":     "insert",
 				"collection": "news",
-				"data": ["{$data.news}"],
+				"data": "{$data.news}",
 				"produce": "data.mongoResponse"
 			}]
 	}, {
@@ -63,12 +60,9 @@
 			}, {
 				"className": "task/mongoRequest",
 				"connector":  "mongo",
-				"method":     "update",
-				"options": {
-					"upsert": 1
-				},
+				"method":     "insert",
 				"collection": "comments",
-				"data": ["{$data.index}"],
+				"data": "{$data.index}",
 				"produce": "data.mongoResponse"
 			}]
 	}]

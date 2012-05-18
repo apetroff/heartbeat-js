@@ -133,8 +133,7 @@ h4 {
 	@include display-box;
     @include box-orient(horizontal);
     @include box-align(center);
-	border-top: 1px solid white;
-
+	
 	.info {
 		
 		@include box-flex(1);

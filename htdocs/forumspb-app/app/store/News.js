@@ -3,6 +3,7 @@ Ext.define('Spief.store.News', {
 
     config: {
 	
+		autoLoad: true,
 		model: 'Spief.model.News',
 		
 		pageSize: 100,

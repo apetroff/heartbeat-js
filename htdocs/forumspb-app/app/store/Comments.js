@@ -3,6 +3,7 @@ Ext.define('Spief.store.Comments', {
 
     config: {
 	
+		autoLoad: true,
 		model: 'Spief.model.Comment',
 		
 		pageSize: 100,

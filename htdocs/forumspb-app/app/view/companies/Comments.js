@@ -3,11 +3,10 @@ Ext.define('Spief.view.companies.Comments', {
     xtype: 'commentslist',
 
     config: {
-		heigth: 300,
-		width: 300,
+		title: 'Комментарии',
 		itemCls: 'comment',
-        itemTpl: new Ext.XTemplate(
-			'<h2>{title}</h2>'
-		)
+        ui: 'round',
+		itemTpl: [ '{date}','{title}','{lead}' ],
+		store: 'Comments'
     }
 });

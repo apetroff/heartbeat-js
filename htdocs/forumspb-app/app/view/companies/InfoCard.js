@@ -4,7 +4,8 @@ Ext.define('Spief.view.companies.InfoCard', {
 	xtype: 'infoCard',
 	
 	config: {
-	
+		
+		title: 'Карточка компании',
 		cls: 'infoCard',
 
 		scrollable: false,
@@ -65,20 +66,6 @@ Ext.define('Spief.view.companies.InfoCard', {
 			cls: 'x-description-field',
 			itemId: 'description',
 			tpl: '{description}'
-		}, {
-			xtype: 'container',
-			cls: 'x-form-fieldset-title',
-			itemId: 'descriptionHeader',
-			html: 'Новости'
-		}, {
-			xtype: 'newslist'
-		}, {
-			xtype: 'container',
-			cls: 'x-form-fieldset-title',
-			itemId: 'descriptionHeader',
-			html: 'Комментарии'
-		}, {
-			xtype: 'commentslist',
 		}]
 	},
 	
