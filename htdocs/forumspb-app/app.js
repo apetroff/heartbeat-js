@@ -64,6 +64,8 @@ Ext.application({
         'Speaker',
 		'User',
 		'Company',
+		'News',
+		'Comment',
 		'Ticker'
     ],
 
@@ -82,6 +84,8 @@ Ext.application({
 
         'companies.Card',
 		'companies.List',
+		'companies.News',
+		'companies.Comments',
 		'companies.Detail',
         'companies.InfoHeader',
 		'companies.InfoCard',
@@ -117,6 +121,8 @@ Ext.application({
         'SessionSpeakers',
         
 		'Companies',
+		'News',
+		'Comments',
 		'Tickers'
     ],
 
