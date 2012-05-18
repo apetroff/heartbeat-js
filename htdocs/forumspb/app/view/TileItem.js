@@ -27,7 +27,9 @@ Ext.define('Ria.view.TileItem', {
 					'<dd>{sector}</dd>',
 			'</dl>',
 			'<strong>{[values.tickers[0]]}</strong>',
-			'<span>&mdash;{[~~(Math.random() * 20)]}%</span>',
+			'<p>',
+				'<big>{[values.tickersData.changeProc || 0]}%</big>',
+			'<p>',
 		'</div></div>'
 	).compile(),
 
@@ -63,8 +65,11 @@ Ext.define('Ria.view.TileItem', {
 	},
 
 	getScore: function () {
-		var rec = this.getRecord();
-		return rec.data.score;
+		var tD = this.getTickersData();
+		if (tD) {
+			return ~~tD.high;
+		}
+		return 0;
 	},
 
 	removeInfoWindow: function () {
@@ -118,6 +123,20 @@ Ext.define('Ria.view.TileItem', {
 		}, this.infoWindowCloseDelay);
 	},
 
+	getTickersData: function () {
+		if (window.tickersData) {
+			var record = this.getRecord();
+			var tickers = window.tickersData.filter(function (item) {
+				return item._id == record.data.id;
+			})[0];
+
+			if (tickers) {
+				return tickers;
+			}
+		}
+		return null;
+	},
+
 	onTileTap: function (e) {
 		if (this.list.openedTiles.indexOf(this) >= 0) {
 			this.setInfoWindowTimeout();
@@ -129,6 +148,8 @@ Ext.define('Ria.view.TileItem', {
 		if (!this.container) {
 			this.container = this.element.dom.offsetParent;
 		}
+
+		record.data.tickersData = this.getTickersData();
 
 		var infoWindow = this.infoTpl.append(
 			this.container, record.data, true
