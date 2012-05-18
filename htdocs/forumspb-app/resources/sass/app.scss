@@ -128,17 +128,52 @@ h4 {
 
 
 
-.companies {
-    h2 {
-        font-weight: bold;
-        padding-bottom: 3px;
-    }
-    p {
-        font-size: 70%;
-    }
-    .x-list-item {
-        border-top: 1px solid white;
-    }
+.x-list-item.companies .x-list-item-label {
+
+	@include display-box;
+    @include box-orient(horizontal);
+    @include box-align(center);
+	border-top: 1px solid white;
+
+	.info {
+		
+		@include box-flex(1);
+
+		h2 {
+			font-weight: bold;
+			padding-bottom: 3px;
+		}
+		
+		p {
+			font-size: 70%;
+		}
+	
+	}
+	
+	.brief {
+		
+		@include display-box;
+		@include box-orient(horizontal);
+		@include box-align(center);
+		
+		.briefcase {
+			background-color: #6C9804;
+			-webkit-mask: center 1px theme_image($theme-name, "pictos/briefcase1.png") no-repeat;
+			-webkit-mask-size: 1.3em;
+			width: 28px;
+			height: 28px;
+			display: block;
+		}
+		
+		.label {
+			font-size: 20px;
+			padding-left: 10px;
+			padding-right: 25px;
+		}
+	}
+}
+.x-list-item.companies.x-item-selected .x-list-item-label .brief .briefcase{
+	background-color: #FFF;
 }
 
 .ticker {

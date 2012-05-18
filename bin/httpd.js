@@ -348,7 +348,6 @@ module.exports = {
 			result._id = parseInt(config.companyId);
 		}
 		catch (e) {
-			console.log('!!!!!!!!!!!!!!!!!!!!!!!!', config.companyId, e.message, textData);
 			return null;
 		}
 		

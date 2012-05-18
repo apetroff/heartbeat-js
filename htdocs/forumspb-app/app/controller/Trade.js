@@ -111,6 +111,8 @@ Ext.define('Spief.controller.Trade', {
 				this.buyHide();
 			}
 		}, this);
+		
+		Spief.util.Prime.briefcaseCompaniesUpdate();
 	},
 	
 	onBuyCancelTap: function() {
@@ -169,6 +171,8 @@ Ext.define('Spief.controller.Trade', {
 				this.sellHide();
 			}
 		}, this);
+		
+		Spief.util.Prime.briefcaseCompaniesUpdate();
 	},
 	
 	onSellCancelTap: function() {

@@ -371,6 +371,6 @@ Ext.define('Spief.controller.User', {
 		
 		this.getAccountForm().setRecord(Spief.accountModel);
 		this.setState('accountLoaded');
-		
+		Spief.util.Prime.briefcaseCompaniesUpdate();		
 	}
 });

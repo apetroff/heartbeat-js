@@ -10,6 +10,7 @@ Ext.define('Spief.model.Company', {
 			'title',
 			'tickers',
 			'daily',
+			'briefcaseCount',
 			'region',
 			'sector',
 			'description',
