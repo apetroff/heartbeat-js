@@ -33,6 +33,8 @@ Ext.define('Ria.view.TileItem', {
 
 	infoWindowSize: 360,
 
+	infoWindowCloseDelay: 5000,
+
 	initialize: function() {
 		this.callParent(arguments);
 
@@ -56,10 +58,8 @@ Ext.define('Ria.view.TileItem', {
 		this.list = window.tilesList = window.tilesList || {};
 
 		this.list.openedTiles = [];
-	},
 
-	collide: function () {
-		this.removeInfoWindow();
+		this.onInfoWindowTap = Ext.bind(this.setInfoWindowTimeout, this);
 	},
 
 	getScore: function () {
@@ -70,11 +70,23 @@ Ext.define('Ria.view.TileItem', {
 	removeInfoWindow: function () {
 		if (this.container && this.infoWindowSize) {
 			try {
+				this.infoWindow.removeEventListener(
+					'click', this.onInfoWindowTap
+				);
+				this.gestures.removeListener(this.infoWindow, 'tap');
 				this.container.removeChild(this.infoWindow);
 			} catch (e) {
 				console.error(e);
 			}
 			this.infoWindow = null;
+		}
+
+		/**
+		 * Check if the window wasn't opened again
+		 * since the timeout was set.
+		 */
+		if (-1 == this.list.openedTiles.indexOf(this)) {
+			this.element.removeCls('tile-opened');
 		}
 	},
 
@@ -94,8 +106,21 @@ Ext.define('Ria.view.TileItem', {
 		);
 	},
 
+	setInfoWindowTimeout: function () {
+		/* Close the window in N seconds. */
+		if (this.infoWindowTimeout) {
+			clearTimeout(this.infoWindowTimeout);
+		}
+		var self = this;
+		this.infoWindowTimeout = setTimeout(function () {
+			self.closeTile();
+			self.infoWindowTimeout = null;
+		}, this.infoWindowCloseDelay);
+	},
+
 	onTileTap: function (e) {
 		if (this.list.openedTiles.indexOf(this) >= 0) {
+			this.setInfoWindowTimeout();
 			return;
 		}
 
@@ -108,6 +133,9 @@ Ext.define('Ria.view.TileItem', {
 		var infoWindow = this.infoTpl.append(
 			this.container, record.data, true
 		).dom;
+
+		infoWindow.addEventListener('click', this.onInfoWindowTap, false);
+		this.gestures.addListener(infoWindow, 'tap', this.onInfoWindowTap);
 
 		this.gestures.dontPropagate(infoWindow, [
 			'mousedown',
@@ -179,27 +207,37 @@ Ext.define('Ria.view.TileItem', {
 
 		/* Close and remove overlapping windows. */
 		for (var i = this.list.openedTiles.length - 1; i >= 0; i -= 1) {
-			(function (tile, i, openedTiles, self) {
-				if (self.overlaps(tile)) {
-					openedTiles.splice(i, 1);
-
-					var tW = tile.infoWindow;
-					if (tW) {
-						tW.style.setProperty('opacity', 0);
-
-						setTimeout(function () {
-							tile.removeInfoWindow();
-
-							if (-1 == openedTiles.indexOf(tile)) {
-								tile.element.removeCls('tile-opened');
-							}
-						}, 300);
-					}
-				}
-			}(this.list.openedTiles[i], i, this.list.openedTiles, this));
+			var tile = this.list.openedTiles[i];
+			if (this.overlaps(tile)) {
+				this.closeTile(tile, i);
+			}
 		}
 
 		this.infoWindow = infoWindow;
 		this.list.openedTiles.push(this);
-    }
+		this.setInfoWindowTimeout();
+    },
+
+	closeTile: function (tile, i) {
+		var openedTiles = this.list.openedTiles;
+
+		if (undefined === tile) {
+			tile = this;
+		}
+		if (undefined === i) {
+			i = openedTiles.indexOf(tile);
+		}
+
+		if (openedTiles[i]) {
+			openedTiles.splice(i, 1);
+
+			if (tile.infoWindow) {
+				tile.infoWindow.style.setProperty('opacity', 0);
+
+				setTimeout(function () {
+					tile.removeInfoWindow();
+				}, 300);
+			}
+		}
+	}
 });
