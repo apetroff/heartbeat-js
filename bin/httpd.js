@@ -228,7 +228,7 @@ module.exports = {
 						+'<parentId>EmitentQuotesIntraday</parentId></request>'
 			});
 			
-			if (i < companyIds.length) setTimeout(function() {
+			if (i+1 < companyIds.length) setTimeout(function() {
 				closure(i+1);
 			}, timeout);
 	
@@ -258,7 +258,7 @@ module.exports = {
 					+ '<Tickers>' + tickers + '</Tickers></request>'
 			});
 			
-			if (i < companyIds.length) setTimeout(function() {
+			if (i+1 < companyIds.length) setTimeout(function() {
 				closure(i+1);
 			}, timeout);
 			
@@ -290,7 +290,7 @@ module.exports = {
 					+'<Tickers>' + tickers + '</Tickers></request>'
 			});
 			
-			if (i < companyIds.length) setTimeout(function() {
+			if (i+1 < companyIds.length) setTimeout(function() {
 				closure(i+1);
 			}, timeout);
 			
@@ -365,6 +365,7 @@ module.exports = {
 			endSplitter = "</table></td></tr>",
 			trSplitter = "</tr>",
 			contentRegExp = /title='(.+?)' class='news_text'.+(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d)</,
+			guidRegExp = /<a href=".+\.aspx\?GUID=\{(.+?)\}">.+<\/a>/,
 			cellNames = 'title date'.split(' '),
 			result = {},
 			news;
@@ -379,9 +380,10 @@ module.exports = {
 			
 			trData.map(function(tr) {
 				
-				var matchRes = tr.match(contentRegExp);
+				var matchRes = tr.match(contentRegExp),
+					guidMatch = tr.match(guidRegExp);
 				
-				if (!matchRes) return;
+				if (!matchRes || !guidMatch) return;
 				
 				matchRes.shift();
 				
@@ -391,6 +393,7 @@ module.exports = {
 					news[cellNames[i]] = match;
 				});
 				
+				news._id = guidMatch[1];
 				news.date = module.exports.parseDate(news.date);
 				news.companyId = config.companyId;
 								
@@ -414,7 +417,8 @@ module.exports = {
 		var startSplitter = "<table id='GridBuilderComments_headTable' style='WIDTH:100%;' class='grid-header' border='0'><colgroup><col width=100%/></colgroup>",
 			endSplitter = "</table></td>",
 			trSplitter = '</tr>',
-			contentRegExp = /title='(.+?)' class='news_text'.+<font class="time">\/(.+)<\/font.+p class="cont_txt">(.+)<a style/,
+			contentRegExp = /title='(.+?)' class='news_text'.+<\/a><font class="time">\/(.+)<\/font.+p class="cont_txt">(.+)<a style/,
+			guidRegExp = /<a href=".+\.aspx\?GUID=\{(.+?)\}">/,
 			cellNames = 'title date lead'.split(' '),
 			result = [],
 			comment;
@@ -428,9 +432,10 @@ module.exports = {
 			
 			trData.map(function(tr) {
 				
-				var matchRes = tr.match(contentRegExp);
+				var matchRes = tr.match(contentRegExp),
+					guidMatch = tr.match(guidRegExp);
 				
-				if (!matchRes) return;
+				if (!matchRes || !guidMatch) return;
 				
 				matchRes.shift();
 				
@@ -440,6 +445,7 @@ module.exports = {
 					comment[cellNames[i]] = match;
 				});
 				
+				comment._id = guidMatch[1];
 				comment.date = module.exports.parseDate(comment.date);
 				comment.companyId = config.companyId;
 				

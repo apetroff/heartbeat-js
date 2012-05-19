@@ -39,6 +39,22 @@ Ext.define('Spief.controller.Companies', {
 	launch: function() {
 		
 		this.companiesStore = Ext.getStore('Companies');
+		
+		// - - -
+		
+		this.newsStore = Ext.getStore('News');
+		this.commentsStore = Ext.getStore('Comments');
+		
+		this.companyFilter = new Ext.util.Filter({
+			property: 'companyId',
+			value   : '0'
+		});
+		
+		this.newsStore.setFilters([this.companyFilter]);
+		this.commentsStore.setFilters([this.companyFilter]);
+		
+		// - - -
+		
 		this.primeProxy = Spief.util.Prime;
 		
 		this.primeProxy.process('data/companies.js', Ext.bind(this.onFirstLoad));
@@ -123,6 +139,13 @@ Ext.define('Spief.controller.Companies', {
 		this.getCompaniesContainer().push(this.company);
 		this.getCompanyInfo().setRecord(this.currentCompany);
 		this.getInfoCard().setRecord(this.currentCompany);
+		
+		this.companyFilter.setValue(this.currentCompany.getId().toString())
+		
+		console.log('<<<<<<<<<<<<<<', this.companyFilter);		
+		
+		this.newsStore.load();
+		this.commentsStore.load();
 	}
 
 });

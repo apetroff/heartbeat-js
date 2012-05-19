@@ -53,8 +53,6 @@ Ext.define('Spief.util.Prime', {
 		
 		var briefcase = Spief.accountModel.get('briefcase');
 		
-		console.log('<<<---', briefcase);
-		
 		if (!briefcase) return;
 		
 		this.companiesStore.each(function(companyModel) {
@@ -62,7 +60,6 @@ Ext.define('Spief.util.Prime', {
 			var id = companyModel.getId(),
 				count = briefcase[id] || 0;
 			
-			console.log('<<<---', id, briefcase[id]);
 			companyModel.set('briefcaseCount', count);
 			
 		}, this);

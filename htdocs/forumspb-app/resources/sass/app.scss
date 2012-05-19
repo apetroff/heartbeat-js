@@ -217,6 +217,33 @@ h4 {
 	}
 }
 
+.comment, .news {
+	
+	date {
+		color: $base-color;
+		font-size: 80%;
+		margin-right: 10px;
+	}
+	
+	p {
+		color: $index-bar-bg-color/2;
+		font-size: 70%;
+	}
+	
+}
+
+.comment.x-item-selected, .news.x-item-selected {
+	
+	date {
+		color: #FFF;
+	}
+	
+	p {
+		color: #FFF;
+		opacity: 0.75;
+	}
+}
+
 
 .companyInfo {
 

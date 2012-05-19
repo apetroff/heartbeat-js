@@ -6,7 +6,15 @@ Ext.define('Spief.view.companies.Comments', {
 		title: 'Комментарии',
 		itemCls: 'comment',
         ui: 'round',
-		itemTpl: [ '{date}','{title}','{lead}' ],
+		itemTpl: Ext.create('Ext.XTemplate',
+			'<h1><date>{[this.format(values.date)]}</date>{title}</h1>',
+			'<p>{lead}</p>',
+			{
+				format: function(date) {
+					return Ext.Date.format(date, "d.m.Y H:i")
+				}
+			}
+		),
 		store: 'Comments'
     }
 });
