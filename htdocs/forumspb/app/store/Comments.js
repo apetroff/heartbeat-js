@@ -3,10 +3,13 @@ Ext.define('Ria.store.Comments', {
 
     config: {
 	
-		autoLoad: true,
+		autoDestroy: true,
+		remoteFilter: true,
+		remoteSort: true,
+		
 		model: 'Ria.model.Comment',
 		
-		pageSize: 100,
+		pageSize: 10,
 		
 		proxy: {
 			type: 'ajax',			
@@ -18,6 +21,8 @@ Ext.define('Ria.store.Comments', {
 				type: 'json',
 				rootProperty: 'data'
 			}
-		}
+		},
+		
+		sorters: [{property: 'date', direction: 'DESC'}]
     }
 });

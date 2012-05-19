@@ -33,6 +33,20 @@ Ext.define('Ria.view.TileItem', {
 		'</div></div>'
 	).compile(),
 
+	newsTpl: new Ext.XTemplate(
+		'<h2>Новости</h2>',
+		'<tpl for=".">',
+			'{title}',
+		'</tpl>'
+	).compile(),
+
+	commentsTpl: new Ext.XTemplate(
+		'<h2>Комментарии</h2>',
+		'<tpl for=".">',
+			'{title}',
+		'</tpl>'
+	).compile(),
+
 	infoWindowSize: 360,
 
 	infoWindowCloseDelay: 5000,
@@ -135,6 +149,8 @@ Ext.define('Ria.view.TileItem', {
 			this.setInfoWindowTimeout();
 			return;
 		}
+
+		this.fireEvent('openInfoWindow', this);
 
 		var record = this.getRecord();
 
@@ -252,6 +268,28 @@ Ext.define('Ria.view.TileItem', {
 					tile.removeInfoWindow();
 				}, 300);
 			}
+		}
+	},
+
+	getData: function (rec) {
+		return rec.data;
+	},
+
+	onNewsLoad: function (records) {
+		if (this.infoWindow && records.length) {
+			var news = this.newsTpl.append(
+				this.infoWindow.querySelector('.content'),
+				records.map(this.getData), true
+			);
+		}
+	},
+
+	onCommentsLoad: function (records) {
+		if (this.infoWindow && records.length) {
+			var comments = this.commentsTpl.append(
+				this.infoWindow.querySelector('.content'),
+				records.map(this.getData), true
+			);
 		}
 	}
 });

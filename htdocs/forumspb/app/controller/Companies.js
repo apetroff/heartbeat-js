@@ -6,66 +6,49 @@ Ext.define('Ria.controller.Companies', {
 	config: {
 		
 		refs: {
-			companies: 'companies',
-			companiesContainer: 'companiesContainer',
-			company: 'company',
-			companyInfo: 'companiesContainer companyInfo',
-			
-			infoCard: 'infoCard',
-			
-			buyForm: 'buyForm',
-			sellForm: 'sellForm',
-			
-			tradePanel: 'companyInfo tradePanel',
-			buyButton: 'tradePanel button[ui=confirm]',
-			sellButton: 'tradePanel button[ui=decline]'
+			company: 'tilesitem'
 		},
-		
+
 		control: {
-			companies: {
-				itemtap: 'onCompanyTap'
-			},
-			
-			buyButton: {
-				tap: 'onBuy'
-			},
-			
-			sellButton: {
-				tap: 'onSell'
+			company: {
+				openInfoWindow: 'getNews'
 			}
 		}
+	},
+
+	getNews: function (companyView) {
+		var rec = companyView.getRecord();
+		var id = rec.get('_id');
+		this.companyFilter.setValue(id.toString());
+		this.newsStore.load({
+			scope: companyView,
+			callback: companyView.onNewsLoad
+		});
+		this.commentsStore.load({
+			scope: companyView,
+			callback: companyView.onCommentsLoad
+		});
 	},
 	
 	launch: function() {
 		this.companiesStore = Ext.getStore('Companies');
 		this.primeProxy = Ria.util.Prime;
-		
+
+		this.newsStore = Ext.getStore('News');
+		this.commentsStore = Ext.getStore('Comments');
+
 		this.primeProxy.process('data/companies.js', Ext.bind(this.onFirstLoad));
+
+		this.companyFilter = new Ext.util.Filter({
+			property: 'companyId',
+			value   : '0'
+		});
+
+		this.newsStore.setFilters([this.companyFilter]);
+		this.commentsStore.setFilters([this.companyFilter]);
 	},
 
 	onFirstLoad: function() {
 		
-	},
-
-	onCompanyTap: function(list, idx, el, record) {
-		if (!this.company) {
-			this.company = Ext.widget('company');
-		}
-		
-		var id = record.getId();
-		
-		Ria.companyModel = this.currentCompany = record;
-		
-		this.onSync();
-		
-		this.setCompanyInfo();
-	},
-	
-	setCompanyInfo: function() {
-		this.company.config.title = this.currentCompany.get('title');
-		this.getCompaniesContainer().push(this.company);
-		this.getCompanyInfo().setRecord(this.currentCompany);
-		this.getInfoCard().setRecord(this.currentCompany);
 	}
-
 });

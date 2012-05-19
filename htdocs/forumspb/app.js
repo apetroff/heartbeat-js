@@ -11,8 +11,8 @@ Ext.application({
 
     views : ['Main', 'Detail'],
     controllers: ['Controller', 'Companies'],
-    models: ['Company', 'Ticker'],
-    stores: ['Companies', 'Tickers'],
+    models: ['Company', 'Ticker', 'News', 'Comment'],
+    stores: ['Companies', 'Tickers', 'News', 'Comments'],
 
 	launch: function() {
         Ext.create('Ria.view.Main');
