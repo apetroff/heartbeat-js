@@ -124,17 +124,10 @@ Ext.define('Ria.view.TileItem', {
 	},
 
 	getTickersData: function () {
-		if (window.tickersData) {
-			var record = this.getRecord();
-			var tickers = window.tickersData.filter(function (item) {
-				return item._id == record.data.id;
-			})[0];
-
-			if (tickers) {
-				return tickers;
-			}
-		}
-		return null;
+		var record = this.getRecord();
+		var store = Ext.getStore('Tickers');
+		var tickersRec = store.getById(record.data._id);
+		return tickersRec && tickersRec.data;
 	},
 
 	onTileTap: function (e) {

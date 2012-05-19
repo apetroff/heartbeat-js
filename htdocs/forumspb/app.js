@@ -10,9 +10,9 @@ Ext.application({
     tabletStartupScreen: 'resources/loading/Homescreen~ipad.jpg',
 
     views : ['Main', 'Detail'],
-    controllers: ['Controller'],
-    models: ['Tile'],
-    stores: ['Tiles'],
+    controllers: ['Controller', 'Companies'],
+    models: ['Company', 'Ticker'],
+    stores: ['Companies', 'Tickers'],
 
 	launch: function() {
         Ext.create('Ria.view.Main');

@@ -1,0 +1,430 @@
+{
+    "persons": [
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Bartiromo_Maria.jpg",
+            "name": "Мария Бартиромо",
+            "post": "Телеведущая программы Closing Bell телеканала CNBC; Управляющий редактор Wall Street Journal",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Primakov_Yevgeny.jpg",
+            "name": "Евгений Примаков",
+            "post": "Президент, Председатель правления, дискуссионный «Меркурий-клуб»",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kissinger_Henry.jpg",
+            "name": "Генри Киссинджер",
+            "post": "Американский государственный деятель, дипломат и эксперт в области международных отношений, лауреат Нобелевской премии",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Darricarrere_Yves-Louis.jpg",
+            "name": "Ив-Луи Даррикаррер",
+            "post": "Президент по разведке и добыче Total SA",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Dudley_Robert.jpg",
+            "name": "Роберт Дадли",
+            "post": "Главный исполнительный директор группы BP Plc.",
+            "country": "Великобритания"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Evtushenkov_Vladimir.jpg",
+            "name": "Владимир Евтушенков",
+            "post": "Председатель совета директоров финансовая корпорация Система ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Faraci_John.jpg",
+            "name": "Джон Фарачи",
+            "post": "Председатель, Главный исполнительный директор International Paper",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Francioni_Reto.jpg",
+            "name": "Рето Франчиони",
+            "post": "Главный исполнительный директор Deutsche Borse AG",
+            "country": "Германия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Himenes_D.jpg",
+            "name": "Джозеф Хименез",
+            "post": "Главный исполнительный директор Novartis International AG",
+            "country": "Швейцария"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kibsgaard_Paal.jpg",
+            "name": "Паал Кибсгаард",
+            "post": "Главный исполнительный директор Schlumberger Ltd.",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kleinfeld_Klaus.jpg",
+            "name": "Клаус Кляйнфельд",
+            "post": "Председатель совета директоров, Главный исполнительный директор Alcoa Inc.",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Ko%D1%81h_Olaf.jpg",
+            "name": "Олаф Г. Кох",
+            "post": "Председатель правления, Главный исполнительный директор Metro AG",
+            "country": "Германия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Blankfein_LloydC.jpg",
+            "name": "Ллойд Бланкфайн",
+            "post": "Председатель, Главный исполнительный директор Goldman Sachs Group Inc",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Bonderman_David.jpg",
+            "name": "Дэвид Бондерман",
+            "post": "Управляющий партнер TPG Capital",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Lopez_Gerard.jpg",
+            "name": "Жерар Лопес",
+            "post": "Партнер-основатель, Председатель, Genii Capital, Сооснователь Skype",
+            "country": "Люксембург"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Loescher_Peter.jpg",
+            "name": "Петер Лешер",
+            "post": "Президент, Главный исполнительный директор Siemens AG",
+            "country": "Германия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Lund_Helge.jpg",
+            "name": "Хельге Лунд",
+            "post": "Главный исполнительный директор Statoil ASA",
+            "country": "Норвегия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Ma-_Weihua.jpg",
+            "name": "Вейхуа Ма",
+            "post": "Президент, Главный исполнительный директор, Исполнительный директор China Merchants Bank",
+            "country": "Китай"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Oudea_Frederic.jpg",
+            "name": "Фредерик Удеа",
+            "post": "Председатель совета директоров, Главный исполнительный директор Societe Generale Group S.A.",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Rogers_James.jpg",
+            "name": "Джеймс П. Роджерс",
+            "post": "Председатель совета директоров, Главный исполнительный директор Eastman Chemical Company",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Svets3.jpg",
+            "name": "Николай Швец",
+            "post": "Генеральный директор Холдинга межрегиональных распределительных сетевых компаний ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Teyssen_Johannes.jpg",
+            "name": "Йоханнес Тейссен",
+            "post": "Председатель правления, Главный исполнительный директор E.ON AG",
+            "country": "Германия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Tricoire_Jean-Pascal.jpg",
+            "name": "Жан-Паскаль Трикуар",
+            "post": "Президент, Главный исполнительный директор Schneider Electric",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/van_Boxmeer.jpg",
+            "name": "Жан Франсуа ван Боксмеер",
+            "post": "Председатель правления, Главный исполнительный директор Heineken Holding NV",
+            "country": "Нидерланды"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Gorman_JamesP.jpg",
+            "name": "Джеймс Горман",
+            "post": "Председатель совета директоров, Главный исполнительный директор Morgan Stanley",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Yergin_DrDaniel.jpg",
+            "name": "Д-р Дэниэл Ергин",
+            "post": "Исполнительный вице-президент, Председатель совета директоров, IHS Cambridge Energy Research Associates Inc.",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Van_der_Hoeven_Maria.jpg",
+            "name": "Мария ван дер Хувен",
+            "post": "Исполнительный директор, Международное энергетическое агентство",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Akkerman.jpg",
+            "name": "Йозеф Акерманн",
+            "post": "Председатель правления, Председатель исполнительного комитета группы Deutsche Bank AG",
+            "country": "Германия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Allen_Sam.jpg",
+            "name": "Сэмюэль Р. Аллен",
+            "post": "Председатель совета директоров, Главный исполнительный директор Deere & Company",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Andersen_Nils.jpg",
+            "name": "Нильс С. Андерсен",
+            "post": "Партнер, Главный исполнительный директор группы A.P. Moller - Maersk",
+            "country": "Дания"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Baksaas_Yon.jpg",
+            "name": "Йон Фредрик Баксаас",
+            "post": "Главный исполнительный директор, Президент Telenor Group",
+            "country": "Норвегия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Baumgertner.jpg",
+            "name": "Владислав Баумгертнер",
+            "post": "Генеральный директор Уралкалий ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Vilar_Mir.jpg",
+            "name": "Хуан-Мигель Вилар Мир",
+            "post": "Председатель совета директоров OHL",
+            "country": "Испания"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Gicceoni_Federiko.jpg",
+            "name": "Федерико Гиццони",
+            "post": "Главный исполнительный директор UniCredit Group",
+            "country": "Италия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kamyu_Fillip.jpg",
+            "name": "Филипп Камю",
+            "post": "Председатель совета директоров Alcatel-Lucent",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kostin.jpg",
+            "name": "Андрей Костин",
+            "post": "Президент - председатель правления Банка ВТБ ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/O'Neill_Jim.jpg",
+            "name": "Джим О'Нил",
+            "post": "Председатель Goldman Sachs Asset Management",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Turley_James.jpg",
+            "name": "Джеймс Тёрли",
+            "post": "Председатель совета директоров, Главный исполнительный директор Ernst & Young",
+            "country": "Великобритания"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Nally_Dennis.jpg",
+            "name": "Деннис Нэлли",
+            "post": "Председатель PwC International Ltd",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Lyan_Sin.jpg",
+            "name": "Синьцзюнь Лян",
+            "post": "Вице-председатель совета директоров, Главный исполнительный директор Fosun International Limited",
+            "country": "Китай"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Strzhalkovskiy_Vladimir.jpg",
+            "name": "Владимир Стржалковский",
+            "post": "Генеральный директор, Председатель правления ГМК Норильский никель ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Serutti_Dominik.jpg",
+            "name": "Доминик Серутти",
+            "post": "Президент, Заместитель главного исполнительного директора NYSE Euronext Incorporated",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Gref_Herman.jpg",
+            "name": "Герман Греф",
+            "post": "Президент, Председатель правления Сбербанк России ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Miller_Alexey.jpg",
+            "name": "Алексей Миллер",
+            "post": "Председатель правления Газпром ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/von_Grunberg.jpg",
+            "name": "Хубертус фон Грюнберг",
+            "post": "Председатель совета директоров ABB Group",
+            "country": "Швейцария"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Alexperov_Vagit.jpg",
+            "name": "Вагит Алекперов",
+            "post": "Президент Лукойл ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Boev_Sergey.jpg",
+            "name": "Сергей Боев",
+            "post": "Генеральный директор РТИ ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Khudainatov_Eduard.jpg",
+            "name": "Эдуард Худайнатов",
+            "post": "Президент НК Роснефть ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Barton_Dominic.jpg",
+            "name": "Доминик Бартон",
+            "post": "Управляющий директор McKinsey & Company",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Pinto_Edemir.jpg",
+            "name": "Эдемир Пинто",
+            "post": "Генеральный директор Бразильская биржа BM& FBOVESPA",
+            "country": "Бразилия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Pandit_Vikram.jpg",
+            "name": "Викрам Пандит",
+            "post": "Главный исполнительный директор Citigroup Inc.",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Topchu_Hamdi.jpg",
+            "name": "Хамди Топчу",
+            "post": "Председатель совета директоров, Председатель исполнительного комитета THY-Turkish Airlines",
+            "country": "Турция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Mordashov_Alexey.jpg",
+            "name": "Алексей Мордашов",
+            "post": "Генеральный директор Северсталь ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Deripaska_Oleg.jpg",
+            "name": "Олег Дерипаска",
+            "post": "Председатель правления, Генеральный директор ОК РУСАЛ",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Albrecht_Hans-Holger.jpg",
+            "name": "Ханс Хольгер Альбрехт",
+            "post": "Президент, Главный исполнительный директор Modern Times Group AB",
+            "country": "Швеция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Carlsberg-Joergen-Buhl-Rasmussen4.jpg",
+            "name": "Расмуссен Йорген Бюль",
+            "post": "Президент, Главный исполнительный директор Carlsberg Group",
+            "country": "Дания"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Chambers_John.jpg",
+            "name": "Джон Т. Чамберс",
+            "post": "Председатель совета директоров, Главный исполнительный директор Cisco Systems Inc.",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kuula_Tapio.jpg",
+            "name": "Тапио Куула",
+            "post": "Президент, Главный исполнительный директор Fortum Corporation",
+            "country": "Финляндия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Erteman_Jan.jpg",
+            "name": "Жан-Поль Эртеман",
+            "post": "Председатель совета директоров, Главный исполнительный директор Safran SA",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Liveris_Andrew.jpg",
+            "name": "Эндрю Ливерис",
+            "post": "Председатель совета директоров, Главный исполнительный директор Dow Chemical Company",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/van_Houten_Frans.jpg",
+            "name": "Франс ван Хоутен",
+            "post": "Президент, Главный исполнительный директор, Председатель совета правления и исполнительного комитета Royal Philips Electronics",
+            "country": "Нидерланды"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Voser_Peter.jpg",
+            "name": "Питер Возер",
+            "post": "Главный исполнительный директор Royal Dutch Shell Plc.",
+            "country": "Нидерланды"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Watson_John.jpg",
+            "name": "Джон Уотсон",
+            "post": "Председатель совета директоров, Главный исполнительный директор Chevron Corporation",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Krovec_Yacek.jpg",
+            "name": "Яцек Кравец",
+            "post": "Президент, Главный исполнительный директор PKN Orlen SA",
+            "country": "Польша"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kron_Patrik.jpg",
+            "name": "Патрик Крон",
+            "post": "Председатель совета директоров, Главный исполнительный директор Alstom Group",
+            "country": "Франция"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Kuzovlev.jpg",
+            "name": "Михаил Кузовлев",
+            "post": "Президент Банка Москвы ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Mikhelson_Leonid.jpg",
+            "name": "Леонид Михельсон",
+            "post": "Председатель правления Новатэк ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Dod_Evgeniy.jpg",
+            "name": "Евгений Дод",
+            "post": "Председатель правления РусГидро ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Dubrovsky_Boris.jpg",
+            "name": "Борис Дубровский",
+            "post": "Генеральный директор, Магнитогорский металлургический комбинат ОАО",
+            "country": "Россия"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Read_Ian.jpg",
+            "name": "Ян Рид",
+            "post": "Председатель совета директоров, Главный исполнительный директор Pfizer Inc.",
+            "country": "США"
+        },
+        {
+            "avatar": "http://2012.forumspb.com/img/temp/members/Dauger_Jean-Marie.jpg",
+            "name": "Жан Мари Доже",
+            "post": "Президент GDF Suez",
+            "country": "Франция"
+        }
+    ]
+}
