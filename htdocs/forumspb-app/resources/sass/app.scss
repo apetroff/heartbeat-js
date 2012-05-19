@@ -217,6 +217,27 @@ h4 {
 	}
 }
 
+.comment, .news {
+	
+	date {
+		color: $base-color;
+		font-size: 80%;
+		margin-right: 10px;
+	}
+	
+	p {
+		font-size: 70%;
+	}
+	
+}
+
+.comment.x-item-selected, .news.x-item-selected {
+	
+	date {
+		color: #FFF;
+	}
+}
+
 
 .companyInfo {
 

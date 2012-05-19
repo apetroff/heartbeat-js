@@ -8,9 +8,7 @@ Ext.define('Spief.view.companies.InfoCard', {
 		title: 'Карточка компании',
 		cls: 'infoCard',
 
-		scrollable: false,
-		margin: '20',
-		
+		scrollable: true,
 		defaults: {
 			defaults: {
 				readOnly: true,

@@ -13,16 +13,22 @@ Ext.define('Spief.view.companies.Detail', {
 				xtype: 'companyInfo'
 			}, {
 				xtype: 'tabpanel',
+				tabBar: {
+					layout: {
+					   type: 'hbox',
+					   align: 'middle'
+				   }
+				},
 				flex: 1,
 				defaults: {
 					flex: 1
 				},
 				items:[{
-					xtype: 'infoCard'
-				}, {
 					xtype: 'newslist'
 				}, {
 					xtype: 'commentslist'
+				}, {
+					xtype: 'infoCard'
 				}]
 			}
 		]

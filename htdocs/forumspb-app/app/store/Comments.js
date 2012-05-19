@@ -4,6 +4,9 @@ Ext.define('Spief.store.Comments', {
     config: {
 	
 		autoLoad: true,
+		remoteFilter: true,
+		remoteSort: true,
+		
 		model: 'Spief.model.Comment',
 		
 		pageSize: 100,
@@ -18,6 +21,8 @@ Ext.define('Spief.store.Comments', {
 				type: 'json',
 				rootProperty: 'data'
 			}
-		}
+		},
+		
+		sorter: ['date']
     }
 });

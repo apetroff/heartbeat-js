@@ -4,6 +4,9 @@ Ext.define('Spief.store.News', {
     config: {
 	
 		autoLoad: true,
+		remoteFilter: true,
+		remoteSort: true,
+		
 		model: 'Spief.model.News',
 		
 		pageSize: 100,
@@ -18,6 +21,8 @@ Ext.define('Spief.store.News', {
 				type: 'json',
 				rootProperty: 'data'
 			}
-		}
+		},
+		
+		sorter: ['date']
     }
 });
