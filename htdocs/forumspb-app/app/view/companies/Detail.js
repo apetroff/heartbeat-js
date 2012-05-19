@@ -15,8 +15,8 @@ Ext.define('Spief.view.companies.Detail', {
 				xtype: 'tabpanel',
 				tabBar: {
 					layout: {
-					   type: 'hbox',
-					   align: 'middle'
+						type: 'hbox',
+						pack: 'center'
 				   }
 				},
 				flex: 1,

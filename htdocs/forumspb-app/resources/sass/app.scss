@@ -226,6 +226,7 @@ h4 {
 	}
 	
 	p {
+		color: $index-bar-bg-color/2;
 		font-size: 70%;
 	}
 	
@@ -235,6 +236,11 @@ h4 {
 	
 	date {
 		color: #FFF;
+	}
+	
+	p {
+		color: #FFF;
+		opacity: 0.75;
 	}
 }
 

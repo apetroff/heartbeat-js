@@ -59,8 +59,7 @@ Ext.define('Spief.controller.Trade', {
 	},
 	
 	onAccountSync: function() {
-	
-		console.log('account updated');
+		//console.log('account updated');
 	},
 	
 	onBuyCountFieldSpin: function() {
@@ -199,7 +198,7 @@ Ext.define('Spief.controller.Trade', {
 			defaultValue = ~~(maximum/2),
 			increment = (maximum > 100) ? 10 : 1;
 			
-		console.log(maximum, defaultValue, increment);
+		//console.log(maximum, defaultValue, increment);
 			
 		this.getBuyCountField().setIncrement(increment);
 		this.getBuyCountField().setMaxValue(maximum);
@@ -215,7 +214,7 @@ Ext.define('Spief.controller.Trade', {
 			defaultValue = ~~(maximum/2),
 			increment = (maximum > 100) ? 10 : 1;
 		
-		console.log(maximum, defaultValue, increment);
+		//console.log(maximum, defaultValue, increment);
 				
 		this.getSellCountField().setIncrement(increment);
 		this.getSellCountField().setMaxValue(maximum);

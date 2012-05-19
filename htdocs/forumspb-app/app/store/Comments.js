@@ -3,13 +3,13 @@ Ext.define('Spief.store.Comments', {
 
     config: {
 	
-		autoLoad: true,
+		autoDestroy: true,
 		remoteFilter: true,
 		remoteSort: true,
 		
 		model: 'Spief.model.Comment',
 		
-		pageSize: 100,
+		pageSize: 10,
 		
 		proxy: {
 			type: 'ajax',			
@@ -23,6 +23,6 @@ Ext.define('Spief.store.Comments', {
 			}
 		},
 		
-		sorter: ['date']
+		sorters: [{property: 'date', direction: 'DESC'}]
     }
 });

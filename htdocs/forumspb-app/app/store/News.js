@@ -3,13 +3,13 @@ Ext.define('Spief.store.News', {
 
     config: {
 	
-		autoLoad: true,
+		autoDestroy: true,
 		remoteFilter: true,
 		remoteSort: true,
 		
 		model: 'Spief.model.News',
 		
-		pageSize: 100,
+		pageSize: 10,
 		
 		proxy: {
 			type: 'ajax',			
@@ -23,6 +23,8 @@ Ext.define('Spief.store.News', {
 			}
 		},
 		
-		sorter: ['date']
-    }
+		sorters: [{property: 'date', direction: 'DESC'}]
+    },
+	
+	
 });

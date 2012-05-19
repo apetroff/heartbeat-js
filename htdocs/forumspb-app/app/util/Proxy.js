@@ -8,7 +8,7 @@ Ext.define('Spief.util.Proxy', {
 		    speakerStore = Ext.getStore('Speakers'),
 		    sessionSpeakerStore = Ext.getStore('SessionSpeakers'),
 		    speakerSessionStore = Ext.getStore('SpeakerSessions'),
-		    sessionIds, proposalModel, speakerModel, speakerSessions = {}, sessionId, speaker, sessionDays = {};
+		    sessionIds, proposalModel, speakerModel, speakerSessions = {}, sessionId, speaker, sessionDays = {}, sessionModel;
 		
 		Ext.data.JsonP.request({
 		    url: url,
