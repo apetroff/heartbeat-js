@@ -23,6 +23,7 @@ Ext.application({
 		var cont = document.querySelector('.x-dataview-tiles');
 		cont.appendChild(canvas);
 
+		/*
 		window.hockey = initHockey(canvas, {
 			explosionSound: document.querySelector('audio'),
 
@@ -39,5 +40,6 @@ Ext.application({
 				}
 			}
 		});
+		*/
     }
 });

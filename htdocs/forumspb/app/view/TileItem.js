@@ -103,7 +103,17 @@ Ext.define('Ria.view.TileItem', {
 				this.infoWindow.removeEventListener(
 					'touchstart', this.onInfoWindowTap
 				);
-				this.gestures.removeScroll(this.infoWindowContent, this.scrollHandler);
+				this.gestures.removeScroll(
+					this.infoWindowContent, this.scrollHandler
+				);
+
+				this.gestures.restorePropagation(
+					this.infoWindow, [
+						'mousedown',
+						'touchstart'
+					]
+				);
+
 				this.container.removeChild(this.infoWindow);
 			} catch (e) {
 				console.error(e);

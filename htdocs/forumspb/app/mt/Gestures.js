@@ -38,7 +38,7 @@ Ext.define('Ria.mt.Gestures', {
 					},
 
 					touchmove: function (e) {
-						if (null != startId) {
+						if (startId != null) {
 							var touches = e.targetTouches;
 							if (touches.length == 1) {
 								var touch = touches[0];
@@ -183,6 +183,13 @@ Ext.define('Ria.mt.Gestures', {
 		var dont = this._dont;
 		events.forEach(function (name) {
 			el.addEventListener(name, dont, false);
+		});
+	},
+
+	restorePropagation: function (el, events) {
+		var dont = this._dont;
+		events.forEach(function (name) {
+			el.removeEventListener(name, dont, false);
 		});
 	}
 });
