@@ -163,8 +163,8 @@ Ext.define('Ria.mt.Gestures', {
 
 	addScroll: function (el) {
 		var handler = function (e, deltaX, deltaY) {
-			el.scrollLeft += deltaX;
-			el.scrollTop += deltaY;
+			el.scrollLeft -= deltaX;
+			el.scrollTop  -= deltaY;
 			e.preventDefault();
 		};
 		this.addListener(el, 'scroll', handler);
