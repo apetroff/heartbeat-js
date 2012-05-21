@@ -41,15 +41,3 @@ Ext.application({
 		});
     }
 });
-
-
-/* Disable gestures and context menu. */
-document.addEventListener('gesturestart', function (e) {
-	e.preventDefault();
-	e.stopPropagation();
-}, false);
-
-document.addEventListener('contextmenu', function (e) {
-	e.preventDefault();
-	e.stopPropagation();
-}, false);

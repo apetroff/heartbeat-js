@@ -1,22 +1,29 @@
+/* Disable gestures and context menu. */
+document.addEventListener('gesturestart', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+}, false);
+
+document.addEventListener('contextmenu', function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+}, false);
+
 Ext.define('Ria.mt.Gestures', {
 	extend: 'Ext.Base',
 
 	constructor: function (config) {
 		this.callParent(arguments);
-
-		document.body.addEventListener('gesturechange', function (e) {
-			e.preventDefault();
-		});
 	},
 
 	gestures: {
 		tap: {
 			add: function (el, fn) {
 				var MAX_DURATION = 1000;
-				var MAX_X_DELTA = 10;
-				var MAX_Y_DELTA = 10;
+				var MAX_X_DELTA = 50;
+				var MAX_Y_DELTA = 50;
 
-				var start, x, y;
+				var startId, startTime, x, y;
 
 				var handlers = {
 					touchstart: function (e) {
@@ -26,30 +33,41 @@ Ext.define('Ria.mt.Gestures', {
 							var touch = touches[0];
 							x = touch.pageX;
 							y = touch.pageY;
-							start = Date.now();
-						} else {
-							start = null;
+							startTime = Date.now();
+							startId = touch.identifier;
 						}
 					},
 
 					touchmove: function (e) {
-						if (start) {
+						if (null != startId) {
 							var touches = e.targetTouches;
-							var touch = touches[0];
+							if (touches.length == 1) {
+								var touch = touches[0];
 
-							var xD = Math.abs(touch.pageX - x);
-							var yD = Math.abs(touch.pageY - y);
+								if (startId == touch.identifier) {
+									var xD = Math.abs(touch.pageX - x);
+									var yD = Math.abs(touch.pageY - y);
 
-							if (xD > MAX_X_DELTA || yD > MAX_Y_DELTA) {
-								start = null;
+									if (xD > MAX_X_DELTA || yD > MAX_Y_DELTA) {
+										startId = null;
+									}
+								}
 							}
 						}
 					},
 
 					touchend: function (e) {
-						if (start && (Date.now() - start) <= MAX_DURATION) {
-							start = null;
-							fn.call(el, e);
+						if (startId != null) {
+							var touches = e.changedTouches;
+							if (touches.length == 1) {
+								var touch = touches[0];
+
+								if (startId == touch.identifier) {
+									startId = null;
+									startTime = null;
+									fn.call(el, e);
+								}
+							}
 						}
 					}
 				};
@@ -70,18 +88,47 @@ Ext.define('Ria.mt.Gestures', {
 
 		scroll: {
 			add: function (el, fn) {
-				var startX, startY;
+				var startX, startY, startId;
 
 				var handlers = {
 					touchstart: function (e) {
-						startX = e.pageX;
-						startY = e.pageY;
+						var touches = e.targetTouches;
+						if (touches.length == 1) {
+							var touch = touches[0];
+							startId = touch.identifier;
+							startX = touch.pageX;
+							startY = touch.pageY;
+						}
 					},
 
 					touchmove: function (e) {
-						var deltaX = e.pageX - startX;
-						var deltaY = e.pageY - startY;
-						fn(e, deltaX, deltaY);
+						if (startId != null) {
+							var touches = e.targetTouches;
+							if (touches.length == 1) {
+								var touch = touches[0];
+
+								if (touch.identifier == startId) {
+									var deltaX = ~~(touch.pageX - startX);
+									var deltaY = ~~(touch.pageY - startY);
+
+									if (deltaX || deltaY) {
+										fn(e, deltaX, deltaY);
+									}
+								}
+							}
+						}
+					},
+
+					touchend: function (e) {
+						var touches = e.changedTouches;
+
+						if (touches.length == 1) {
+							var touch = touches[0];
+
+							if (touches.identifier == startId) {
+								startId = null;
+							}
+						}
 					}
 				};
 
@@ -119,11 +166,17 @@ Ext.define('Ria.mt.Gestures', {
 	},
 
 	addScroll: function (el) {
-		this.addListener(el, 'scroll', function (e, deltaX, deltaY) {
+		var handler = function (e, deltaX, deltaY) {
 			el.scrollLeft += deltaX;
 			el.scrollTop += deltaY;
 			e.preventDefault();
-		}, false);
+		};
+		this.addListener(el, 'scroll', handler);
+		return handler;
+	},
+
+	removeScroll: function (el, handler) {
+		this.removeListener(el, 'scroll', handler);
 	},
 
 	_dont: function (e) {

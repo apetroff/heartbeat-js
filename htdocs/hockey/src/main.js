@@ -40,7 +40,7 @@
 
 		defaultOptions: {
 			ballRadius: 40,
-			ballHitpoints: 6,
+			ballHitpoints: 15,
 			scoreDuration: 20,
 			squareSize: 120,
 			springCoef: 1000,
@@ -118,7 +118,7 @@
 		addWalls: function () {
 			var fixDef = new b2FixtureDef;
 			fixDef.density = 1.0;
-			fixDef.friction = 1;
+			fixDef.friction = 0;
 			fixDef.restitution = 1;
 			
 			var bodyDef = new b2BodyDef;
@@ -196,7 +196,7 @@
   
 			var fixDef = new b2FixtureDef;
 			fixDef.density = 1.0;
-			fixDef.friction = 1;
+			fixDef.friction = 0;
 			fixDef.restitution = 1;
        
 			bodyDef.type = b2Body.b2_dynamicBody;
@@ -303,9 +303,11 @@
 				ballData.hitpoints -= 1;
 
 				if (ballData.hitpoints > 0) {
+					var prevRadius = ballData.radius;
 					ballData.radius = ballData.hitpoints *
 						(self.ballRadius / self.options.ballHitpoints);
-					ball.GetFixtureList().GetShape().SetRadius(ballData.radius);
+					ballFix.GetShape().SetRadius(ballData.radius);
+					ballFix.SetDensity(Math.pow(prevRadius / ballData.radius, 2));
 				}
 
 				var score = self.options.onEndContact(data.index);
@@ -519,8 +521,7 @@
 
 			var posX = ~~(pos.x * $);
 			var posY = ~~(pos.y * $);
-			// yeah baby
-			var r = ~~(ball.GetFixtureList().GetShape().GetRadius() * $);
+			var r = ~~(data.radius * $);
 
 			this.ctx.save();
 			if (angle) {

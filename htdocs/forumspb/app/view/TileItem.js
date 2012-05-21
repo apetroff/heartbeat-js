@@ -37,6 +37,14 @@ Ext.define('Ria.view.TileItem', {
 		'<h2>Новости</h2>',
 		'<tpl for=".">',
 			'{title}',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
+			'dsfksjdngkn nksdfm skdfmlk ;sdmfdlkmfkldsm flkmfldsmflkdsmn fksdmfklsdmflsdmfl',
 		'</tpl>'
 	).compile(),
 
@@ -49,7 +57,7 @@ Ext.define('Ria.view.TileItem', {
 
 	infoWindowSize: 360,
 
-	infoWindowCloseDelay: 5000,
+	infoWindowCloseDelay: 10000,
 
 	initialize: function() {
 		this.callParent(arguments);
@@ -92,7 +100,10 @@ Ext.define('Ria.view.TileItem', {
 				this.infoWindow.removeEventListener(
 					'click', this.onInfoWindowTap
 				);
-				this.gestures.removeListener(this.infoWindow, 'tap');
+				this.infoWindow.removeEventListener(
+					'touchstart', this.onInfoWindowTap
+				);
+				this.gestures.removeScroll(this.infoWindowContent, this.scrollHandler);
 				this.container.removeChild(this.infoWindow);
 			} catch (e) {
 				console.error(e);
@@ -163,14 +174,16 @@ Ext.define('Ria.view.TileItem', {
 		var infoWindow = this.infoTpl.append(
 			this.container, record.data, true
 		).dom;
+		var infoWindowContent = infoWindow.querySelector('.content');
 
 		infoWindow.addEventListener('click', this.onInfoWindowTap, false);
-		this.gestures.addListener(infoWindow, 'tap', this.onInfoWindowTap);
+		infoWindow.addEventListener('touchstart', this.onInfoWindowTap, false);
 
 		this.gestures.dontPropagate(infoWindow, [
 			'mousedown',
 			'touchstart'
 		]);
+		this.scrollHandler = this.gestures.addScroll(infoWindowContent);
 
 		var style = infoWindow.style;
 
@@ -244,6 +257,7 @@ Ext.define('Ria.view.TileItem', {
 		}
 
 		this.infoWindow = infoWindow;
+		this.infoWindowContent = infoWindowContent;
 		this.list.openedTiles.push(this);
 		this.setInfoWindowTimeout();
     },
@@ -271,15 +285,15 @@ Ext.define('Ria.view.TileItem', {
 		}
 	},
 
-	getData: function (rec) {
+	_getData: function (rec) {
 		return rec.data;
 	},
 
 	onNewsLoad: function (records) {
 		if (this.infoWindow && records.length) {
 			var news = this.newsTpl.append(
-				this.infoWindow.querySelector('.content'),
-				records.map(this.getData), true
+				this.infoWindowContent,
+				records.map(this._getData), true
 			);
 		}
 	},
@@ -287,8 +301,8 @@ Ext.define('Ria.view.TileItem', {
 	onCommentsLoad: function (records) {
 		if (this.infoWindow && records.length) {
 			var comments = this.commentsTpl.append(
-				this.infoWindow.querySelector('.content'),
-				records.map(this.getData), true
+				this.infoWindowContent,
+				records.map(this._getData), true
 			);
 		}
 	}
