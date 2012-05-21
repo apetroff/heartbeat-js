@@ -28,7 +28,6 @@ Ext.define('Ria.mt.Gestures', {
 				var handlers = {
 					touchstart: function (e) {
 						var touches = e.targetTouches;
-
 						if (touches.length === 1) {
 							var touch = touches[0];
 							x = touch.pageX;
@@ -43,7 +42,6 @@ Ext.define('Ria.mt.Gestures', {
 							var touches = e.targetTouches;
 							if (touches.length == 1) {
 								var touch = touches[0];
-
 								if (startId == touch.identifier) {
 									var xD = Math.abs(touch.pageX - x);
 									var yD = Math.abs(touch.pageY - y);
@@ -61,7 +59,6 @@ Ext.define('Ria.mt.Gestures', {
 							var touches = e.changedTouches;
 							if (touches.length == 1) {
 								var touch = touches[0];
-
 								if (startId == touch.identifier) {
 									startId = null;
 									startTime = null;
@@ -106,8 +103,7 @@ Ext.define('Ria.mt.Gestures', {
 							var touches = e.targetTouches;
 							if (touches.length == 1) {
 								var touch = touches[0];
-
-								if (touch.identifier == startId) {
+								if (startId == touch.identifier) {
 									var deltaX = ~~(touch.pageX - startX);
 									var deltaY = ~~(touch.pageY - startY);
 
@@ -120,13 +116,13 @@ Ext.define('Ria.mt.Gestures', {
 					},
 
 					touchend: function (e) {
-						var touches = e.changedTouches;
-
-						if (touches.length == 1) {
-							var touch = touches[0];
-
-							if (touches.identifier == startId) {
-								startId = null;
+						if (startId != null) {
+							var touches = e.changedTouches;
+							if (touches.length == 1) {
+								var touch = touches[0];
+								if (startId == touches.identifier) {
+									startId = null;
+								}
 							}
 						}
 					}
