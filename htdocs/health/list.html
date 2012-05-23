@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <style>
+            .monitor-false {background-color:red}
+            .monitor-true {background-color:green}
+            </style>
+        <script language="javascript">
+            function runMonitorUpdate()
+            {
+                var myRequest = new XMLHttpRequest();
+                //myRequest.setRequestHeader("Cache-Control", "no-cache");
+                myRequest.open("POST","http://health.local:50088/entity/health/list.json");
+                myRequest.onreadystatechange=function() {
+                    if (myRequest.readyState==4) {
+                        responseObj = JSON.parse(myRequest.responseText);
+                        updateMonitorData(responseObj);
+                    }
+                }
+                myRequest.setRequestHeader("Content-Type", "text/json");
+                myRequest.send();
+            }
+            
+            function init()
+            {
+                setInterval(runMonitorUpdate, 1000);
+            }
+            
+            function updateMonitorData(responseObj)
+            {
+                document.body.innerHTML = '';
+                
+                curTimestamp = responseObj.curTimestamp;
+                data = responseObj.monitorData;
+                for(key in data)
+                {
+                    sid = data[key].sid;
+                    status = data[key].status;
+                    
+                    statusDiv = document.getElementById(sid);
+                    console.log(statusDiv);
+                    if(!statusDiv)
+                    {
+                        newTableDiv = document.createElement('div');
+                        newTableDiv.id = sid;
+                        newTableDiv.style.width = '45%';
+                        newTableDiv.style.height = '45%';
+                        newTableDiv.className='monitor-'+status;
+                        newTableDiv.style.float = 'left';
+                        newTableDiv.style.textAlign= 'center';
+                        newTableDiv.innerHTML = status;
+                        document.body.insertBefore(newTableDiv,document.body.firstChild);                        
+                    } 
+                    else
+                    {
+                        statusDiv.className='monitor-'+status;
+                        statusDiv.innerHTML = status;
+                    }
+                }
+            }
+            
+            </script>
+
+    </head>
+    <body onload = "init()">
+    </body>
+</html>

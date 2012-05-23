@@ -2,11 +2,7 @@
 {
 	"db": "<db>",
 
-	"consumerConfig": "<consumerConfig>",
-
 	"initiator" : {
-		"timerd": "<timer>",
-		"callbackd": "<callback>",
 		"httpd" : {
 			"port": 50088,
 			"static": {
@@ -21,7 +17,7 @@
 				"path": "",
 				"tasks": [{
 					"className": "task/redirect",
-					"url": "/forumspb/",
+					"url": "/health/",
 					"output": "{$response}"
 				}]
 			}, {
@@ -450,96 +446,6 @@
 				"presenter": {
 					"type": "json",
 					"vars": "{$data.profile}"
-				}
-			}, {
-				"path": "proxy",
-				"tasks": "<proxy>",
-
-				"presenter": {
-					"type": "asis",
-					"contentType": "{$data.download.contentType}",
-					"vars": "{$data.download.data}"
-				},
-				
-				"workflows":[{
-					"path": "post",
-					"tasks": [{
-						"className": "task/post",
-						"request": "{$request}",
-						"produce": "data.body"
-					}, {
-					   "className": "task/download",
-						"verbose": 1,
-						"retries": 2,
-						"timeout": 2,
-						"post": "{$data.body.fields.request}",
-						"url": "{$data.body.fields.url}",
-						"headers": "{$data.body.fields.headers}",
-						"produce": "data.download"
-					}],
-					
-					"presenter": {
-						"type": "asis",
-						"headers": "{$data.download.headers}",
-						"vars": "{$data.download.data}"
-					}
-				}]
-			}]
-		},
-		
-		"socketd": {
-			"port": 50089,
-			"workflows": [{
-				"route": "/entity/states/set",
-				"description": "set state",
-				"tasks": [{
-					"className":  "task/mongoRequest",
-					"connector":  "mongo",
-					"collection": "states",
-					"method": "update",
-					"replace": 1,
-					"criteria": {
-						"state": "{$query.data.state}"
-					},
-					"options": {
-						"upsert": 1
-					},
-					"data": "{$query.data}",
-					"produce": "data.recordIds"
-				}, {
-					"className":  "task/mongoRequest",
-					"if": "$data.recordIds",
-					"connector":  "mongo",
-					"collection": "states",
-					"pager": {
-						"filter": {
-							"state": "{$query.data.state}"
-						}
-					},
-					"produce": "data.records"
-				}],
-				"presenter": {
-					"broadcast": true,
-					"header": "/entity/states/get",
-					"vars": "{$data.records.data.0}"
-				}
-			}, {
-				"route": "/entity/states/get",
-				"description": "set state",
-				"tasks": [{
-					"className":  "task/mongoRequest",
-					"connector":  "mongo",
-					"collection": "states",
-					"pager": {
-						"filter": {
-							"state": "{$query.data.state}"
-						}
-					},
-					"produce": "data.records"
-				}],
-				"presenter": {
-					"header": "{$query.route}",
-					"vars": "{$data.records.data.0}"
 				}
 			}]
 		}

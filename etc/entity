@@ -1,124 +1,53 @@
 [{
-	"path": "accounts",
+	"path": "health",
 	"workflows": [{
 		"path": "list.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"functionName": "parseQuery",
-			"url": "{$request.url}",
-			"user": "{$request.user}",
-			"produce": "data.query"
-		}, {
+		"prepare": ["session"],
+		"tasks": [
+        {
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
-			"pager": "{$data.query}",
-			"collection": "accounts",
+			"collection": "health",
 			"produce":    "data.records"
-		}],
+		},
+        {
+            "functionName":  "getTimestamp",
+            "produce":       "data.curTimestamp"
+        },
+        {
+            "functionName": "checkMonitor",
+            "curTimestamp": "{$data.curTimestamp}",
+            "records":      "{$data.records}",
+            "produce":      "data.monitorData"
+        }
+        ],
 		"presenter": {
 			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}, {
-		"path": "create.json",
-		"prepare": ["session", "user"],
-		"tasks": [{
-			"functionName": "addUserData",
-			"data": "{$request.body.fields}",
-			"user": "{$request.user}",
-			"produce": "data.personalData"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"method":     "insert",
-			"collection": "accounts",
-			"data":       "{$data.personalData}",
-			"produce":    "data.taskResponse"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.taskResponse}"
+			"vars": {
+                "monitorData":"{$data.monitorData}"
+            }
 		}
 	}, {
 		"path": "update.json",
-		"prepare": ["session", "user"],
+		"prepare": ["session"],
 		"tasks": [{
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
 			"method":     "update",
-			"collection": "accounts",
-			"data":       "{$request.body.fields}",
+			"collection": "health",
+            "verbose":true,
+			"data": [{
+                "_id":"{$request.sessionUID}",
+                "url":"{$request.body.fields.url}"
+            }],
+			"options": { 
+			    "upsert": 1
+			},
 			"produce":    "data.updatedId"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"collection": "accounts",
-			"filter":      "{$data.updatedId}",
-			"produce":    "data.records"
 		}],
 		"presenter": {
 			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}]
-}, {
-	"path": "tickers",
-	"workflows": [{
-		"path": "list.json",
-		"tasks": [{
-			"functionName": "parseQuery",
-			"url": "{$request.url}",
-			"produce": "data.query"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"pager": "{$data.query}",
-			"collection": "tickers",
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}]
-}, {
-	"path": "news",
-	"workflows": [{
-		"path": "list.json",
-		"tasks": [{
-			"functionName": "parseQuery",
-			"url": "{$request.url}",
-			"produce": "data.query"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"pager": "{$data.query}",
-			"collection": "news",
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
-		}
-	}]
-}, {
-	"path": "comments",
-	"workflows": [{
-		"path": "list.json",
-		"tasks": [{
-			"functionName": "parseQuery",
-			"url": "{$request.url}",
-			"produce": "data.query"
-		}, {
-			"className":  "task/mongoRequest",
-			"connector":  "mongo",
-			"pager": "{$data.query}",
-			"collection": "comments",
-			"produce":    "data.records"
-		}],
-		"presenter": {
-			"type": "json",
-			"vars": "{$data.records}"
+			"vars": "{$request.body.fields.url}"
 		}
 	}]
 }]
