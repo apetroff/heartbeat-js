@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script language="javascript" src="/health/jquery-1.7.2.min.js"></script>
         <style>
             .monitor-false {background-color:red}
             .monitor-true {background-color:green}
@@ -7,17 +8,18 @@
         <script language="javascript">
             function runMonitorUpdate()
             {
-                var myRequest = new XMLHttpRequest();
-                //myRequest.setRequestHeader("Cache-Control", "no-cache");
-                myRequest.open("POST","http://health.local:50088/entity/health/list.json");
-                myRequest.onreadystatechange=function() {
-                    if (myRequest.readyState==4) {
-                        responseObj = JSON.parse(myRequest.responseText);
-                        updateMonitorData(responseObj);
-                    }
-                }
-                myRequest.setRequestHeader("Content-Type", "text/json");
-                myRequest.send();
+                jQuery.ajax({
+                            type:'POST',
+                            timeout: 5000,
+                            url: 'http://health.local:50088/entity/health/list.json',
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                $('#errorMsg').text('AHTUNG! AJAX error happened!');
+                            },
+                            success: function(data, textStatus, jqXHR){
+                                updateMonitorData(data);
+                                $('#errorMsg').text('');
+                            }
+                });
             }
             
             function init()
@@ -27,40 +29,46 @@
             
             function updateMonitorData(responseObj)
             {
-                document.body.innerHTML = '';
-                
-                curTimestamp = responseObj.curTimestamp;
-                data = responseObj.monitorData;
-                for(key in data)
+                jQuery('#monitor').html('');
+                monitorData = responseObj.monitorData;
+                jQuery.each(monitorData, function(key)
                 {
-                    sid = data[key].sid;
-                    status = data[key].status;
+                    sid = monitorData[key].sid;
+                    status = monitorData[key].status;
                     
-                    statusDiv = document.getElementById(sid);
-                    console.log(statusDiv);
-                    if(!statusDiv)
+                    statusDiv = jQuery(sid);
+                            console.log();
+                    if(jQuery(sid).length == 0)
                     {
-                        newTableDiv = document.createElement('div');
-                        newTableDiv.id = sid;
-                        newTableDiv.style.width = '45%';
-                        newTableDiv.style.height = '45%';
-                        newTableDiv.className='monitor-'+status;
-                        newTableDiv.style.float = 'left';
-                        newTableDiv.style.textAlign= 'center';
-                        newTableDiv.innerHTML = status;
-                        document.body.insertBefore(newTableDiv,document.body.firstChild);                        
+                            jQuery('<div/>')
+                            .css({
+                                    'width':'45%',
+                                    'height':'45%',
+                                    'float':'left',
+                                    'text-align':'center'
+                            })
+                            .addClass('monitor-'+status)
+                            .attr('id',sid)
+                            .html(status)
+                            .appendTo('#monitor');
+                            
                     } 
                     else
                     {
                         statusDiv.className='monitor-'+status;
                         statusDiv.innerHTML = status;
                     }
-                }
+                });
             }
             
+            $(document).ready(function(){
+                init();
+            });
             </script>
 
     </head>
-    <body onload = "init()">
+    <body>
+        <div id="errorMsg" style="width: 100%; text-align:center;color:blue"></div>
+        <div id="monitor" style="width: 100%; text-align:center;"></div>
     </body>
 </html>
