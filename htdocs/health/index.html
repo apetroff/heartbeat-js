@@ -1,34 +1,8 @@
 <html>
     <head>
         <script language="javascript" src="/health/jquery-1.7.2.min.js"></script>
-        <script language="javascript">
-            function updateStatus()
-            {
-                jQuery.ajax({
-                            type:'POST',
-                            timeout: 5000,
-                            url: 'http://health.local:50088/entity/health/update.json',
-                            data: {'url':window.location.href},
-                            contentType: 'text/json',
-                            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                $('#errorMsg').text('AHTUNG! AJAX error happened!');
-                            },
-                            success: function(data, textStatus, jqXHR){
-                                $('#errorMsg').text('');
-                            }
-                });
-                
-            }
-            function init()
-            {
-                setInterval(updateStatus, 5000);
-            }
-            jQuery(document).ready(function(){
-                init();
-            });
-        </script>
+        <script language="javascript" src="/health/health-monitor.js"></script>
     </head>
     <body>
-        <div id="errorMsg" style="width: 100%; text-align:center;color:blue"></div>
     </body>
 </html>

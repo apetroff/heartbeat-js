@@ -22,6 +22,7 @@ var converter = new iconv('windows-1251', 'utf-8'),
 module.exports = {
     getTimestamp: function(config){
         //console.log(config.data);
+        console.log(config.blah);
         return ~~(Date.now()/1000);
     },
     checkMonitor: function(config){
@@ -32,15 +33,9 @@ module.exports = {
         var monitorStatus = [];
         for(key in data)
         {
-            if(curTimestamp - data[key].updated > monitorTimeOut)
-            {
-                monitorStatus.push({'sid':data[key]._id,'status':false});
-            }
-            else
-            {
-                monitorStatus.push({'sid':data[key]._id,'status':true});
-            }
+            monitorStatus.push({'sid':data[key]._id,'userAgent':data[key].userAgent,'status':(curTimestamp - data[key].updated < monitorTimeOut)});
         }
+        
         return monitorStatus;
     }
 };

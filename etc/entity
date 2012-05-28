@@ -30,15 +30,17 @@
 	}, {
 		"path": "update.json",
 		"prepare": ["session"],
-		"tasks": [{
+		"tasks": 
+        [{
 			"className":  "task/mongoRequest",
 			"connector":  "mongo",
 			"method":     "update",
 			"collection": "health",
             "verbose":true,
 			"data": [{
-                "_id":"{$request.sessionUID}",
-                "url":"{$request.body.fields.url}"
+                "_id":       "{$request.sessionUID}",
+                "url":       "{$request.url.query.url}",
+                "userAgent": "{$request.headers.user-agent}"
             }],
 			"options": { 
 			    "upsert": 1
@@ -46,8 +48,8 @@
 			"produce":    "data.updatedId"
 		}],
 		"presenter": {
-			"type": "json",
-			"vars": "{$request.body.fields.url}"
+			"type": "asis",
+			"vars": "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 		}
 	}]
 }]

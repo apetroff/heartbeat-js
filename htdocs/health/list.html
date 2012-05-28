@@ -11,13 +11,13 @@
                 jQuery.ajax({
                             type:'POST',
                             timeout: 5000,
-                            url: 'http://health.local:50088/entity/health/list.json',
+                            url: '/entity/health/list.json',
                             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                $('#errorMsg').text('AHTUNG! AJAX error happened!');
+                                $('#errorMsg').html('<h1 style="color:red">AHTUNG! AJAX error happened!</h1>');
                             },
                             success: function(data, textStatus, jqXHR){
                                 updateMonitorData(data);
-                                $('#errorMsg').text('');
+                                $('#errorMsg').html('');
                             }
                 });
             }
@@ -35,9 +35,8 @@
                 {
                     sid = monitorData[key].sid;
                     status = monitorData[key].status;
+                    userAgent = monitorData[key].userAgent;
                     
-                    statusDiv = jQuery(sid);
-                            console.log();
                     if(jQuery(sid).length == 0)
                     {
                             jQuery('<div/>')
@@ -49,14 +48,14 @@
                             })
                             .addClass('monitor-'+status)
                             .attr('id',sid)
-                            .html(status)
+                            .html(userAgent)
                             .appendTo('#monitor');
                             
                     } 
                     else
                     {
-                        statusDiv.className='monitor-'+status;
-                        statusDiv.innerHTML = status;
+                        jQuery(sid).className='monitor-'+status;
+                        jQuery(sid).innerHTML = userAgent;
                     }
                 });
             }
