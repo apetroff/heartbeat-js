@@ -4,7 +4,7 @@
 
 	"initiator" : {
 		"httpd" : {
-			"port": 50088,
+			"port": 50090,
 			"static": {
 				"index": "index.html"
 			},
