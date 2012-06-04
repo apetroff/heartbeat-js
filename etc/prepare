@@ -18,7 +18,7 @@
 			"secret": "4d4ywyTuy8UYTU4y",
 			"cookieTpl": {
 				"name": "stoken",
-				"domain": "health.local",
+				
 				"path": "/",
 				"expirePeriod": "+172800000",
 				"httpOnly": true
