@@ -1,6 +1,6 @@
 [submodule "lib/workflow"]
 	path = lib/workflow
-	url = ssh://git.rian.off/scm/workflow.nodejs
+	url = /opt/workflow.git
 [submodule "lib/sencha-touch-2"]
 	path = lib/sencha-touch-2
-	url = ssh://git.rian.off/scm/alien/sencha-touch-2.0
+	url = /opt/sencha-touch-2.0.git
