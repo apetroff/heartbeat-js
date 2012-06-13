@@ -1,7 +1,7 @@
 function updateStatus()
 {
     //console.log(new Date().getTime());
-    jQuery('<img>').attr('id','statusImg').attr('src','http://localhost:50090/entity/health/update.json?url='+window.location.href+'&'+new Date().getTime()).remove();
+    jQuery('<img>').attr('id','statusImg').attr('src','http://forumspb.dataflo.ws:50090/entity/health/update.json?url='+window.location.href+'&'+new Date().getTime()).remove();
 }
 function init()
 {
