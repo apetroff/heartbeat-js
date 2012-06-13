@@ -5,7 +5,7 @@
     }
     updateStatus();
     setInterval(
-        updateStatus;
+        updateStatus
         ,5000
     );
 }())
