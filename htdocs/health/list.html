@@ -1,6 +1,6 @@
 <html>
     <head>
-        <script language="javascript" src="http://localhost:50090/health/jquery-1.7.2.min.js"></script>
+        <script language="javascript" src="http://forumspb.dataflo.ws:50090/health/jquery-1.7.2.min.js"></script>
         <style>
             .monitor-false {background-color:red}
             .monitor-true {background-color:green}
@@ -11,7 +11,7 @@
                 jQuery.ajax({
                             type:'POST',
                             timeout: 5000,
-                            url: 'http://localhost:50090/entity/health/list.json',
+                            url: 'http://forumspb.dataflo.ws:50090/entity/health/list.json',
                             error: function(XMLHttpRequest, textStatus, errorThrown) {
                                 $('#errorMsg').html('<h1 style="color:red">AHTUNG! AJAX error happened!</h1>');
                             },
