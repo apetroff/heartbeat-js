@@ -24,7 +24,7 @@
             
             function init()
             {
-                setInterval(runMonitorUpdate, 1000);
+                setInterval(runMonitorUpdate, 5000);
             }
             
             function updateMonitorData(responseObj)
@@ -60,7 +60,7 @@
                 });
             }
             
-            $(document).ready(function(){
+            jQuery(document).ready(function(){
                 init();
             });
             </script>
