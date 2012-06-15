@@ -49,6 +49,7 @@
 		}],
 		"presenter": {
 			"type": "asis",
+            "headers": {"Content-Type": "image/gif"},
 			"vars": "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 		}
 	}]
