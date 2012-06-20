@@ -6,6 +6,6 @@
     updateStatus();
     setInterval(
         updateStatus
-        ,5000
+        ,30000
     );
 }())

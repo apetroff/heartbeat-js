@@ -1,6 +1,6 @@
 // json
 {
     "consumerConfig":{
-        "monitorTimeOut": 20
+        "monitorTimeOut": 60
     }
 }
